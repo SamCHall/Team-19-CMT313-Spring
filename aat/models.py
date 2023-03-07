@@ -63,3 +63,9 @@ class Module(db.Model):
     )
 
     # relationship for assignments
+
+    def get_students(self):
+        return [user for user in self.user if user.user_type == "student"]
+
+    def get_staff(self):
+        return [user for user in self.user if user.user_type == "staff"]
