@@ -35,7 +35,10 @@ class Student(User):
     course = db.Column(db.String)
     cohort = db.Column(db.Integer)
 
-    # relationship for submissions
+    submissions = db.relationship(
+        "Submission",
+        back_populates = "student"
+    )
 
     __mapper_args__ = {
         "polymorphic_identity": "student",
@@ -87,7 +90,11 @@ class Assignment(db.Model):
     )
 
     # Questions relationship
-    # Submissions relationship
+
+    submissions = db.relationship(
+        "Submission",
+        back_populates = "assignment"
+    )
 
     __mapper_args__ = {
         "polymorphic_on": "assignment_type",
@@ -109,3 +116,22 @@ class SummativeAssignment(Assignment):
     __mapper_args__ = {
         "polymorphic_identity": "summative_assignment",
     }
+
+
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    assignment_id = db.Column(db.Integer, db.ForeignKey("assignment.id"))
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"))
+
+    attempt_number = db.Column(db.Integer)
+    mark = db.Column(db.Integer)
+
+    assignment = db.relationship(
+        "Assignment",
+        back_populates = "submissions"
+    )
+
+    student = db.relationship(
+        "Student",
+        back_populates = "submissions"
+    )
