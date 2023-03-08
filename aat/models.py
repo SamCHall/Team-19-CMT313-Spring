@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from aat.aat import app, db
+import abc
 
 
 # Tables for many to many relationships links
@@ -137,6 +138,11 @@ class Submission(db.Model):
     )
 
 
+# https://stackoverflow.com/a/28727066/
+class QuestionMeta(type(db.Model), type(abc.ABC)):
+    pass
+
+
 class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
@@ -147,6 +153,10 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         "polymorphic_on": "question_type",
         "polymorphic_identity": "question",
     }
+
+    @abc.abstractmethod
+    def mark(self):
+        pass
 
 
 class QuestionType1(Question):
