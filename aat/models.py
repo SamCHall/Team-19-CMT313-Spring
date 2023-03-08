@@ -135,3 +135,37 @@ class Submission(db.Model):
         "Student",
         back_populates = "submissions"
     )
+
+
+class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    question_type = db.Column(db.String)
+    active = db.Column(db.Boolean)
+
+    __mapper_args__ = {
+        "polymorphic_on": "question_type",
+        "polymorphic_identity": "question",
+    }
+
+
+class QuestionType1(Question):
+    id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
+    question_text = db.Column(db.String)
+
+    answer = db.Column(db.String)
+
+    __mapper_args__ = {
+        "polymorphic_identity": "question_type1",
+    }
+
+
+class QuestionType2(Question):
+    id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
+    question_text = db.Column(db.String)
+
+    answer = db.Column(db.String)
+
+    __mapper_args__ = {
+        "polymorphic_identity": "question_type2",
+    }
