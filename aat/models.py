@@ -90,7 +90,11 @@ class Assignment(db.Model):
         back_populates="assignments"
     )
 
-    # Questions relationship
+    question_assignment = db.relationship(
+        "AssignQuestion",
+        back_populates = "assignment",
+        order_by = "AssignQuestion.question_number.asc()"
+    )
 
     submissions = db.relationship(
         "Submission",
@@ -101,6 +105,13 @@ class Assignment(db.Model):
         "polymorphic_on": "assignment_type",
         "polymorphic_identity": "assignment",
     }
+
+    def get_questions(self):
+        return [(item.question_number, item.question) for item in self.question_assignment]
+
+    def add_question(self, question, question_no):
+        print(self.id, question, question_no)
+        return AssignQuestion.add_question(self.id, question.id, question_no)
 
 
 class FormativeAssignment(Assignment):
@@ -138,6 +149,46 @@ class Submission(db.Model):
     )
 
 
+class AssignQuestion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    assignment_id = db.Column(db.Integer, db.ForeignKey("assignment.id"))
+    question_id = db.Column(db.Integer, db.ForeignKey("question.id"))
+    question_number = db.Column(db.Integer)
+
+    assignment = db.relationship(
+        "Assignment",
+        back_populates = "question_assignment"
+    )
+
+    question = db.relationship(
+        "Question",
+        back_populates = "question_assignment"
+    )
+
+    @staticmethod
+    def get_assignment_questions(assignment_id):
+        assign = AssignQuestion.query.filter_by(assignment_id=assignment_id).order_by(AssignQuestion.question_number.asc()).all()
+        questions = [item.question for item in assign]
+        return questions
+
+    @staticmethod
+    def get_question_assignments(question_id):
+        assign = AssignQuestion.query.filter_by(question_id=question_id).all()
+        assignments = [item.assignment for item in assign]
+        return assignments
+
+    @staticmethod
+    def add_question(assignment_id, question_id, question_number):
+        print(assignment_id, question_id, question_number)
+        assign = AssignQuestion(
+            assignment_id = assignment_id,
+            question_id = question_id,
+            question_number = question_number
+        )
+        db.session.add(assign)
+        db.session.commit()
+
+
 # https://stackoverflow.com/a/28727066/
 class QuestionMeta(type(db.Model), type(abc.ABC)):
     pass
@@ -149,6 +200,11 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     question_type = db.Column(db.String)
     active = db.Column(db.Boolean)
 
+    question_assignment = db.relationship(
+        "AssignQuestion",
+        back_populates = "question"
+    )
+
     __mapper_args__ = {
         "polymorphic_on": "question_type",
         "polymorphic_identity": "question",
@@ -157,6 +213,9 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     @abc.abstractmethod
     def mark(self):
         pass
+
+    def get_assignments(self):
+        return [item.assignment for item in self.question_assignment]
 
 
 class QuestionType1(Question):
@@ -169,6 +228,9 @@ class QuestionType1(Question):
         "polymorphic_identity": "question_type1",
     }
 
+    def mark(self):
+        return 0
+
 
 class QuestionType2(Question):
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
@@ -179,3 +241,6 @@ class QuestionType2(Question):
     __mapper_args__ = {
         "polymorphic_identity": "question_type2",
     }
+
+    def mark(self):
+        return 0
