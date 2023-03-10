@@ -107,7 +107,7 @@ class Assignment(db.Model):
     }
 
     def get_questions(self):
-        return [(item.question_number, item.question) for item in self.question_assignment]
+        return dict([(item.question_number, item.question) for item in self.question_assignment])
 
     def add_question(self, question, question_no):
         print(self.id, question, question_no)
@@ -168,7 +168,7 @@ class AssignQuestion(db.Model):
     @staticmethod
     def get_assignment_questions(assignment_id):
         assign = AssignQuestion.query.filter_by(assignment_id=assignment_id).order_by(AssignQuestion.question_number.asc()).all()
-        questions = [item.question for item in assign]
+        questions = dict([(item.question_number, item.question) for item in assign])
         return questions
 
     @staticmethod
@@ -221,6 +221,7 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 class QuestionType1(Question):
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
     question_text = db.Column(db.String)
+    options = db.Column(db.String)
 
     answer = db.Column(db.String)
 
