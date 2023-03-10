@@ -10,7 +10,7 @@ from `requirements.txt` using pip.
 
 ## AAT Prototype Features Responsibilities
 
-- Question Type 1 (fill in the black) - Jack
+- Question Type 1 (fill in the blank) - Jack
 - Question Type 2 (muiliple choice) - Jake
 - Formative Assessment - Sam
 - Summative Assessment - Chris
