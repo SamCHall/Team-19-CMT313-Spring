@@ -1,0 +1,11 @@
+SCSS accepts eveything that CSS does and more. Feel free to write standard CSS in an SCSS file.
+
+To create a new (s)css file:
+- In the scss folder create a new file with the following naming convention (note that all files
+  types must be .scss, even if it contains standard CSS):
+    '_example.scss'
+- Import the file to main.scss using a variation on the following:
+    @import 'example';
+
+All of the files imported to main.scss are automatically included in a single .css file and are
+passed to base.html. There is no need to import them to base.html manually.

@@ -1,0 +1,3 @@
+Any JavaScript added to script.js is automatically passed to base.html. To add a new 
+JavaScript file go to 'att/assets.py' and add 'js/yourFileName.js' to the asset bundle.
+There is an example there to mimic.
