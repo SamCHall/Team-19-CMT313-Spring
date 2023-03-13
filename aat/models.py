@@ -210,6 +210,10 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         "polymorphic_identity": "question",
     }
 
+    def __str__(self):
+        output = self.title + " " + self.question_type
+        return output
+
     @abc.abstractmethod
     def mark(self):
         pass
