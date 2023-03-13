@@ -12,9 +12,9 @@ enable your virtual environment. Finally, use Python to run wsgi.py.
 
 An example using pipenv:
 ```
-$ pipenv install
-$ pipenv shell
-$ python wsgi.py
+pipenv install
+pipenv shell
+python wsgi.py
 ```
 
 ## AAT Prototype Features Responsibilities
