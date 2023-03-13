@@ -12,7 +12,7 @@ enable your virtual environment. Finally, use Python to run wsgi.py.
 
 An example using pipenv:
 ```
-$ pipenv install -r requirements.txt
+$ pipenv install
 $ pipenv shell
 $ python wsgi.py
 ```
