@@ -70,7 +70,9 @@ class Module(db.Model):
         'Assignment',
         back_populates="module"
     )
-
+    def __str__(self):
+        return (self.code).upper() + " " + self.name
+    
     def get_students(self):
         return [user for user in self.user if user.user_type == "student"]
 

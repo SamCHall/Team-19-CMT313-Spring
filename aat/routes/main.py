@@ -1,7 +1,7 @@
 from flask import render_template
 
 from ..aat import app, db
-from aat.models import Question, Assignment, FormativeAssignment
+from aat.models import Question, FormativeAssignment, Module
 from aat.forms.formative_forms import CreateFormAss
 
 @app.route("/")
@@ -12,9 +12,10 @@ def home():
 def create_assessment():
     form = CreateFormAss()
     form.add_question.query = Question.query
+    form.module_id.query = Module.query
 
     if form.validate_on_submit():
-        assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data)
+        assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data, module = form.module_id.data)
         db.session.add(assignment)
         db.session.commit()
         
@@ -26,5 +27,4 @@ def create_assessment():
         for question in question_list:
             question_no += 1
             FormativeAssignment.add_question(assignment, question, question_no)
-        print(Assignment.get_questions(assignment))
     return render_template('create_formative.html', title='Create Assessment', form = form)
