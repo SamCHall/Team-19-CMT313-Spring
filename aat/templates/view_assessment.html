@@ -7,22 +7,33 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    <div id="assignment_title">
+    <h1 id="assignment_title">
         {{ assignment.title }}
-    </div>
+    </h1>
 
     {% for question in questions %}
         <div id="question">
             {% if question.question_type == question_type1 %}
-            {{ question.title }}
-            
 
+            <h2 id="question_title">
+                {{ question.title }}
+            </div>
+
+            <div id="question_text">
                 {{ question.question_text }}
+            </div>
+
+            <div id="question_options">
                 {{ question.options }}
+            </div>
 
             {% else %}
-                {{ question.title }}
-                {{ question.question_text }}
+                <h2 id="question_title">
+                    {{ question.title }}
+                </div>
+                <div id="question_text">
+                    {{ question.question_text }}
+                </div>
 
             {% endif %}
             
