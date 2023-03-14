@@ -8,9 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'aa
 
 db = SQLAlchemy(app)
 
-import os
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
-
 
 from aat.routes import main
