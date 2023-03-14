@@ -61,32 +61,41 @@ with app.app_context():
     db.session.add(module2)
 
     q1 = QuestionType1(
-        title = "hi"
+        title = "hi",
+        question_text = "this is some question text",
+        options = "option1, option2, option3"
     )
     db.session.add(q1)
 
     q2 = QuestionType1(
-        title = "hello"
+        title = "hello",
+        question_text = "this is some different question text",
+        options = "option1, option2, option3"
     )
     db.session.add(q2)
 
     q3 = QuestionType1(
-        title = "world"
+        title = "world",
+        question_text = "this is some question text",
+        options = "option1, option2, option3"
     )
     db.session.add(q3)
 
     q4 = QuestionType2(
-        title = "hi2"
+        title = "hi2",
+        question_text = "this is some question text"
     )
     db.session.add(q4)
 
     q5 = QuestionType2(
-        title = "hello2"
+        title = "hello2",
+        question_text = "this is some question text"
     )
     db.session.add(q5)
 
     q6 = QuestionType2(
-        title = "world2"
+        title = "world2",
+        question_text = "this is some question text"
     )
     db.session.add(q6)
 

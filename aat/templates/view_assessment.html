@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <div id="assignment_title">
+        {{ assignment.title }}
+    </div>
+
+    {% for question in questions %}
+        <div id="question">
+            {% if question.question_type == question_type1 %}
+            {{ question.title }}
+            
+
+                {{ question.question_text }}
+                {{ question.options }}
+
+            {% else %}
+                {{ question.title }}
+                {{ question.question_text }}
+
+            {% endif %}
+            
+        </div>
+    {% endfor %}
+    
+</body>
+</html>
