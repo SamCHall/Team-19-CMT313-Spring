@@ -23,7 +23,7 @@ app.config['REMEMBER_COOKIE_HTTPONLY'] = True
 # Database connection
 if not bool(os.environ.get('DELOYMENT')):
     basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'development.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'aat.db')
 db = SQLAlchemy(app)
 
 # Form protection

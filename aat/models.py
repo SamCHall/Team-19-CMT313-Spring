@@ -222,9 +222,8 @@ class QuestionType1(Question):
     """Fill in the blank."""
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
     question_text = db.Column(db.String)
-    options = db.Column(db.String)
-
-    answer = db.Column(db.String)
+    possible_answers = db.Column(db.String)
+    correct_answers = db.Column(db.String)
 
     __mapper_args__ = {
         "polymorphic_identity": "question_type1",
