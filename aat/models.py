@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from . import app, db
+from . import db
 import abc
 
 
@@ -219,6 +219,7 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
 
 class QuestionType1(Question):
+    """Fill in the blank."""
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
     question_text = db.Column(db.String)
     options = db.Column(db.String)
