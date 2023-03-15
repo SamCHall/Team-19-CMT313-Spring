@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired, ValidationError
+from .models import QuestionType1
 
 
 class QuestonType1Form(FlaskForm):
@@ -11,7 +12,17 @@ class QuestonType1Form(FlaskForm):
     incorrect_answers = StringField('Incorrect answers')
     submit = SubmitField('Confirm')
 
-    def validate_question_text(self, question_template):
-        if "{}" not in question_template:
-            raise ValidationError('Your template must include at least one blank which is done by placing curly braces, {}, in place of a word.')
+    def validate_title(self, title):
+        exists = QuestionType1.query.filter_by(title=title.data)
+        if exists:
+            raise ValidationError('A question with this title already exists')
 
+    def validate_question_template(self, question_template):
+        if "BLANK" not in question_template.data:
+            raise ValidationError('Your template must include at least one BLANK')
+
+    def validate_correct_answers(self, correct_answers):
+        n_of_blanks = self.question_template.data.count('BLANK')
+        print(correct_answers.data.split(','))
+        if not len(correct_answers.data.split(',')) == n_of_blanks:
+            raise ValidationError('Number of correct answers must match the number of "BLANK"s in the template.')

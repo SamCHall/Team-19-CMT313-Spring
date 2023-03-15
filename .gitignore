@@ -1,7 +1,7 @@
 # App specific files
 gen
 .flaskenv
-development.db
+aat.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

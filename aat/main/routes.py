@@ -21,7 +21,7 @@ def create_question():
         incorrect_answers_raw = qt1_form.incorrect_answers.data.split(',')
         for answer in incorrect_answers_raw: incorrect_answers.append(answer.strip())
         
-        qt1 = QuestionType1(title=qt1_form.title.data, question_template=qt1_form.question_template.data, correct_answers=str(correct_answers), incorrect_answers=str(incorrect_answers))
+        qt1 = QuestionType1(title=qt1_form.title.data, question_template=qt1_form.question_template.data.replace('BLANK', '{}'), correct_answers=str(correct_answers), incorrect_answers=str(incorrect_answers))
         db.session.add(qt1)
         db.session.commit()
         

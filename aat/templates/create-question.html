@@ -14,7 +14,7 @@
             </ul>
         {% endif %}
         <!-- Template -->
-        {{ qt1_form.question_template(placeholder='Provide a question template using "{}" to place blanks') }}
+        {{ qt1_form.question_template(placeholder='Provide a question template placing BLANK where appropriate.') }}
         {% if qt1_form.question_template.errors %}
             <ul class="errors">
                 {% for error in qt1_form.question_template.errors %}
