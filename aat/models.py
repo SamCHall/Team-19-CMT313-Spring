@@ -148,6 +148,29 @@ class Submission(db.Model):
         back_populates = "submissions"
     )
 
+    submission_answers = db.relationship(
+        "SubmissionAnswers",
+        back_populates = "submission"
+    )
+
+
+class SubmissionAnswers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey("question.id"), nullable=False)
+    submission_id = db.Column(db.Integer, db.ForeignKey("submission.id"), nullable=False)
+    submission_answer = db.Column(db.String, nullable=False)
+    question_mark = db.Column(db.Integer, nullable=False)
+
+    question = db.relationship(
+        "Question",
+        back_populates = "submissions"
+    )
+
+    submission = db.relationship(
+        "Submission",
+        back_populates = "submission_answers"
+    )
+
 
 class AssignQuestion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -202,6 +225,11 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
     question_assignment = db.relationship(
         "AssignQuestion",
+        back_populates = "question"
+    )
+
+    submissions = db.relationship(
+        "SubmissionAnswers",
         back_populates = "question"
     )
 
