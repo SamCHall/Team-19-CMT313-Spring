@@ -11,11 +11,7 @@
         {% if assignment.active == True %}
         <div id="assignment_information">
             <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
-            {% for module in modules %}
-                {% if assignment.module_id == module.id %}
-                    {{ module.code }}   {{ module.name }}
-                {% endif %}
-            {% endfor %}
+            {{ assignment.module }}
         </div>
         {% endif %}
     {% endfor %}

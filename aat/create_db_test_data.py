@@ -1,38 +1,55 @@
-from aat.aat import app, db
-from aat.models import *
+from . import db
+from .models import *
 
-with app.app_context():
-    db.create_all()
-
+try:
     student1 = Student(
+        username = "rtjst",
+        password = "alpha",
+        email = "c@example.com",
         first_name = "Alpha",
         surname = "1",
-        course = "computing"
+        cohort = 2013,
+        course = "computing",
     )
     db.session.add(student1)
 
     student2 = Student(
+        username = "ej7u6s",
+        password = "alpha",
+        email = "d@example.com",
         first_name = "Beta",
         surname = "2",
+        cohort = 2013,
         course = "computing"
     )
     db.session.add(student2)
 
     student3 = Student(
+        username = "dhtrh",
+        password = "alpha",
+        email = "e@example.com",
         first_name = "Gamma",
         surname = "3",
+        cohort = 2014,
         course = "computing"
     )
     db.session.add(student3)
 
     student4 = Student(
+        username = "dtyhstre",
+        password = "alpha",
+        email = "f@example.com",
         first_name = "Delta",
         surname = "4",
+        cohort = 2014,
         course = "computing"
     )
     db.session.add(student4)
 
     staff1 = Staff(
+        username = "dttrhyt",
+        password = "alpha",
+        email = "a@example.com",
         first_name = "Martin",
         surname = "Chorley",
         position = "Lect"
@@ -40,6 +57,9 @@ with app.app_context():
     db.session.add(staff1)
 
     staff2 = Staff(
+        username = "ujytyd",
+        password = "alpha",
+        email = "b@example.com",
         first_name = "Matthew",
         surname = "Morgan",
         position = "Lect"
@@ -148,3 +168,9 @@ with app.app_context():
     assignment1.add_question(q3, 2)
 
     db.session.commit()
+except:
+    print('''
+Tried to populate the database with test data but an error occured.
+This is likely because data already exists.
+To avoid this error please disable the line which includes 'create_db_test_data' in 'aat/__init__.py'.
+    ''')

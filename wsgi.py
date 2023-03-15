@@ -1,1 +1,4 @@
-from aat.aat import app as application
+from aat import app as application
+
+if __name__ == '__main__':
+    application.run()

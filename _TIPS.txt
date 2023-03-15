@@ -1,0 +1,13 @@
+We're all at the tip of the iceberg with lots to learn (pun intended) so I think it will be useful to
+pool our knowledge for handy shortcuts etc.
+
+
+1. Create the file '.flaskenv' in the root folder and add the following line:
+    FLASK_DEBUG=true
+
+This will automatically enable debugging on your PC. The file will be ignored by git
+so others will not be forced into debug mode.
+
+
+2. In large projects like this it can be difficult to navigate and find the file you're like for.
+If you're using VSCode/VSCodium open a file by name using ctrl + p.
