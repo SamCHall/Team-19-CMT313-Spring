@@ -1,0 +1,22 @@
+h1 {
+    background-color: rgb(87, 181, 181);
+}
+
+body {
+    background-color:rgb(77, 87, 120)
+}
+
+.button:visited {
+    text-decoration: none;
+}
+
+.button {
+    background-color: aquamarine;
+    padding: 10px;
+    border-radius: 25%;
+    text-decoration: none;
+}
+
+.button:hover {
+    background: grey;
+}
