@@ -2,7 +2,8 @@
 
 {% block content %}
 <section id="createQuestionType1">
-    <form action="{{ url_for('create_question') }}" method="post">
+    <form id="qt1-form" action="{{ url_for('create_question') }}" method="post" autocomplete="off">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
         {{ qt1_form.hidden_tag() }}
         <!-- Title -->
         {{ qt1_form.title(placeholder='Title', autofocus=true) }}
@@ -40,6 +41,8 @@
                 {% endfor %}
             </ul>
         {% endif %}
+        <!-- Preview answer -->
+        <input id="preview" style="pointer-events: none; cursor: default;" placeholder="Preview">
         <!-- Submit -->
         {{ qt1_form.submit() }}
     </form>

@@ -196,7 +196,7 @@ class QuestionMeta(type(db.Model), type(abc.ABC)):
 
 class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
+    title = db.Column(db.String, nullable=False, unique=True)
     question_type = db.Column(db.String)
     active = db.Column(db.Boolean, default=False)
 
