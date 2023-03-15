@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired, ValidationError
-from .models import QuestionType1
+from ..models import QuestionType1
 
 
 class QuestonType1Form(FlaskForm):
@@ -14,6 +14,7 @@ class QuestonType1Form(FlaskForm):
 
     def validate_title(self, title):
         exists = QuestionType1.query.filter_by(title=title.data)
+        print(exists)
         if exists:
             raise ValidationError('A question with this title already exists')
 

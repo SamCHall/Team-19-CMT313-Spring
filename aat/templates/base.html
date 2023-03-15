@@ -18,6 +18,17 @@
     <!-- <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/icon.svg') }}"> -->
 </head>
 <body>
+
+    <header>
+        <nav>
+            {% if current_user.is_authenticated %}
+            <a class="menu-item" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a class="menu-item" href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
     <main>
         {% block content %}
         {% endblock content %}
