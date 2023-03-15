@@ -2,6 +2,7 @@
 gen
 .flaskenv
 aat.db
+Pipfile
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
