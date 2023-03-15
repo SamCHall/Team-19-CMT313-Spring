@@ -5,6 +5,7 @@ from flask_dotenv import DotEnv
 from flask_wtf.csrf import CSRFProtect
 from flask_assets import Environment
 from flask_compress import Compress
+from flask_login import LoginManager
 
 
 # Initialisation and configuration:
@@ -37,8 +38,19 @@ assets.register(bundles)
 # Compression
 Compress(app)
 
+# Login Manager
+from .models import User
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id is None:
+        return None
+    return User.query.get(int(user_id))
+
 # Routes
-from .main import routes
+from .main import auth, routes
 
 # Create database
 from . import models

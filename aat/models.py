@@ -1,4 +1,7 @@
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from . import app, db
 import abc
 
@@ -12,12 +15,15 @@ module_user = db.Table(
 )
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String)
-    surname = db.Column(db.String)
-    email = db.Column(db.String)
-    user_type = db.Column(db.String)
+    username = db.Column(db.String, unique=True, nullable=False)
+    __password = db.Column(db.String, nullable=False)
+
+    first_name = db.Column(db.String, nullable=False)
+    surname = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    user_type = db.Column(db.String, nullable=False)
 
     modules = db.relationship(
         'Module',
@@ -30,11 +36,22 @@ class User(db.Model):
         "polymorphic_identity": "user",
     }
 
+    @property
+    def password(self):
+        raise AttributeError('Password is not readable.')
+
+    @password.setter
+    def password(self,password):
+        self.__password=generate_password_hash(password)
+
+    def verify_password(self,password):
+        return check_password_hash(self.__password,password)
+
 
 class Student(User):
     id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    course = db.Column(db.String)
-    cohort = db.Column(db.Integer)
+    course = db.Column(db.String, nullable=False)
+    cohort = db.Column(db.Integer, nullable=False)
 
     submissions = db.relationship(
         "Submission",
@@ -48,7 +65,7 @@ class Student(User):
 
 class Staff(User):
     id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    position = db.Column(db.String)
+    position = db.Column(db.String, nullable=False)
 
     __mapper_args__ = {
         "polymorphic_identity": "staff",
