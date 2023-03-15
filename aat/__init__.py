@@ -50,7 +50,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # Routes
-from .main import auth, routes
+from .routes import auth, routes
 
 # Create database
 from . import models
