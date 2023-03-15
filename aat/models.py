@@ -87,7 +87,9 @@ class Module(db.Model):
         'Assignment',
         back_populates="module"
     )
-
+    def __str__(self):
+        return (self.code).upper() + " " + self.name
+    
     def get_students(self):
         return [user for user in self.user if user.user_type == "student"]
 
@@ -254,6 +256,10 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         "polymorphic_on": "question_type",
         "polymorphic_identity": "question",
     }
+
+    def __str__(self):
+        output = self.title + " " + self.question_type
+        return output
 
     @abc.abstractmethod
     def mark(self):
