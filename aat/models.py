@@ -89,7 +89,7 @@ class Module(db.Model):
     )
     def __str__(self):
         return (self.code).upper() + " " + self.name
-    
+
     def get_students(self):
         return [user for user in self.user if user.user_type == "student"]
 
@@ -238,9 +238,9 @@ class QuestionMeta(type(db.Model), type(abc.ABC)):
 
 class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
+    title = db.Column(db.String, nullable=False, unique=True)
     question_type = db.Column(db.String)
-    active = db.Column(db.Boolean)
+    active = db.Column(db.Boolean, default=False)
 
     question_assignment = db.relationship(
         "AssignQuestion",
@@ -270,11 +270,11 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
 
 class QuestionType1(Question):
+    """Fill in the blank."""
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
-    question_text = db.Column(db.String)
-    options = db.Column(db.String)
-
-    answer = db.Column(db.String)
+    question_template = db.Column(db.String, nullable=False)
+    correct_answers = db.Column(db.String, nullable=False)
+    incorrect_answers = db.Column(db.String)
 
     __mapper_args__ = {
         "polymorphic_identity": "question_type1",

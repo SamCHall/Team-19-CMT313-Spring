@@ -1,6 +1,7 @@
 # App specific files
 gen
 .flaskenv
+aat.db
 development.db
 Pipfile
 

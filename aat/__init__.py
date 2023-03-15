@@ -24,7 +24,7 @@ app.config['REMEMBER_COOKIE_HTTPONLY'] = True
 # Database connection
 if not bool(os.environ.get('DELOYMENT')):
     basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'development.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'aat.db')
 db = SQLAlchemy(app)
 
 # Form protection
@@ -57,4 +57,4 @@ from . import models
 with app.app_context():
     db.create_all()
     # Comment/uncomment the below line to enable/disable test content generation for the database.
-    from . import create_db_test_data
+    # from . import create_db_test_data
