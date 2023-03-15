@@ -1,13 +1,28 @@
-from flask import render_template
+from flask import render_template, url_for
 from ..models import QuestionType1
+from ..forms import QuestonType1Form
+from .. import app, db
 
-from .. import app
 
 @app.route("/")
 def home():
     
     return render_template('home.html', title='Home')
 
-@app.route('/staff/question/create')
+@app.route('/staff/question/create', methods=['GET', 'POST'])
 def create_question():
-    return render_template('create-question.html')
+    qt1_form = QuestonType1Form()
+    if qt1_form.validate_on_submit():
+        correct_answers = []
+        correct_answers_raw = qt1_form.correct_answers.data.split(',')
+        for answer in correct_answers_raw: correct_answers.append(answer.strip())
+        
+        incorrect_answers = []
+        incorrect_answers_raw = qt1_form.incorrect_answers.data.split(',')
+        for answer in incorrect_answers_raw: incorrect_answers.append(answer.strip())
+        
+        qt1 = QuestionType1(title=qt1_form.title.data, question_template=qt1_form.question_template.data, correct_answers=str(correct_answers), incorrect_answers=str(incorrect_answers))
+        db.session.add(qt1)
+        db.session.commit()
+        
+    return render_template('create-question.html', qt1_form=qt1_form)
