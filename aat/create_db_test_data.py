@@ -1,9 +1,7 @@
-from aat.aat import app, db
-from aat.models import *
+from . import db
+from .models import *
 
-with app.app_context():
-    db.create_all()
-
+try:
     student1 = Student(
         first_name = "Alpha",
         surname = "1",
@@ -139,3 +137,9 @@ with app.app_context():
     assignment1.add_question(q3, 2)
 
     db.session.commit()
+except:
+    print('''
+Tried to populate the database with test data but an error occured.
+This is likely because data already exists.
+To avoid this error please disable the line which includes 'create_db_test_data' in 'aat/__init__.py'.
+    ''')
