@@ -13,8 +13,7 @@ class QuestonType1Form(FlaskForm):
     submit = SubmitField('Confirm')
 
     def validate_title(self, title):
-        exists = QuestionType1.query.filter_by(title=title.data)
-        print(exists)
+        exists = QuestionType1.query.filter_by(title=title.data).first()
         if exists:
             raise ValidationError('A question with this title already exists')
 
