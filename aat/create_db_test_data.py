@@ -184,12 +184,31 @@ try:
         mark = 6
     )
     db.session.add(submission1)
-
-    db.session.commit()
-
     submission1.add_question_answer(q1, "['low-level', 'source']", 1)
     submission1.add_question_answer(q2, "['compiler', 'object']", 2)
     submission1.add_question_answer(q2, "['interpreter', 'line', 'source, 'executes']", 3)
+
+    submission2 = Submission(
+        assignment = assignment4,
+        student = student2,
+        attempt_number = 1,
+        mark = 8
+    )
+    db.session.add(submission2)
+    submission2.add_question_answer(q1, "['high-level', 'source']", 2)
+    submission2.add_question_answer(q2, "['compiler', 'object']", 2)
+    submission2.add_question_answer(q2, "['interpreter', 'statement', 'source, 'executes']", 4)
+
+    submission3 = Submission(
+        assignment = assignment4,
+        student = student4,
+        attempt_number = 1,
+        mark = 2
+    )
+    db.session.add(submission1)
+    submission3.add_question_answer(q1, "['high-level', 'object']", 1)
+    submission3.add_question_answer(q2, "['interpreter', 'source']", 0)
+    submission3.add_question_answer(q2, "['compiler', 'line', 'machine, 'executes']", 1)
 
     db.session.commit()
 except:
