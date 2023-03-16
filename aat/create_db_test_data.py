@@ -80,6 +80,13 @@ try:
     )
     db.session.add(module2)
 
+    module3 = Module(
+        name = "The Internet",
+        code = "COMP2-9",
+        user = [student1, student2, student4, staff1]
+    )
+    db.session.add(module3)
+
     q1 = QuestionType1(
         title = "Code 1",
         active = True,
@@ -123,22 +130,22 @@ try:
     db.session.add(q6)
 
     assignment1 = SummativeAssignment(
-        title = "Html & Css Based Assessment ",
+        title = "Procedures and functions",
         module = module1,
         active = True
     )
     db.session.add(assignment1)
 
     assignment2 = SummativeAssignment(
-        title = "Programming Challenges",
-        module = module1,
+        title = "Hardware devices",
+        module = module2,
         active = True
     )
     db.session.add(assignment2)
 
     assignment3 = SummativeAssignment(
-        title = "Web Application Development",
-        module = module1,
+        title = "Web site design",
+        module = module3,
         active = True
     )
     db.session.add(assignment3)
@@ -151,14 +158,14 @@ try:
     db.session.add(assignment4)
 
     assignment5 = FormativeAssignment(
-        title = "Statements, Expressions and Operators - Quiz",
-        module = module1,
+        title = "Structure of the Internet",
+        module = module3,
         active = True
     )
     db.session.add(assignment5)
 
     assignment6 = FormativeAssignment(
-        title = "Iteration - Quiz",
+        title = "Data types",
         module = module1,
         active = True
     )
