@@ -81,17 +81,23 @@ if User.query.first() is None:
     db.session.add(module2)
 
     q1 = QuestionType1(
-        title = "hi"
+        title = "hi",
+        question_template = "A {} language program is called {} code.",
+        correct_answers = "['high-level', ' source']",
     )
     db.session.add(q1)
 
     q2 = QuestionType1(
-        title = "hello"
+        title = "hello",
+        question_template = "A {} translates source code into {} code.",
+        correct_answers = "['compiler', ' object']",
     )
     db.session.add(q2)
 
     q3 = QuestionType1(
-        title = "world"
+        title = "world",
+        question_template = "An {} analyses each {} of the {} code as it {} the statement.",
+        correct_answers = "['interpreter', 'statement', 'source, 'executes']",
     )
     db.session.add(q3)
 
