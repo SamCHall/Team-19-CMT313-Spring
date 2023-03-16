@@ -129,7 +129,6 @@ class Assignment(db.Model):
         return dict([(item.question_number, item.question) for item in self.question_assignment])
 
     def add_question(self, question, question_no):
-        print(self.id, question, question_no)
         return AssignQuestion.add_question(self.id, question.id, question_no)
 
 
@@ -151,11 +150,11 @@ class SummativeAssignment(Assignment):
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    assignment_id = db.Column(db.Integer, db.ForeignKey("assignment.id"))
-    student_id = db.Column(db.Integer, db.ForeignKey("student.id"))
+    assignment_id = db.Column(db.Integer, db.ForeignKey("assignment.id"), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
 
-    attempt_number = db.Column(db.Integer)
-    mark = db.Column(db.Integer)
+    attempt_number = db.Column(db.Integer, nullable=False)
+    mark = db.Column(db.Integer, nullable=False)
 
     assignment = db.relationship(
         "Assignment",
@@ -171,6 +170,16 @@ class Submission(db.Model):
         "SubmissionAnswers",
         back_populates = "submission"
     )
+
+    def add_question_answer(self, question, answer, mark):
+        question_submission = SubmissionAnswers(
+            question = question,
+            submission = self,
+            submission_answer = answer,
+            question_mark = mark
+        )
+        db.session.add(question_submission)
+        db.session.commit()
 
 
 class SubmissionAnswers(db.Model):

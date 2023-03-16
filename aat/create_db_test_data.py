@@ -88,7 +88,7 @@ try:
     db.session.add(module3)
 
     q1 = QuestionType1(
-        title = "Code 1",
+        title = "Programming Language 1",
         active = True,
         question_template = "A {} language program is called {} code.",
         correct_answers = "['high-level', ' source']",
@@ -97,7 +97,7 @@ try:
     db.session.add(q1)
 
     q2 = QuestionType1(
-        title = "Code 2",
+        title = "Translator 1",
         active = True,
         question_template = "A {} translates source code into {} code.",
         correct_answers = "['compiler', ' object']",
@@ -106,7 +106,7 @@ try:
     db.session.add(q2)
 
     q3 = QuestionType1(
-        title = "Code 3",
+        title = "Running software 1",
         active = True,
         question_template = "An {} analyses each {} of the {} code as it {} the statement.",
         correct_answers = "['interpreter', 'statement', 'source, 'executes']",
@@ -176,6 +176,20 @@ try:
     assignment4.add_question(q1, 1)
     assignment4.add_question(q2, 3)
     assignment4.add_question(q3, 2)
+
+    submission1 = Submission(
+        assignment = assignment4,
+        student = student1,
+        attempt_number = 1,
+        mark = 6
+    )
+    db.session.add(submission1)
+
+    db.session.commit()
+
+    submission1.add_question_answer(q1, "['low-level', 'source']", 1)
+    submission1.add_question_answer(q2, "['compiler', 'object']", 2)
+    submission1.add_question_answer(q2, "['interpreter', 'line', 'source, 'executes']", 3)
 
     db.session.commit()
 except:
