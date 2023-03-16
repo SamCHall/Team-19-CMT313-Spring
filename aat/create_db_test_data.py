@@ -168,4 +168,4 @@ if User.query.first() is None:
     print("Test data has been added to the database.")
 
 else:
-    print("Database alreay contains data, test data has not been added.")
+    print("Database already contains data, test data has not been added.")
