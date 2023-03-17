@@ -46,6 +46,50 @@ try:
     )
     db.session.add(student4)
 
+    student5 = Student(
+        username = "alexandria",
+        password = "alpha",
+        email = "g@example.com",
+        first_name = "Alexandria",
+        surname = "Wolf",
+        cohort = 2013,
+        course = "computing",
+    )
+    db.session.add(student1)
+
+    student6 = Student(
+        username = "jada",
+        password = "alpha",
+        email = "h@example.com",
+        first_name = "Jada",
+        surname = "Le",
+        cohort = 2014,
+        course = "computing"
+    )
+    db.session.add(student2)
+
+    student7 = Student(
+        username = "kristina",
+        password = "alpha",
+        email = "i@example.com",
+        first_name = "Kristina",
+        surname = "Knowles",
+        cohort = 2014,
+        course = "computing"
+    )
+    db.session.add(student3)
+
+    student8 = Student(
+        username = "eesa",
+        password = "alpha",
+        email = "j@example.com",
+        first_name = "Eesa",
+        surname = "Ray",
+        cohort = 2014,
+        course = "computing"
+    )
+    db.session.add(student4)
+
     staff1 = Staff(
         username = "elena",
         password = "alpha",
@@ -76,7 +120,7 @@ try:
     module2 = Module(
         name = "Computer systems",
         code = "COMP2-8",
-        user = [student1, student2, student4, staff1]
+        user = [student1, student2, student3, student4, student5, student6, student7, student8, staff1, staff2]
     )
     db.session.add(module2)
 
@@ -209,6 +253,39 @@ try:
     submission3.add_question_answer(q1, "['high-level', 'object']", 1)
     submission3.add_question_answer(q2, "['interpreter', 'source']", 0)
     submission3.add_question_answer(q2, "['compiler', 'line', 'machine, 'executes']", 1)
+
+    submission4 = Submission(
+        assignment = assignment4,
+        student = student5,
+        attempt_number = 1,
+        mark = 2
+    )
+    db.session.add(submission4)
+    submission4.add_question_answer(q1, "['high', 'object']", 0)
+    submission4.add_question_answer(q2, "['assemblers', 'machine']", 0)
+    submission4.add_question_answer(q2, "['interpreter', 'line', 'object, 'executes']", 2)
+
+    submission5 = Submission(
+        assignment = assignment4,
+        student = student6,
+        attempt_number = 1,
+        mark = 5
+    )
+    db.session.add(submission5)
+    submission5.add_question_answer(q1, "['high-level', 'source']", 2)
+    submission5.add_question_answer(q2, "['interpreter', 'object']", 1)
+    submission5.add_question_answer(q2, "['compiler', 'statement', 'assembly, 'executes']", 2)
+
+    submission6 = Submission(
+        assignment = assignment4,
+        student = student7,
+        attempt_number = 1,
+        mark = 4
+    )
+    db.session.add(submission1)
+    submission6.add_question_answer(q1, "['high-level', 'assembly']", 1)
+    submission6.add_question_answer(q2, "['compiler', 'source']", 1)
+    submission6.add_question_answer(q2, "['compiler', 'statement', 'machine, 'executes']", 2)
 
     db.session.commit()
 except:
