@@ -1,7 +1,7 @@
 from . import db
 from .models import *
 
-try:
+if User.query.first() is None:
     student1 = Student(
         username = "leia",
         password = "alpha",
@@ -171,9 +171,7 @@ try:
     assignment4.add_question(q3, 2)
 
     db.session.commit()
-except:
-    print('''
-Tried to populate the database with test data but an error occured.
-This is likely because data already exists.
-To avoid this error please disable the line which includes 'create_db_test_data' in 'aat/__init__.py'.
-    ''')
+    print("Test data has been added to the database.")
+
+else:
+    print("Database already contains data, test data has not been added.")
