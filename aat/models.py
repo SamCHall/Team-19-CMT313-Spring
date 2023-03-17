@@ -286,7 +286,7 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
         for submission in self.submissions:
             if submission.question_mark in marks:
-                marks[submission.question_mark] = marks[submission.question_mark] + 1
+                marks[submission.question_mark] += 1
             else:
                 marks[submission.question_mark] = 1
         return marks
@@ -305,6 +305,15 @@ class QuestionType1(Question):
 
     def mark(self):
         return 0
+
+    def list_correct_answers(self):
+        return eval(self.correct_answers)
+
+    def list_incorrect_answers(self):
+        return eval(self.incorrect_answers)
+
+    def num_of_blanks():
+        return len(self.list_correct_answers())
 
 
 class QuestionType2(Question):
