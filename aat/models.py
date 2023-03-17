@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import app, db
 import abc
+import statistics
 
 
 # Tables for many to many relationships links
@@ -276,6 +277,19 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
     def get_assignments(self):
         return [item.assignment for item in self.question_assignment]
+
+    def average_mark(self):
+        return statistics.mean([submission.question_mark for submission in self.submissions])
+
+    def mark_dist(self):
+        marks = {}
+
+        for submission in self.submissions:
+            if submission.question_mark in marks:
+                marks[submission.question_mark] = marks[submission.question_mark] + 1
+            else:
+                marks[submission.question_mark] = 1
+        return marks
 
 
 class QuestionType1(Question):
