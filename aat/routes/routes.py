@@ -1,7 +1,7 @@
 from flask import render_template, url_for
-
+from flask_login import current_user, login_required
 from .. import app, db
-from ..models import Question, QuestionType1, FormativeAssignment, Module, Assignment, AssignQuestion
+from ..models import Question, QuestionType1, FormativeAssignment, Module, Assignment, AssignQuestion, Staff
 from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
 
@@ -9,26 +9,30 @@ from ..forms.question_type_1 import QuestonType1Form
 def home():
     return render_template('home.html', title='Home')
 
+@login_required
 @app.route("/create-formative", methods=['GET', 'POST'])
 def create_assessment():
-    form = CreateFormAss()
-    form.add_question.query = Question.query
-    form.module_id.query = Module.query
+    if Staff.query.get(current_user.get_id()) != None:
+        form = CreateFormAss()
+        form.add_question.query = Question.query
+        form.module_id.query = Module.query
 
-    if form.validate_on_submit():
-        assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data, module = form.module_id.data)
-        db.session.add(assignment)
-        db.session.commit()
+        if form.validate_on_submit():
+            assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data, module = form.module_id.data)
+            db.session.add(assignment)
+            db.session.commit()
 
-        question_list = []
-        for i in range(len(form.add_question.data)):
-            question_list.append(form.add_question.data[i])
+            question_list = []
+            for i in range(len(form.add_question.data)):
+                question_list.append(form.add_question.data[i])
 
-        question_no = 0
-        for question in question_list:
-            question_no += 1
-            FormativeAssignment.add_question(assignment, question, question_no)
-    return render_template('create_formative.html', title='Create Assessment', form = form)
+            question_no = 0
+            for question in question_list:
+                question_no += 1
+                FormativeAssignment.add_question(assignment, question, question_no)
+        return render_template('create_formative.html', title='Create Assessment', form = form)
+    else:
+        return 'Access Denied'
 
 @app.route('/staff/question/create', methods=['GET', 'POST'])
 def create_question():
@@ -47,6 +51,7 @@ def create_question():
         db.session.commit()
 
     return render_template('create-question.html', qt1_form=qt1_form)
+
 
 @app.route("/assessments", methods=['GET'])
 def view_assessments():
