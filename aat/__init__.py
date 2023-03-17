@@ -57,4 +57,4 @@ from . import models
 with app.app_context():
     db.create_all()
     # Comment/uncomment the below line to enable/disable test content generation for the database.
-    # from . import create_db_test_data
+    from . import create_db_test_data

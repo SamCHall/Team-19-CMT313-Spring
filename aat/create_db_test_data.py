@@ -1,7 +1,7 @@
 from . import db
 from .models import *
 
-try:
+if User.query.first() is None:
     student1 = Student(
         username = "rtjst",
         password = "alpha",
@@ -81,17 +81,23 @@ try:
     db.session.add(module2)
 
     q1 = QuestionType1(
-        title = "hi"
+        title = "hi",
+        question_template = "A {} language program is called {} code.",
+        correct_answers = "['high-level', ' source']",
     )
     db.session.add(q1)
 
     q2 = QuestionType1(
-        title = "hello"
+        title = "hello",
+        question_template = "A {} translates source code into {} code.",
+        correct_answers = "['compiler', ' object']",
     )
     db.session.add(q2)
 
     q3 = QuestionType1(
-        title = "world"
+        title = "world",
+        question_template = "An {} analyses each {} of the {} code as it {} the statement.",
+        correct_answers = "['interpreter', 'statement', 'source, 'executes']",
     )
     db.session.add(q3)
 
@@ -159,9 +165,7 @@ try:
     assignment1.add_question(q3, 2)
 
     db.session.commit()
-except:
-    print('''
-Tried to populate the database with test data but an error occured.
-This is likely because data already exists.
-To avoid this error please disable the line which includes 'create_db_test_data' in 'aat/__init__.py'.
-    ''')
+    print("Test data has been added to the database.")
+
+else:
+    print("Database already contains data, test data has not been added.")
