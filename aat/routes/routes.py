@@ -1,8 +1,8 @@
-from flask import render_template, url_for
+from flask import render_template, url_for, session
 from flask_login import current_user, login_required
 from .. import app, db
-from ..models import Question, QuestionType1, FormativeAssignment, Module, Assignment, AssignQuestion, Staff
-from ..forms.formative_forms import CreateFormAss
+from ..models import Question, QuestionType1, FormativeAssignment, Module, Assignment, AssignQuestion, Staff, QuestionType2
+from ..forms.formative_forms import CreateFormAss, AnswerFormAss
 from ..forms.question_type_1 import QuestonType1Form
 
 @app.route("/")
@@ -59,9 +59,10 @@ def view_assessments():
     modules = Module.query.all()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments, modules = modules)
 
-@app.route("/view-assessment/<int:assessment_id>")
-def view_assessment(assessment_id):
+@app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
+def answer_assessment(assessment_id):
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+    form = AnswerFormAss()
     
-    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
+    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title, form=form)

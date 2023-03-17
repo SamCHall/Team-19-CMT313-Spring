@@ -287,6 +287,10 @@ class QuestionType1(Question):
 class QuestionType2(Question):
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
     question_text = db.Column(db.String)
+    option1 = db.Column(db.String)
+    option2 = db.Column(db.String)
+    option3 = db.Column(db.String)
+    option4 = db.Column(db.String)
 
     answer = db.Column(db.String)
 

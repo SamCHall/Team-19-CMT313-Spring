@@ -5,6 +5,8 @@
         {{ assignment.title }}
     </h1>
 
+    <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
+    {{form.csrf_token}}
     {% for question in questions %}
         <div id="question">
             {% if question.question_type == "question_type1" %}
@@ -22,18 +24,33 @@
             </div>
 
             {% else %}
-
+            <div>
                 <h2 id="question_title">
                     {{ question.title }}
-                </div>
+                </h2>
 
                 <div id="question_text">
-                    {{ question.question_text }}
+                    {{ question.question_text}}
                 </div>
-
+                
+                <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}">
+                <div>
+                  <label id="option1_label">
+                    <input type="radio" name="{{loop.index}}" id="option1" value="{{ question.option1 }}"> {{ question.option1 }}</label>
+                  <label id="option2_label">
+                    <input type="radio" name="{{loop.index}}" id="option2" value ="{{ question.option2 }}"> {{ question.option2 }}</label>
+                  <label id="option3_label">
+                    <input type="radio" name="{{loop.index}}" id="option3" value ="{{ question.option3 }}"> {{ question.option3 }}</label>
+                  <label id="option4_label">
+                    <input type="radio" name="{{loop.index}}" id="option4" value ="{{ question.option4 }}"> {{ question.option4 }}</label>
+                <input type="submit" id="Submit" value="Submit">
+            </div>    
+            </form>
+            
+            
             {% endif %}
             
         </div>
     {% endfor %}
-    
+    </form>
 {% endblock content %}

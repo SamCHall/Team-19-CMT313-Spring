@@ -108,17 +108,32 @@ if User.query.first() is None:
     db.session.add(q3)
 
     q4 = QuestionType2(
-        title = "hi2"
+        title = "hi2",
+        option1 = "option 1",
+        option2 = "option 2",
+        option3 = "option 3",
+        option4 = "option 4",
+        answer = "option 3"
     )
     db.session.add(q4)
 
     q5 = QuestionType2(
-        title = "hello2"
+        title = "hello2",
+        option1 = "option 1",
+        option2 = "option 2",
+        option3 = "option 3",
+        option4 = "option 4",
+        answer = "option 3"
     )
     db.session.add(q5)
 
     q6 = QuestionType2(
-        title = "world2"
+        title = "world2",
+        option1 = "option 1",
+        option2 = "option 2",
+        option3 = "option 3",
+        option4 = "option 4",
+        answer = "option 3"
     )
     db.session.add(q6)
 
