@@ -5,8 +5,6 @@
         {{ assignment.title }}
     </h1>
 
-    <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
-    {{form.csrf_token}}
     {% for question in questions %}
         <div id="question">
             {% if question.question_type == "question_type1" %}
@@ -14,14 +12,18 @@
             <h2 id="question_title">
                 {{ question.title }}
             </div>
+            <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
+            <label for="{{loop.index}}_answer">
+                {{ question.question_template|safe }}
+            </label>
 
-            <div id="question_template">
-                {{ question.question_template }}
+            <div id="type_1_options">
+                    {% for option in question.options %}
+                        <option draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
+                    {% endfor %}
             </div>
-
-            <div id="question_options">
-                {{ question.options }}
-            </div>
+            <button type="submit">Submit</button>
+            </form>
 
             {% else %}
             <div>
@@ -33,7 +35,7 @@
                     {{ question.question_text}}
                 </div>
                 
-                <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}">
+                <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
                 <div>
                   <label id="option1_label">
                     <input type="radio" name="{{loop.index}}" id="option1" value="{{ question.option1 }}"> {{ question.option1 }}</label>
@@ -52,5 +54,4 @@
             
         </div>
     {% endfor %}
-    </form>
 {% endblock content %}

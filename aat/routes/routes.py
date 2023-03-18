@@ -1,3 +1,5 @@
+import random
+import ast
 from flask import render_template, url_for, session
 from flask_login import current_user, login_required
 from .. import app, db
@@ -64,5 +66,18 @@ def answer_assessment(assessment_id):
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
     form = AnswerFormAss()
+    
+    for question in questions:
+        if question.question_type == "question_type1":
+            question.question_template = str(question.question_template).replace("{}","<span class=\"dropzone\" id=\"question{{loop.index}}\"></span>")
+
+            a = ast.literal_eval(question.correct_answers)
+            b = ast.literal_eval(question.incorrect_answers)
+            c = a + b
+            print(c)
+            print(type(c))
+            # Randomises the order of options from correct_answers and incorrect_answers
+            question.options = random.sample(c, len(c))
+            print(question.options)
     
     return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title, form=form)
