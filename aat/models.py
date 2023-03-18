@@ -173,21 +173,32 @@ class Submission(db.Model):
     )
 
     def add_question_answer(self, question, answer, mark):
-        question_submission = SubmissionAnswers(
-            question = question,
-            submission = self,
-            submission_answer = answer,
-            question_mark = mark
-        )
-        db.session.add(question_submission)
-        db.session.commit()
+        if question.question_type == "question_type1":
+            question_submission = SubmissionType1(
+                question = question,
+                submission = self,
+                submission_answer = answer,
+                question_mark = mark
+            )
+            db.session.add(question_submission)
+            db.session.commit()
+
+        elif question.question_type == "question_type2":
+            question_submission = SubmissionType2(
+                question = question,
+                submission = self,
+                submission_answer = answer,
+                question_mark = mark
+            )
+            db.session.add(question_submission)
+            db.session.commit()
 
 
 class SubmissionAnswers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey("question.id"), nullable=False)
     submission_id = db.Column(db.Integer, db.ForeignKey("submission.id"), nullable=False)
-    submission_answer = db.Column(db.String, nullable=False)
+    submission_question_type = db.Column(db.String)
     question_mark = db.Column(db.Integer, nullable=False)
 
     question = db.relationship(
@@ -199,6 +210,32 @@ class SubmissionAnswers(db.Model):
         "Submission",
         back_populates = "submission_answers"
     )
+
+    __mapper_args__ = {
+        "polymorphic_on": "submission_question_type",
+        "polymorphic_identity": "submission",
+    }
+
+
+class SubmissionType1(SubmissionAnswers):
+    id = db.Column(db.Integer, db.ForeignKey("submission_answers.id"), primary_key=True)
+    submission_answer = db.Column(db.String, nullable=False)
+
+    def list_submission(self):
+        return eval(self.submission_answer)
+
+    __mapper_args__ = {
+        "polymorphic_identity": "submission_type1",
+    }
+
+
+class SubmissionType2(SubmissionAnswers):
+    id = db.Column(db.Integer, db.ForeignKey("submission_answers.id"), primary_key=True)
+    submission_answer = db.Column(db.String, nullable=False)
+
+    __mapper_args__ = {
+        "polymorphic_identity": "submission_type2",
+    }
 
 
 class AssignQuestion(db.Model):

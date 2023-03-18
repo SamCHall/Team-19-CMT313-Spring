@@ -282,7 +282,7 @@ if User.query.first() is None:
         attempt_number = 1,
         mark = 4
     )
-    db.session.add(submission1)
+    db.session.add(submission6)
     submission6.add_question_answer(q1, "['high-level', 'assembly']", 1)
     submission6.add_question_answer(q2, "['compiler', 'source']", 1)
     submission6.add_question_answer(q3, "['compiler', 'statement', 'machine, 'executes']", 2)
