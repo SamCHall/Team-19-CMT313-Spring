@@ -71,13 +71,14 @@ def answer_assessment(assessment_id):
         if question.question_type == "question_type1":
             question.question_template = str(question.question_template).replace("{}","<span class=\"dropzone\" id=\"question{{loop.index}}\"></span>")
 
+            # Takes the string literal and converts it to a list of strings
             a = ast.literal_eval(question.correct_answers)
             b = ast.literal_eval(question.incorrect_answers)
+
+            # Making both lists into one
             c = a + b
-            print(c)
-            print(type(c))
+
             # Randomises the order of options from correct_answers and incorrect_answers
             question.options = random.sample(c, len(c))
-            print(question.options)
     
     return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title, form=form)
