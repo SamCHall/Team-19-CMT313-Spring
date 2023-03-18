@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import app, db
 import abc
+import collections
 import statistics
 
 
@@ -357,6 +358,29 @@ class QuestionType1(Question):
 
     def num_of_blanks(self):
         return len(self.list_correct_answers())
+
+    def num_correct_for_blank(self, blank_no):
+        correct = 0
+        for submission in self.submissions:
+            if submission.list_submission()[blank_no] == self.list_correct_answers()[blank_no]:
+                correct += 1
+        return correct
+
+    def correct_precentage_for_black(self, blank_no):
+        return 100 * self.num_correct_for_blank(blank_no) / len(self.submissions)
+
+    def answer_occur_for_blank(self, blank_no):
+        answers = {}
+        for submission in self.submissions:
+            if (answer:= submission.list_submission()[blank_no]) in answers.keys():
+                answers[answer] += 1
+            else:
+                answers[answer] = 1
+        print(answers)
+        # https://stackoverflow.com/a/11230132
+        sorted_answers = collections.Counter(answers).most_common()
+        print(sorted_answers)
+        return sorted_answers
 
 
 class QuestionType2(Question):
