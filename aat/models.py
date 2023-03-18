@@ -291,6 +291,12 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
                 marks[submission.question_mark] = 1
         return marks
 
+    def lowest_mark(self):
+        return min(list(self.mark_dist().keys()))
+
+    def highest_mark(self):
+        return max(list(self.mark_dist().keys()))
+
 
 class QuestionType1(Question):
     """Fill in the blank."""
@@ -312,7 +318,7 @@ class QuestionType1(Question):
     def list_incorrect_answers(self):
         return eval(self.incorrect_answers)
 
-    def num_of_blanks():
+    def num_of_blanks(self):
         return len(self.list_correct_answers())
 
 

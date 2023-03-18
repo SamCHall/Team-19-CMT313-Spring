@@ -153,7 +153,7 @@ if User.query.first() is None:
         title = "Running software 1",
         active = True,
         question_template = "An {} analyses each {} of the {} code as it {} the statement.",
-        correct_answers = "['interpreter', 'statement', 'source, 'executes']",
+        correct_answers = "['interpreter', 'statement', 'source', 'executes']",
         incorrect_answers = "['compiler', 'assemblers', 'machine', 'object', 'assembly', 'line']"
     )
     db.session.add(q3)
@@ -230,7 +230,7 @@ if User.query.first() is None:
     db.session.add(submission1)
     submission1.add_question_answer(q1, "['low-level', 'source']", 1)
     submission1.add_question_answer(q2, "['compiler', 'object']", 2)
-    submission1.add_question_answer(q2, "['interpreter', 'line', 'source, 'executes']", 3)
+    submission1.add_question_answer(q3, "['interpreter', 'line', 'source, 'executes']", 3)
 
     submission2 = Submission(
         assignment = assignment4,
@@ -241,7 +241,7 @@ if User.query.first() is None:
     db.session.add(submission2)
     submission2.add_question_answer(q1, "['high-level', 'source']", 2)
     submission2.add_question_answer(q2, "['compiler', 'object']", 2)
-    submission2.add_question_answer(q2, "['interpreter', 'statement', 'source, 'executes']", 4)
+    submission2.add_question_answer(q3, "['interpreter', 'statement', 'source, 'executes']", 4)
 
     submission3 = Submission(
         assignment = assignment4,
@@ -252,7 +252,7 @@ if User.query.first() is None:
     db.session.add(submission1)
     submission3.add_question_answer(q1, "['high-level', 'object']", 1)
     submission3.add_question_answer(q2, "['interpreter', 'source']", 0)
-    submission3.add_question_answer(q2, "['compiler', 'line', 'machine, 'executes']", 1)
+    submission3.add_question_answer(q3, "['compiler', 'line', 'machine, 'executes']", 1)
 
     submission4 = Submission(
         assignment = assignment4,
@@ -263,7 +263,7 @@ if User.query.first() is None:
     db.session.add(submission4)
     submission4.add_question_answer(q1, "['high', 'object']", 0)
     submission4.add_question_answer(q2, "['assemblers', 'machine']", 0)
-    submission4.add_question_answer(q2, "['interpreter', 'line', 'object, 'executes']", 2)
+    submission4.add_question_answer(q3, "['interpreter', 'line', 'object, 'executes']", 2)
 
     submission5 = Submission(
         assignment = assignment4,
@@ -274,7 +274,7 @@ if User.query.first() is None:
     db.session.add(submission5)
     submission5.add_question_answer(q1, "['high-level', 'source']", 2)
     submission5.add_question_answer(q2, "['interpreter', 'object']", 1)
-    submission5.add_question_answer(q2, "['compiler', 'statement', 'assembly, 'executes']", 2)
+    submission5.add_question_answer(q3, "['compiler', 'statement', 'assembly, 'executes']", 2)
 
     submission6 = Submission(
         assignment = assignment4,
@@ -285,7 +285,7 @@ if User.query.first() is None:
     db.session.add(submission1)
     submission6.add_question_answer(q1, "['high-level', 'assembly']", 1)
     submission6.add_question_answer(q2, "['compiler', 'source']", 1)
-    submission6.add_question_answer(q2, "['compiler', 'statement', 'machine, 'executes']", 2)
+    submission6.add_question_answer(q3, "['compiler', 'statement', 'machine, 'executes']", 2)
 
     db.session.commit()
     print("Test data has been added to the database.")
