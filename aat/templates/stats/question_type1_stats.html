@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ question.title }} - Stats</h1>
+
+<!-- Include html file with code to display question here -->
+
+<h2>Overall performance</h2>
+
+<ul>
+    <li>Number of submissions: {{ question.submissions | length }}</li>
+    <li>Number of blanks: {{ question.num_of_blanks() }}</li>
+    <li>Average Mark: {{ question.average_mark() }}</li>
+    <li>Lowest Mark: {{ question.lowest_mark() }}</li>
+    <li>Highest Mark: {{ question.highest_mark() }}</li>
+</ul>
+
+{% endblock content %}
