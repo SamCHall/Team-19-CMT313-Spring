@@ -69,6 +69,8 @@ def answer_assessment(assessment_id):
     
     for question in questions:
         if question.question_type == "question_type1":
+
+            # Replaces {} in the template with a dropzone
             question.question_template = str(question.question_template).replace("{}","<span class=\"dropzone\" id=\"question{{loop.index}}\"></span>")
 
             # Takes the string literal and converts it to a list of strings

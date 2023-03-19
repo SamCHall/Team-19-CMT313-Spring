@@ -3,10 +3,14 @@
 {% block content %}
     {% for assignment in assignments %}
         {% if assignment.active == True %}
-        <div id="assignment_information">
-            <a href="{{ url_for('answer_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
-            {{ assignment.module }}
-        </div>
+            {% for item in assignment.module.get_students() %}
+                {% if current_user.id == item.id %}
+                    <div id="assignment_information">
+                        <a href="{{ url_for('answer_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                        {{ assignment.module }}
+                    </div>
+                {% endif %}
+            {% endfor %}
         {% endif %}
     {% endfor %}
 {% endblock content %}

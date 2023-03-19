@@ -14,7 +14,7 @@
             </div>
             <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
             <label for="{{loop.index}}_answer">
-                {{ question.question_template|safe }}
+               <p>{{ question.question_template|safe }}</p> 
             </label>
 
             <div id="type_1_options">
