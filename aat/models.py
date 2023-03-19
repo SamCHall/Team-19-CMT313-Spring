@@ -327,7 +327,9 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
                 marks[submission.question_mark] += 1
             else:
                 marks[submission.question_mark] = 1
-        return marks
+
+        sorted_by_mark = dict(sorted(marks.items()))
+        return sorted_by_mark
 
     def lowest_mark(self):
         return min(list(self.mark_dist().keys()))

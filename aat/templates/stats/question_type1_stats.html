@@ -15,6 +15,27 @@
     <li>Highest Mark: {{ question.highest_mark() }}</li>
 </ul>
 
+{% set mark_dist = question.mark_dist() %}
+
+<div id="overallGraph" class="graph"></div>
+
+<script>
+    let layout = {title: 'Mark distribution'}
+    let config = {
+        displayModeBar: false,
+        responsive: true
+    }
+    let data = [
+        {
+            x : {{ mark_dist.keys() | list }},
+            y : {{ mark_dist.values() | list }},
+            type : 'bar'
+        }
+    ];
+    overallGraph = document.getElementById('overallGraph');
+    Plotly.newPlot(overallGraph, data, layout, config)
+</script>
+
 <h2>Each blank word</h2>
 {% for count in range(0, question.num_of_blanks()) %}
 {% set correct_answer = question.list_correct_answers()[count] %}
