@@ -68,5 +68,28 @@
         {% endfor %}
     </table>
 </figure>
+
+<div id="blank{{ count }}Graph" class="graph"></div>
+
+{% set answer_dict = dict(answers) %}
+<script>
+{
+    let layout = {title: 'Blank {{ count+1 }} - {{ correct_answer }}'}
+    let config = {
+        displayModeBar: false,
+        responsive: true
+    }
+    let data = [
+        {
+            x : {{ answer_dict.keys() | list | safe }},
+            y : {{ answer_dict.values() | list }},
+            type : 'bar'
+        }
+    ];
+    graph = document.getElementById('blank{{ count }}Graph');
+    Plotly.newPlot(graph, data, layout, config)
+}
+</script>
+
 {% endfor %}
 {% endblock content %}
