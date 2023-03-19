@@ -7,14 +7,16 @@ from ..models import Question, QuestionType1, QuestionType2
 @app.route('/question/<int:id>/stats')
 @login_required
 def question_stats(id):
-    if current_user.user_type == "staff":
-        question = Question.query.filter_by(id=id).first_or_404()
-        if isinstance(question, type(QuestionType1())):
+    if current_user.user_type != "staff":
+        abort(403, description="This page can only be accessed by staff.")
+
+    question = Question.query.filter_by(id=id).first_or_404()
+
+    match question.question_type:
+        case "question_type1":
             return render_template('stats/question_type1_stats.html', title=question.title, question=question)
 
-        elif isinstance(question, type(QuestionType2())):
+        case "question_type2":
             abort(501)
-        else:
-            abort(500)
 
-    abort(403, description="This page can only be accessed by staff.")
+    abort(500)
