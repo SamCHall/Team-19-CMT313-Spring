@@ -46,6 +46,50 @@ if User.query.first() is None:
     )
     db.session.add(student4)
 
+    student5 = Student(
+        username = "alexandria",
+        password = "alpha",
+        email = "g@example.com",
+        first_name = "Alexandria",
+        surname = "Wolf",
+        cohort = 2013,
+        course = "computing",
+    )
+    db.session.add(student1)
+
+    student6 = Student(
+        username = "jada",
+        password = "alpha",
+        email = "h@example.com",
+        first_name = "Jada",
+        surname = "Le",
+        cohort = 2014,
+        course = "computing"
+    )
+    db.session.add(student2)
+
+    student7 = Student(
+        username = "kristina",
+        password = "alpha",
+        email = "i@example.com",
+        first_name = "Kristina",
+        surname = "Knowles",
+        cohort = 2014,
+        course = "computing"
+    )
+    db.session.add(student3)
+
+    student8 = Student(
+        username = "eesa",
+        password = "alpha",
+        email = "j@example.com",
+        first_name = "Eesa",
+        surname = "Ray",
+        cohort = 2014,
+        course = "computing"
+    )
+    db.session.add(student4)
+
     staff1 = Staff(
         username = "elena",
         password = "alpha",
@@ -76,12 +120,19 @@ if User.query.first() is None:
     module2 = Module(
         name = "Computer systems",
         code = "COMP2-8",
-        user = [student1, student2, student4, staff1]
+        user = [student1, student2, student3, student4, student5, student6, student7, student8, staff1, staff2]
     )
     db.session.add(module2)
 
+    module3 = Module(
+        name = "The Internet",
+        code = "COMP2-9",
+        user = [student1, student2, student4, staff1]
+    )
+    db.session.add(module3)
+
     q1 = QuestionType1(
-        title = "Code 1",
+        title = "Programming Language 1",
         active = True,
         question_template = "A {} language program is called {} code.",
         correct_answers = "['high-level', ' source']",
@@ -90,7 +141,7 @@ if User.query.first() is None:
     db.session.add(q1)
 
     q2 = QuestionType1(
-        title = "Code 2",
+        title = "Translator 1",
         active = True,
         question_template = "A {} translates source code into {} code.",
         correct_answers = "['compiler', ' object']",
@@ -99,10 +150,10 @@ if User.query.first() is None:
     db.session.add(q2)
 
     q3 = QuestionType1(
-        title = "Code 3",
+        title = "Running software 1",
         active = True,
         question_template = "An {} analyses each {} of the {} code as it {} the statement.",
-        correct_answers = "['interpreter', 'statement', 'source, 'executes']",
+        correct_answers = "['interpreter', 'statement', 'source', 'executes']",
         incorrect_answers = "['compiler', 'assemblers', 'machine', 'object', 'assembly', 'line']"
     )
     db.session.add(q3)
@@ -138,22 +189,22 @@ if User.query.first() is None:
     db.session.add(q6)
 
     assignment1 = SummativeAssignment(
-        title = "Html & Css Based Assessment ",
+        title = "Procedures and functions",
         module = module1,
         active = True
     )
     db.session.add(assignment1)
 
     assignment2 = SummativeAssignment(
-        title = "Programming Challenges",
-        module = module1,
+        title = "Hardware devices",
+        module = module2,
         active = True
     )
     db.session.add(assignment2)
 
     assignment3 = SummativeAssignment(
-        title = "Web Application Development",
-        module = module1,
+        title = "Web site design",
+        module = module3,
         active = True
     )
     db.session.add(assignment3)
@@ -166,14 +217,14 @@ if User.query.first() is None:
     db.session.add(assignment4)
 
     assignment5 = FormativeAssignment(
-        title = "Statements, Expressions and Operators - Quiz",
-        module = module1,
+        title = "Structure of the Internet",
+        module = module3,
         active = True
     )
     db.session.add(assignment5)
 
     assignment6 = FormativeAssignment(
-        title = "Iteration - Quiz",
+        title = "Data types",
         module = module1,
         active = True
     )
@@ -184,6 +235,72 @@ if User.query.first() is None:
     assignment4.add_question(q1, 1)
     assignment4.add_question(q2, 3)
     assignment4.add_question(q3, 2)
+
+    submission1 = Submission(
+        assignment = assignment4,
+        student = student1,
+        attempt_number = 1,
+        mark = 6
+    )
+    db.session.add(submission1)
+    submission1.add_question_answer(q1, "['low-level', 'source']", 1)
+    submission1.add_question_answer(q2, "['compiler', 'object']", 2)
+    submission1.add_question_answer(q3, "['interpreter', 'line', 'source', 'executes']", 3)
+
+    submission2 = Submission(
+        assignment = assignment4,
+        student = student2,
+        attempt_number = 1,
+        mark = 8
+    )
+    db.session.add(submission2)
+    submission2.add_question_answer(q1, "['high-level', 'source']", 2)
+    submission2.add_question_answer(q2, "['compiler', 'object']", 2)
+    submission2.add_question_answer(q3, "['interpreter', 'statement', 'source', 'executes']", 4)
+
+    submission3 = Submission(
+        assignment = assignment4,
+        student = student4,
+        attempt_number = 1,
+        mark = 2
+    )
+    db.session.add(submission1)
+    submission3.add_question_answer(q1, "['high-level', 'object']", 1)
+    submission3.add_question_answer(q2, "['interpreter', 'source']", 0)
+    submission3.add_question_answer(q3, "['compiler', 'line', 'machine', 'executes']", 1)
+
+    submission4 = Submission(
+        assignment = assignment4,
+        student = student5,
+        attempt_number = 1,
+        mark = 2
+    )
+    db.session.add(submission4)
+    submission4.add_question_answer(q1, "['high', 'object']", 0)
+    submission4.add_question_answer(q2, "['assemblers', 'machine']", 0)
+    submission4.add_question_answer(q3, "['interpreter', 'line', 'object', 'executes']", 2)
+
+    submission5 = Submission(
+        assignment = assignment4,
+        student = student6,
+        attempt_number = 1,
+        mark = 5
+    )
+    db.session.add(submission5)
+    submission5.add_question_answer(q1, "['high-level', 'source']", 2)
+    submission5.add_question_answer(q2, "['interpreter', 'object']", 1)
+    submission5.add_question_answer(q3, "['compiler', 'statement', 'assembly', 'executes']", 2)
+
+    submission6 = Submission(
+        assignment = assignment4,
+        student = student7,
+        attempt_number = 1,
+        mark = 4
+    )
+    db.session.add(submission6)
+    submission6.add_question_answer(q1, "['high-level', 'assembly']", 1)
+    submission6.add_question_answer(q2, "['compiler', 'source']", 1)
+    submission6.add_question_answer(q3, "['compiler', 'statement', 'machine', 'executes']", 2)
 
     db.session.commit()
     print("Test data has been added to the database.")

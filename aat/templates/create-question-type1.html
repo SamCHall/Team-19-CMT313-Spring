@@ -2,7 +2,7 @@
 
 {% block content %}
 <section id="createQuestionType1">
-    <form id="qt1-form" action="{{ url_for('create_question') }}" method="post" autocomplete="off">
+    <form id="qt1-form" action="{{ url_for('create_question_type1') }}" method="post" autocomplete="off">
         <input autocomplete="false" name="hidden" type="text" style="display:none;">
         {{ qt1_form.hidden_tag() }}
         <!-- Title -->

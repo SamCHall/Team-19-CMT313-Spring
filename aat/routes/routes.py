@@ -3,9 +3,10 @@ import ast
 from flask import render_template, url_for, session
 from flask_login import current_user, login_required
 from .. import app, db
-from ..models import Question, QuestionType1, FormativeAssignment, Module, Assignment, AssignQuestion, Staff, QuestionType2
-from ..forms.formative_forms import CreateFormAss, AnswerFormAss
+from ..models import *
+from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
+from ..forms.question_type_2 import QuestonType2Form
 
 @app.route("/")
 def home():
@@ -36,8 +37,8 @@ def create_assessment():
     else:
         return 'Access Denied'
 
-@app.route('/staff/question/create', methods=['GET', 'POST'])
-def create_question():
+@app.route('/staff/question/create/type1', methods=['GET', 'POST'])
+def create_question_type1():
     qt1_form = QuestonType1Form()
     if qt1_form.validate_on_submit():
         correct_answers = []
@@ -52,34 +53,31 @@ def create_question():
         db.session.add(qt1)
         db.session.commit()
 
-    return render_template('create-question.html', qt1_form=qt1_form)
+    return render_template('create-question-type1.html', qt1_form=qt1_form)
 
+@app.route("/staff/question/create/type2", methods=["POST", "GET"])
+def create_question_type2():
+    form = QuestonType2Form()
+    if form.validate_on_submit():
+        question_text=form.title.data
+        op1=form.option1.data
+        op2=form.option2.data
+        op3=form.option3.data
+        op4=form.option4.data
+        correctOption=form.correctOption.data
 
-@app.route("/assessments", methods=['GET'])
-def view_assessments():
-    assignments = Assignment.query.all()
-    return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
+        qt2 = QuestionType2(
+            question_text=question_text,
+            title=question_text,
+            option1=op1,
+            option2=op2,
+            option3=op3,
+            option4=op4,
+            question_type="question_type2",
+            correctOption=correctOption
+        )
 
-@app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
-def answer_assessment(assessment_id):
-    assignment = Assignment.query.get_or_404(assessment_id)
-    questions = AssignQuestion.get_assignment_questions(assessment_id).values()
-    form = AnswerFormAss()
-    
-    for question in questions:
-        if question.question_type == "question_type1":
+        db.session.add(qt2)
+        db.session.commit()
 
-            # Replaces {} in the template with a dropzone
-            question.question_template = str(question.question_template).replace("{}","<span class=\"dropzone\" id=\"question{{loop.index}}\"></span>")
-
-            # Takes the string literal and converts it to a list of strings
-            a = ast.literal_eval(question.correct_answers)
-            b = ast.literal_eval(question.incorrect_answers)
-
-            # Making both lists into one
-            c = a + b
-
-            # Randomises the order of options from correct_answers and incorrect_answers
-            question.options = random.sample(c, len(c))
-    
-    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title, form=form)
+    return render_template('create-question-type2.html', title='Create', form=form)

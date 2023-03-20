@@ -9,6 +9,13 @@ bundles = {
         output='gen/script.%(version)s.js'
     ),
 
+    'graph': Bundle(
+        'js/plotly-2.18.2.min.js',
+        'js/display-graph.js',
+        filters='jsmin',
+        output='gen/graph.%(version)s.js'
+    ),
+
     'css': Bundle(
         'scss/main.scss', # Do not add CSS files here. See instuctions in the SCSS folder.
         filters='libsass',
