@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% assets "graph" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<h1>{{ question.title }} - Stats</h1>
+
+{# Include html file with code to display question here #}
+
+<h2>Overall performance</h2>
+{# Stats for the question as a whole #}
+<ul>
+    <li>Number of submissions: {{ question.submissions | length }}</li>
+    <li>Number of blanks: {{ question.num_of_blanks() }}</li>
+    <li>Average Mark: {{ question.average_mark() }}</li>
+    <li>Lowest Mark: {{ question.lowest_mark() }}</li>
+    <li>Highest Mark: {{ question.highest_mark() }}</li>
+</ul>
+
+{% set mark_dist = question.mark_dist() %}
+
+<div id="overallGraph" class="graph"></div>
+
+<script type="text/javascript">
+{
+    let data = [
+        {
+            x : {{ mark_dist.keys() | list }},
+            y : {{ mark_dist.values() | list }},
+            type : 'bar'
+        }
+    ];
+    displayGraph('overallGraph', 'Mark distribution', data)
+}
+</script>
+
+<h2>Each blank word</h2>
+{# Stats foreach blank word #}
+
+{% for count in range(0, question.num_of_blanks()) %}
+{# Setting variables #}
+{% set correct_answer = question.list_correct_answers()[count] %}
+{% set answers = question.answer_occur_for_blank(count) %}
+
+{# Removing the correct answer to get a list of only incorrect answers #}
+{% set incorrect_answers = answers | reject('equalto', (correct_answer, question.num_correct_for_blank(count))) | list %}
+
+<h3>Blank {{ count+1 }} - {{ correct_answer }}</h3>
+<ul>
+    <li>Number of correct submissions: {{ question.num_correct_for_blank(count) }}</li>
+    <li>Precentage of correct submissions: {{ question.correct_precentage_for_blank(count) }}</li>
+    {# Display the incorrect answers if there are any #}
+    {% if incorrect_answers | length > 0 %}
+    <li>Incorrect answers given:
+        {% for answer in incorrect_answers %}
+        {{ answer[0] }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    </li>
+    {% endif %}
+</ul>
+<figure>
+    <figcaption>Table of answers with occurrences</figcaption>
+    <table>
+        <tr>
+            <td>Answer</td>
+            <td>Occurrences</td>
+        </tr>
+        {% for answer in answers %}
+        <tr>
+            <td>{{ answer[0] }}</td>
+            <td>{{ answer[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</figure>
+
+<div id="blank{{ count }}Graph" class="graph"></div>
+
+{% set answer_dict = dict(answers) %}
+<script type="text/javascript">
+{
+    let data = [
+        {
+            x : {{ answer_dict.keys() | list | safe }},
+            y : {{ answer_dict.values() | list }},
+            type : 'bar'
+        }
+    ];
+    displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - {{ correct_answer }}', data)
+}
+</script>
+
+{% endfor %}
+{% endblock content %}
