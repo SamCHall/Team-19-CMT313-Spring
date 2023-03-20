@@ -320,6 +320,12 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         return statistics.mean([submission.question_mark for submission in self.submissions])
 
     def mark_dist(self):
+        """
+        Returns a dictionary for the mark distrubition of the question where keys and values are as follows:
+            keys: the mark given
+            value: the number of submissions for a given mark
+        """
+
         marks = {}
 
         for submission in self.submissions:
@@ -351,15 +357,19 @@ class QuestionType1(Question):
         return 0
 
     def list_correct_answers(self):
+        """ Method to convert the string representation of the list in the db to a list """
         return eval(self.correct_answers)
 
     def list_incorrect_answers(self):
+        """ Method to convert the string representation of the list in the db to a list """
         return eval(self.incorrect_answers)
 
     def num_of_blanks(self):
+        """ Method to count the number of blanks in the question """
         return len(self.list_correct_answers())
 
     def num_correct_for_blank(self, blank_no):
+        """ Method to count the number of correct submissions for the given blank """
         correct = 0
         for submission in self.submissions:
             if submission.list_submission()[blank_no] == self.list_correct_answers()[blank_no]:
@@ -367,9 +377,18 @@ class QuestionType1(Question):
         return correct
 
     def correct_precentage_for_black(self, blank_no):
+        """ Method to provide the precentage of correct answers for the given blank """
         return 100 * self.num_correct_for_blank(blank_no) / len(self.submissions)
 
     def answer_occur_for_blank(self, blank_no):
+        """
+        Method to produce a list of truples which contain the following
+            string: A answer a student has selected for a given blank
+            int: The number of submissions where they key was given as the answer to the blank
+
+        The list is sorted with most common answers first
+        """
+
         answers = {}
         for submission in self.submissions:
             if (answer:= submission.list_submission()[blank_no]) in answers.keys():
