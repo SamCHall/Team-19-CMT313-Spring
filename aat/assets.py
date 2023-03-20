@@ -2,18 +2,22 @@ from flask_assets import Bundle
 
 bundles = {
     'js': Bundle(
+        'bootstrap/js/bootstrap.js',
+        'bootstrap/js/popper.js',
         'js/script.js',
+        'js/plotly-2.18.2.min.js',
+        'js/display-graph.js',
         # 'js/example.js', <- Copy this format to add a file, making sure to include the comma at the end.
         filters='jsmin',
         output='gen/script.%(version)s.js'
     ),
 
-    'graph': Bundle(
-        'js/plotly-2.18.2.min.js',
-        'js/display-graph.js',
-        filters='jsmin',
-        output='gen/graph.%(version)s.js'
-    ),
+    # 'graph': Bundle(
+    #     'js/plotly-2.18.2.min.js',
+    #     'js/display-graph.js',
+    #     filters='jsmin',
+    #     output='gen/graph.%(version)s.js'
+    # ),
 
     'css': Bundle(
         'scss/main.scss', # Do not add CSS files here. See instuctions in the SCSS folder.
