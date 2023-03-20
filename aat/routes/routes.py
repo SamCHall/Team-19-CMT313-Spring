@@ -58,8 +58,7 @@ def create_question():
 @app.route("/assessments", methods=['GET'])
 def view_assessments():
     assignments = Assignment.query.all()
-    modules = Module.query.all()
-    return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments, modules = modules)
+    return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
 
 @app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
 def answer_assessment(assessment_id):
