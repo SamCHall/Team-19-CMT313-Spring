@@ -50,7 +50,7 @@
 <h3>Blank {{ count+1 }} - {{ correct_answer }}</h3>
 <ul>
     <li>Number of correct submissions: {{ question.num_correct_for_blank(count) }}</li>
-    <li>Precentage of correct submissions: {{ question.correct_precentage_for_black(count) }}</li>
+    <li>Precentage of correct submissions: {{ question.correct_precentage_for_blank(count) }}</li>
     {# Display the incorrect answers if there are any #}
     {% if incorrect_answers | length > 0 %}
     <li>Incorrect answers given:

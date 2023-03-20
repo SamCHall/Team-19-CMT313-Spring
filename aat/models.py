@@ -378,7 +378,7 @@ class QuestionType1(Question):
                 correct += 1
         return correct
 
-    def correct_precentage_for_black(self, blank_no):
+    def correct_precentage_for_blank(self, blank_no):
         """ Method to provide the precentage of correct answers for the given blank """
         return 100 * self.num_correct_for_blank(blank_no) / len(self.submissions)
 
@@ -397,10 +397,8 @@ class QuestionType1(Question):
                 answers[answer] += 1
             else:
                 answers[answer] = 1
-        print(answers)
         # https://stackoverflow.com/a/11230132
         sorted_answers = collections.Counter(answers).most_common()
-        print(sorted_answers)
         return sorted_answers
 
 
