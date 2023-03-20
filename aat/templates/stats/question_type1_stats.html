@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% assets "graph" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 <h1>{{ question.title }} - Stats</h1>
 
 {# Include html file with code to display question here #}
@@ -19,12 +23,8 @@
 
 <div id="overallGraph" class="graph"></div>
 
-<script>
-    let layout = {title: 'Mark distribution'}
-    let config = {
-        displayModeBar: false,
-        responsive: true
-    }
+<script type="text/javascript">
+{
     let data = [
         {
             x : {{ mark_dist.keys() | list }},
@@ -32,8 +32,8 @@
             type : 'bar'
         }
     ];
-    overallGraph = document.getElementById('overallGraph');
-    Plotly.newPlot(overallGraph, data, layout, config)
+    displayGraph('overallGraph', 'Mark distribution', data)
+}
 </script>
 
 <h2>Each blank word</h2>
@@ -79,13 +79,8 @@
 <div id="blank{{ count }}Graph" class="graph"></div>
 
 {% set answer_dict = dict(answers) %}
-<script>
+<script type="text/javascript">
 {
-    let layout = {title: 'Blank {{ count+1 }} - {{ correct_answer }}'}
-    let config = {
-        displayModeBar: false,
-        responsive: true
-    }
     let data = [
         {
             x : {{ answer_dict.keys() | list | safe }},
@@ -93,8 +88,7 @@
             type : 'bar'
         }
     ];
-    graph = document.getElementById('blank{{ count }}Graph');
-    Plotly.newPlot(graph, data, layout, config)
+    displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - {{ correct_answer }}', data)
 }
 </script>
 
