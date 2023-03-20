@@ -1,10 +1,10 @@
 import random
 import ast
-from flask import render_template, url_for, session
+from flask import render_template, url_for, session, abort
 from flask_login import current_user, login_required
 from .. import app, db
 from ..models import *
-from ..forms.formative_forms import CreateFormAss
+from ..forms.formative_forms import CreateFormAss, AnswerFormAss
 from ..forms.question_type_1 import QuestonType1Form
 from ..forms.question_type_2 import QuestonType2Form
 
@@ -12,30 +12,30 @@ from ..forms.question_type_2 import QuestonType2Form
 def home():
     return render_template('home.html', title='Home')
 
-@login_required
+
 @app.route("/create-formative", methods=['GET', 'POST'])
+@login_required
 def create_assessment():
-    if Staff.query.get(current_user.get_id()) != None:
-        form = CreateFormAss()
-        form.add_question.query = Question.query
-        form.module_id.query = Module.query
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    form = CreateFormAss()
+    form.add_question.query = Question.query
+    form.module_id.query = Module.query
 
-        if form.validate_on_submit():
-            assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data, module = form.module_id.data)
-            db.session.add(assignment)
-            db.session.commit()
+    if form.validate_on_submit():
+        assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data, module = form.module_id.data)
+        db.session.add(assignment)
+        db.session.commit()
 
-            question_list = []
-            for i in range(len(form.add_question.data)):
-                question_list.append(form.add_question.data[i])
+        question_list = []
+        for i in range(len(form.add_question.data)):
+            question_list.append(form.add_question.data[i])
 
-            question_no = 0
-            for question in question_list:
-                question_no += 1
-                FormativeAssignment.add_question(assignment, question, question_no)
-        return render_template('create_formative.html', title='Create Assessment', form = form)
-    else:
-        return 'Access Denied'
+        question_no = 0
+        for question in question_list:
+            question_no += 1
+            FormativeAssignment.add_question(assignment, question, question_no)
+    return render_template('create_formative.html', title='Create Assessment', form = form)
 
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
 def create_question_type1():
@@ -81,3 +81,43 @@ def create_question_type2():
         db.session.commit()
 
     return render_template('create-question-type2.html', title='Create', form=form)
+
+@app.route("/assessments", methods=['GET'])
+def view_assessments():
+    assignments = Assignment.query.all()
+    return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
+
+
+@app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
+@login_required
+def answer_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+    questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+    form = AnswerFormAss()
+
+    if assignment.active == False:
+        abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
+
+    id_list=[]   
+    for item in assignment.module.get_students():
+        id_list.append(item.id)
+    if current_user.id not in id_list:
+        abort(403, description="You are not enrolled on the correct module to take this assignment.")
+
+    for question in questions:
+        if question.question_type == "question_type1":
+
+            # Replaces {} in the template with a dropzone
+            question.question_template = str(question.question_template).replace("{}","<span class=\"dropzone\" id=\"question{{loop.index}}\"></span>")
+
+            # Takes the string literal and converts it to a list of strings
+            a = ast.literal_eval(question.correct_answers)
+            b = ast.literal_eval(question.incorrect_answers)
+
+            # Making both lists into one
+            c = a + b
+
+            # Randomises the order of options from correct_answers and incorrect_answers
+            question.options = random.sample(c, len(c))
+    
+    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title, form=form)

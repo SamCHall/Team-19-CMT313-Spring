@@ -135,7 +135,7 @@ if User.query.first() is None:
         title = "Programming Language 1",
         active = True,
         question_template = "A {} language program is called {} code.",
-        correct_answers = "['high-level', ' source']",
+        correct_answers = "['high-level', 'source']",
         incorrect_answers = "['high', 'low', 'low-level', 'machine', 'object', 'assembly']"
     )
     db.session.add(q1)
@@ -144,7 +144,7 @@ if User.query.first() is None:
         title = "Translator 1",
         active = True,
         question_template = "A {} translates source code into {} code.",
-        correct_answers = "['compiler', ' object']",
+        correct_answers = "['compiler', 'object']",
         incorrect_answers = "['interpreter', 'assemblers', 'executes', 'machine', 'source']"
     )
     db.session.add(q2)
@@ -164,7 +164,7 @@ if User.query.first() is None:
         option2 = "option 2",
         option3 = "option 3",
         option4 = "option 4",
-        answer = "option 3"
+        correctOption = "option 3"
     )
     db.session.add(q4)
 
@@ -174,7 +174,7 @@ if User.query.first() is None:
         option2 = "option 2",
         option3 = "option 3",
         option4 = "option 4",
-        answer = "option 3"
+        correctOption = "option 3"
     )
     db.session.add(q5)
 
@@ -184,7 +184,7 @@ if User.query.first() is None:
         option2 = "option 2",
         option3 = "option 3",
         option4 = "option 4",
-        answer = "option 3"
+        correctOption = "option 3"
     )
     db.session.add(q6)
 
