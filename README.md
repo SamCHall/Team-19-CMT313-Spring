@@ -5,8 +5,17 @@ been written using **Flask** to create a website.
 
 ## Installing
 
-To run the code first create a virtual environment and install all the packages
-from `requirements.txt` using pip.
+To run the code, first create a virtual environment and install all the packages
+from `requirements.txt` using pip. Next, activate your virtual environment. You 
+may next want to create a .env file to specify any environment variables. Thirdly,
+enable your virtual environment. Finally, use Python to run wsgi.py.
+
+An example using pipenv:
+```
+pipenv install
+pipenv shell
+python wsgi.py
+```
 
 ## AAT Prototype Features Responsibilities
 

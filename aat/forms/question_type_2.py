@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import (StringField, SubmitField)
+from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired, Length
 
-class CourseForm(FlaskForm):
+class QuestonType2Form(FlaskForm):
     title = StringField('Title', validators=[InputRequired(),Length(max=100)])
     option1 = StringField('Option 1',validators=[InputRequired(),Length(max=100)])
     option2 = StringField('Option 2',validators=[InputRequired(),Length(max=100)])

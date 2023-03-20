@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="createQuestionType1">
+    <form id="qt1-form" action="{{ url_for('create_question_type1') }}" method="post" autocomplete="off">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
+        {{ qt1_form.hidden_tag() }}
+        <!-- Title -->
+        {{ qt1_form.title(placeholder='Title', autofocus=true) }}
+        {% if qt1_form.title.errors %}
+            <ul class="errors">
+                {% for error in qt1_form.title.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- Template -->
+        {{ qt1_form.question_template(placeholder='Provide a question template placing BLANK where appropriate.') }}
+        {% if qt1_form.question_template.errors %}
+            <ul class="errors">
+                {% for error in qt1_form.question_template.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- Correct answers -->
+        {{ qt1_form.correct_answers(placeholder='Comma separated answers for the above template') }}
+        {% if qt1_form.correct_answers.errors %}
+            <ul class="errors">
+                {% for error in qt1_form.correct_answers.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- Incorrect answers -->
+        {{ qt1_form.incorrect_answers(placeholder='Comma separated incorrect answers (optional)') }}
+        {% if qt1_form.incorrect_answers.errors %}
+            <ul class="errors">
+                {% for error in qt1_form.incorrect_answers.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- Preview answer -->
+        <input id="preview" style="pointer-events: none; cursor: default;" placeholder="Preview">
+        <!-- Submit -->
+        {{ qt1_form.submit() }}
+    </form>
+</section>
+{% endblock content %}

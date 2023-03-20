@@ -1,0 +1,11 @@
+form {
+    max-width: 800px;
+    margin: 0px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    .errors {
+        color: red;
+    }
+}
