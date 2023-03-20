@@ -11,10 +11,10 @@
 
             <h2 id="question_title">
                 {{ question.title }}
-            </div>
+            </h2>
             <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
-            <label for="{{loop.index}}_answer">
-               <p>{{ question.question_template|safe }}</p> 
+            <label for="{{loop.index}}_answer" id="question_template">
+               {{ question.question_template|safe }}
             </label>
 
             <div id="type_1_options">
@@ -24,6 +24,7 @@
             </div>
             <button type="submit">Submit</button>
             </form>
+        </div>
 
             {% else %}
             <div>

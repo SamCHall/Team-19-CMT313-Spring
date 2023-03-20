@@ -9,3 +9,19 @@ form {
         color: red;
     }
 }
+
+form #question_template{
+    display: flex;
+    flex-flow: row;
+}
+
+form #type_1_options{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+form #type_1_options option{
+    padding: 5px;
+}
