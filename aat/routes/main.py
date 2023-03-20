@@ -4,8 +4,13 @@ from ..aat import app,db
 
 from aat.models import Question,QuestionType1
 
+from .forms import CourseForm
+
+app.config['SECRET_KEY'] = 'your secret key'
+
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 @app.route("/")
 def base():
@@ -14,6 +19,12 @@ def base():
 @app.route("/create")
 def create():
     return render_template('create.html', title='Create')
+
+@app.route("/form", methods=('GET', 'POST'))
+def form():
+    form = CourseForm()
+    return render_template('form.html', title='Create', form=form)
+
 
 @app.route("/questions")
 def questions():
