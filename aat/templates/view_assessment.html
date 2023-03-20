@@ -32,11 +32,11 @@
                     {{ question.title }}
                 </h2>
 
+                <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
                 <div id="question_text">
                     {{ question.question_text}}
                 </div>
                 
-                <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
                 <div>
                   <label id="option1_label">
                     <input type="radio" name="{{loop.index}}" id="option1" value="{{ question.option1 }}"> {{ question.option1 }}</label>
