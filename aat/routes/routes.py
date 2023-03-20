@@ -1,9 +1,10 @@
 from flask import render_template, url_for
 
 from .. import app, db
-from ..models import Question, QuestionType1, FormativeAssignment, Module
+from ..models import *
 from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
+from ..forms.question_type_2 import QuestonType2Form
 
 @app.route("/")
 def home():
@@ -30,8 +31,8 @@ def create_assessment():
             FormativeAssignment.add_question(assignment, question, question_no)
     return render_template('create_formative.html', title='Create Assessment', form = form)
 
-@app.route('/staff/question/create', methods=['GET', 'POST'])
-def create_question():
+@app.route('/staff/question/create/type1', methods=['GET', 'POST'])
+def create_question_type1():
     qt1_form = QuestonType1Form()
     if qt1_form.validate_on_submit():
         correct_answers = []
@@ -46,4 +47,31 @@ def create_question():
         db.session.add(qt1)
         db.session.commit()
 
-    return render_template('create-question.html', qt1_form=qt1_form)
+    return render_template('create-question-type1.html', qt1_form=qt1_form)
+
+@app.route("/staff/question/create/type2", methods=["POST", "GET"])
+def create_question_type2():
+    form = QuestonType2Form()
+    if form.validate_on_submit():
+        question_text=form.title.data
+        op1=form.option1.data
+        op2=form.option2.data
+        op3=form.option3.data
+        op4=form.option4.data
+        correctOption=form.correctOption.data
+
+        qt2 = QuestionType2(
+            question_text=question_text,
+            title=question_text,
+            option1=op1,
+            option2=op2,
+            option3=op3,
+            option4=op4,
+            question_type="question_type2",
+            correctOption=correctOption
+        )
+
+        db.session.add(qt2)
+        db.session.commit()
+
+    return render_template('create-question-type2.html', title='Create', form=form)
