@@ -123,6 +123,18 @@ def view_assessment(assessment_id):
 @app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
 @login_required
 def submit_assessment(assessment_id):
+    questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+
+    correct_answers_list = []
+    for question in questions:
+        correct_answers = ast.literal_eval(question.correct_answers)
+        for correct_answer in correct_answers:
+            correct_answers_list.append(correct_answer)
+    
     option_values = request.get_json()['optionValues']
-    print(option_values)
+
+    type1_mark = 0
+    for option_value in range(len(option_values)):
+        if option_values[option_value] == correct_answers_list[option_value]:
+            type1_mark += 1
     return redirect(request.referrer)
