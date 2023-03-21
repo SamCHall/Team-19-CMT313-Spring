@@ -425,3 +425,16 @@ class QuestionType2(Question):
         if len(self.submissions) > 0:
             return 100 * self.correct_submissions_number() / len(self.submissions)
         return None
+
+    def option_choice_quantity(self):
+        count = {
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "D": 0
+        }
+
+        for submission in self.submissions:
+            count[submission.submission_answer] += 1
+
+        return count
