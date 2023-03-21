@@ -75,3 +75,8 @@ def create_question_type2():
         db.session.commit()
 
     return render_template('create-question-type2.html', title='Create', form=form)
+
+@app.route("/questions")
+def questions():
+    questions = question_type2.query.all()
+    return render_template('questions.html', title='Questions',questions=questions)
