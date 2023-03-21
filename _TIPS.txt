@@ -11,3 +11,6 @@ so others will not be forced into debug mode.
 
 2. In large projects like this it can be difficult to navigate and find the file you're like for.
 If you're using VSCode/VSCodium open a file by name using ctrl + p.
+
+3. After branches are merged, they may still show as an existing branch in remote. Use 'git remote prune origin --dry-run'
+to show a list of branches that can be removed since they have been merged. Then use 'git remote prune origin' to remove them.
