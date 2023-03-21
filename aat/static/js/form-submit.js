@@ -13,9 +13,6 @@ document.addEventListener("submit", function(event) {
   xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
   const csrfToken = document.querySelector('input[name="csrf_token"]').value;
   xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-  xhr.onload = function() {
-    console.log(xhr.responseText);
-  };
   xhr.onerror = function() {
     console.log('Error occurred during the request.');
   };
