@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% assets "graph" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<h1>{{ assignment.title }} - Stats</h1>
+
+<h2>Overall Stats</h2>
+
+<ul>
+    <li>Number of submissions: {{ assignment.number_of_submissions() }}</li>
+    <li>Number of students who have submitted: {{ assignment.number_of_students_submitted()}}</li>
+    <li>Number of students who have not submitted: {{ assignment.number_of_students_not_submitted()}}</li>
+</ul>
+
+{% endblock content %}

@@ -133,6 +133,16 @@ class Assignment(db.Model):
     def add_question(self, question, question_no):
         return AssignQuestion.add_question(self.id, question.id, question_no)
 
+    def number_of_submissions(self):
+        return len(self.submissions)
+
+    def number_of_students_submitted(self):
+        students = set([submission.student for submission in self.submissions])
+        return len(students)
+
+    def number_of_students_not_submitted(self):
+        return len(self.module.get_students()) - self.number_of_students_submitted()
+
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
