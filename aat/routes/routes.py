@@ -127,14 +127,19 @@ def submit_assessment(assessment_id):
 
     correct_answers_list = []
     for question in questions:
-        correct_answers = ast.literal_eval(question.correct_answers)
+        if question.question_type == 'question_type1':
+            correct_answers = ast.literal_eval(question.correct_answers)
         for correct_answer in correct_answers:
             correct_answers_list.append(correct_answer)
     
-    option_values = request.get_json()['optionValues']
+    type1_answer_values = request.get_json()['optionValues']
 
     type1_mark = 0
-    for option_value in range(len(option_values)):
-        if option_values[option_value] == correct_answers_list[option_value]:
+    for answer in range(len(type1_answer_values)):
+        if type1_answer_values[answer] == correct_answers_list[answer]:
             type1_mark += 1
+    
+    type2_answer_values = request.get_json()['type2Values']
+    print(type2_answer_values)
+
     return redirect(request.referrer)

@@ -17,7 +17,7 @@
                     {{ question.title }}
                 </h2>
                     
-                    <label for="{{loop.index}}_answer" id="question_template">
+                    <label for="{{ loop.index }}_answer" id="question_template">
                         {{ question.question_template|safe }} 
                     </label>
 
@@ -40,13 +40,13 @@
                     
                     <div>
                     <label id="option1_label">
-                        <input type="radio" name="{{loop.index}}" id="option1" value="{{ question.option1 }}"> {{ question.option1 }}</label>
+                        <input type="radio" name="{{ loop.index }}" id="type2_radio" value="{{ question.option1 }}"> {{ question.option1 }}</label>
                     <label id="option2_label">
-                        <input type="radio" name="{{loop.index}}" id="option2" value ="{{ question.option2 }}"> {{ question.option2 }}</label>
+                        <input type="radio" name="{{ loop.index }}" id="type2_radio" value ="{{ question.option2 }}"> {{ question.option2 }}</label>
                     <label id="option3_label">
-                        <input type="radio" name="{{loop.index}}" id="option3" value ="{{ question.option3 }}"> {{ question.option3 }}</label>
+                        <input type="radio" name="{{ loop.index }}" id="type2_radio" value ="{{ question.option3 }}"> {{ question.option3 }}</label>
                     <label id="option4_label">
-                        <input type="radio" name="{{loop.index}}" id="option4" value ="{{ question.option4 }}"> {{ question.option4 }}</label>
+                        <input type="radio" name="{{ loop.index }}" id="type2_radio" value ="{{ question.option4 }}"> {{ question.option4 }}</label>
                 </div>    
                 {% endif %}
             </div>

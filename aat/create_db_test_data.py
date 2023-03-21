@@ -230,11 +230,25 @@ if User.query.first() is None:
     )
     db.session.add(assignment6)
 
+    assignment7 = FormativeAssignment(
+        title = "All Questions Formative",
+        module = module2,
+        active = True
+    )
+    db.session.add(assignment7)
+
     db.session.commit()
 
     assignment4.add_question(q1, 1)
     assignment4.add_question(q2, 3)
     assignment4.add_question(q3, 2)
+    
+    assignment7.add_question(q1, 1)
+    assignment7.add_question(q2, 2)
+    assignment7.add_question(q3, 3)
+    assignment7.add_question(q4, 4)
+    assignment7.add_question(q5, 5)
+    assignment7.add_question(q6, 6)
 
     submission1 = Submission(
         assignment = assignment4,
