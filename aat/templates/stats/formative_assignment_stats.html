@@ -13,6 +13,10 @@
     <li>Number of submissions: {{ assignment.number_of_submissions() }}</li>
     <li>Number of students who have submitted: {{ assignment.number_of_students_submitted()}}</li>
     <li>Number of students who have not submitted: {{ assignment.number_of_students_not_submitted()}}</li>
+
+    <li>Highest Mark: {{ assignment.highest_mark() }}</li>
+    <li>Lowest Mark: {{ assignment.lowest_mark() }}</li>
+    <li>Average Mark: {{ assignment.average_mark() }}</li>
 </ul>
 
 {% endblock content %}
