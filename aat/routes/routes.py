@@ -1,6 +1,6 @@
 import random
 import ast
-from flask import render_template, url_for, session, abort
+from flask import render_template, url_for, session, abort, request, jsonify, redirect
 from flask_login import current_user, login_required
 from .. import app, db
 from ..models import *
@@ -90,10 +90,9 @@ def view_assessments():
 
 @app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
 @login_required
-def answer_assessment(assessment_id):
+def view_assessment(assessment_id):
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
-    form = AnswerFormAss()
 
     if assignment.active == False:
         abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
@@ -113,11 +112,17 @@ def answer_assessment(assessment_id):
             # Takes the string literal and converts it to a list of strings
             a = ast.literal_eval(question.correct_answers)
             b = ast.literal_eval(question.incorrect_answers)
-
-            # Making both lists into one
+            # Making both lists into one    
             c = a + b
-
+           
             # Randomises the order of options from correct_answers and incorrect_answers
             question.options = random.sample(c, len(c))
     
-    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title, form=form)
+    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
+
+@app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
+@login_required
+def submit_assessment(assessment_id):
+    option_values = request.get_json()['optionValues']
+    print(option_values)
+    return redirect(request.referrer)

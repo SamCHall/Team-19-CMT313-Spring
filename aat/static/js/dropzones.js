@@ -9,8 +9,9 @@ function onDragStart(event) {
   function onDrop(event) {
     var dropzone = event.target;
     var optionValue = event.dataTransfer.getData('text/plain');
-    
+
     dropzone.textContent = optionValue;
+    document.getElementById('answer_' + dropzone.data.identifier).value = optionValue;
     event.dataTransfer.clearData();
   }
   
@@ -19,4 +20,3 @@ function onDragStart(event) {
     dropzones[i].addEventListener('dragover', onDragOver);
     dropzones[i].addEventListener('drop', onDrop);
   }
-  

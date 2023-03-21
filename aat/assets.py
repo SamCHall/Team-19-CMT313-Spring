@@ -4,6 +4,7 @@ bundles = {
     'js': Bundle(
         'js/script.js',
         'js/dropzones.js',
+        'js/form-submit.js',
         # 'js/example.js', <- Copy this format to add a file, making sure to include the comma at the end.
         filters='jsmin',
         output='gen/script.%(version)s.js'

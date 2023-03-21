@@ -4,55 +4,53 @@
     <h1 id="assignment_title">
         {{ assignment.title }}
     </h1>
+    
+    <form action="{{url_for('submit_assessment', assessment_id = assignment.id)}}" id = "form" method="POST">
+        <input type="hidden" name="assessment_id" value="{{ assignment.id }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        {% for question in questions %}
+            <div id="question">
+                {% if question.question_type == "question_type1" %}
 
-    {% for question in questions %}
-        <div id="question">
-            {% if question.question_type == "question_type1" %}
-
-            <h2 id="question_title">
-                {{ question.title }}
-            </h2>
-            <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
-            <label for="{{loop.index}}_answer" id="question_template">
-               {{ question.question_template|safe }}
-            </label>
-
-            <div id="type_1_options">
-                    {% for option in question.options %}
-                        <option draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
-                    {% endfor %}
-            </div>
-            <button type="submit">Submit</button>
-            </form>
-        </div>
-
-            {% else %}
-            <div>
                 <h2 id="question_title">
                     {{ question.title }}
                 </h2>
+                    
+                    <label for="{{loop.index}}_answer" id="question_template">
+                        {{ question.question_template|safe }} 
+                    </label>
 
-                <form action="{{url_for('answer_assessment', assessment_id = assignment.id)}}" method="POST">
-                <div id="question_text">
-                    {{ question.question_text}}
+                    <div id="type_1_options">
+                        {% for option in question.options %}
+                            <option draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
+                        {% endfor %}
                 </div>
-                
+            </div>
+
+                {% else %}
                 <div>
-                  <label id="option1_label">
-                    <input type="radio" name="{{loop.index}}" id="option1" value="{{ question.option1 }}"> {{ question.option1 }}</label>
-                  <label id="option2_label">
-                    <input type="radio" name="{{loop.index}}" id="option2" value ="{{ question.option2 }}"> {{ question.option2 }}</label>
-                  <label id="option3_label">
-                    <input type="radio" name="{{loop.index}}" id="option3" value ="{{ question.option3 }}"> {{ question.option3 }}</label>
-                  <label id="option4_label">
-                    <input type="radio" name="{{loop.index}}" id="option4" value ="{{ question.option4 }}"> {{ question.option4 }}</label>
-                <input type="submit" id="Submit" value="Submit">
-            </div>    
-            </form>
-            
-            
-            {% endif %}
-            
-        </div>
-    {% endfor %}
+                    <h2 id="question_title">
+                        {{ question.title }}
+                    </h2>
+
+                    <div id="question_text">
+                        {{ question.question_text}}
+                    </div>
+                    
+                    <div>
+                    <label id="option1_label">
+                        <input type="radio" name="{{loop.index}}" id="option1" value="{{ question.option1 }}"> {{ question.option1 }}</label>
+                    <label id="option2_label">
+                        <input type="radio" name="{{loop.index}}" id="option2" value ="{{ question.option2 }}"> {{ question.option2 }}</label>
+                    <label id="option3_label">
+                        <input type="radio" name="{{loop.index}}" id="option3" value ="{{ question.option3 }}"> {{ question.option3 }}</label>
+                    <label id="option4_label">
+                        <input type="radio" name="{{loop.index}}" id="option4" value ="{{ question.option4 }}"> {{ question.option4 }}</label>
+                </div>    
+                {% endif %}
+            </div>
+            {% endfor %}
+        <input type="submit" id="submit" value="submit">
+    </form>
 {% endblock content %}
