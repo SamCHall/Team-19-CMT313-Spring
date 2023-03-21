@@ -1,4 +1,6 @@
-document.addEventListener("submit", function(event) {
+var submitFormative = document.querySelector('#submit-formative')
+
+submitFormative.addEventListener("click", function(event) {
   event.preventDefault();
 
   var assessmentId = document.querySelector('input[name="assessment_id"]').value;
