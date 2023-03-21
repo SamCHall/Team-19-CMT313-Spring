@@ -4,7 +4,7 @@ from flask import render_template, url_for, session, abort
 from flask_login import current_user, login_required
 from .. import app, db
 from ..models import *
-from ..forms.formative_forms import CreateFormAss, AnswerFormAss
+from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
 from ..forms.question_type_2 import QuestonType2Form
 
@@ -93,7 +93,6 @@ def view_assessments():
 def answer_assessment(assessment_id):
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
-    form = AnswerFormAss()
 
     if assignment.active == False:
         abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
@@ -120,4 +119,4 @@ def answer_assessment(assessment_id):
             # Randomises the order of options from correct_answers and incorrect_answers
             question.options = random.sample(c, len(c))
     
-    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title, form=form)
+    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
