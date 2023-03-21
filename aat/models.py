@@ -417,3 +417,11 @@ class QuestionType2(Question):
 
     def mark(self):
         return 0
+
+    def correct_submissions_number(self):
+        return sum([submission.mark for submission in self.submissions])
+
+    def correct_submissions_percent(self):
+        if len(self.submissions) > 0:
+            return 100 * self.correct_submissions_number() / len(self.submissions)
+        return None

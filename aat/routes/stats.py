@@ -17,6 +17,6 @@ def question_stats(id):
             return render_template('stats/question_type1_stats.html', title=question.title, question=question)
 
         case "question_type2":
-            abort(501)
+            return render_template('stats/question_type2_stats.html', title=question.title, question=question)
 
     abort(500)
