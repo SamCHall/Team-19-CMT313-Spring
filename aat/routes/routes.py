@@ -140,6 +140,5 @@ def submit_assessment(assessment_id):
             type1_mark += 1
     
     type2_answer_values = request.get_json()['type2Values']
-    print(type2_answer_values)
 
     return redirect(request.referrer)

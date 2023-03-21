@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, widgets, StringField, BooleanField, RadioField
 from ..models import Question
 from wtforms.validators import DataRequired
-from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField, QueryRadioField
+from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 
 class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
@@ -14,7 +14,3 @@ class CreateFormAss(FlaskForm):
     add_question = QuerySelectMultipleFieldWithCheckboxes('Add questions:')
     is_active = BooleanField("Make assignment active?")
     submit = SubmitField('Save')
-
-class AnswerFormAss(FlaskForm):
-    
-    submit = SubmitField('Submit Answer')
