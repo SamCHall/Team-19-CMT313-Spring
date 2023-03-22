@@ -1,14 +1,14 @@
 body {
     display: grid;
     grid-template-rows: 70px 1fr 70px;
-    background-color: lighten($primary, 40%);
+    background-color: lighten($primary, 35%);
 }
 
 .navbar {
     z-index: 9999999;
 
     img {
-        transition-duration: 0.5s;
+        transition-duration: 0.3s;
 
         &:hover {
             transform: scale(1.05);
@@ -16,10 +16,13 @@ body {
     }
 
     .nav-link {
-        color: $primary;
+        color: $light;
+        transition: text-decoration-color 0.3s;
+        text-decoration: underline transparent;
 
         &:hover {
-            color: $secondary;
+            color: $primary;
+            text-decoration-color: $secondary;
         }
     }
 }
