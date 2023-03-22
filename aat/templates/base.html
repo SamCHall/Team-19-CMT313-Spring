@@ -21,7 +21,7 @@
 
     <header>
         <!-- Nav -->
-        <nav class="navbar navbar-expand-md bg-light text-dark">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
             <div class="container">
                 <a href="/" class="navbar-brand">
                     {% cache 86400, 'profile' %}
@@ -41,7 +41,7 @@
                             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 New
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-dark">
                                 <li><a class="dropdown-item" href="{{ url_for('create_question_type1') }}">Fill in the Blank</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('create_question_type2') }}">Multiple Choice</a></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -69,8 +69,20 @@
         <!-- Main content -->
         {% block content %}
         {% endblock content %}
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="flash-list">
+                    {% for message in messages %}
+                        <li class="alert alert-warning d-flex align-items-center" role="alert">
+                            <p>{{ message }}</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     </main>
-
     <footer>
 
     </footer>

@@ -1,4 +1,4 @@
-from flask import render_template, url_for
+from flask import render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 
 from .. import app, db
@@ -64,6 +64,9 @@ def create_question_type1():
         qt1 = QuestionType1(title=qt1_form.title.data, question_template=qt1_form.question_template.data.replace('BLANK', '{}'), correct_answers=str(correct_answers), incorrect_answers=str(incorrect_answers))
         db.session.add(qt1)
         db.session.commit()
+
+        flash("You've created a new Fill in the Blank question!")
+        return redirect('/')
 
     return render_template('create-question-type1.html', qt1_form=qt1_form)
 
