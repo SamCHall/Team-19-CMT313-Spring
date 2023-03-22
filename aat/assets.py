@@ -2,8 +2,8 @@ from flask_assets import Bundle
 
 bundles = {
     'js': Bundle(
-        'bootstrap/js/bootstrap.js',
         'bootstrap/js/popper.js',
+        'bootstrap/js/bootstrap.js',
         'js/script.js',
         'js/plotly-2.18.2.min.js',
         'js/display-graph.js',

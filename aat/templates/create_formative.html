@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-</head>
+{% extends 'base.html' %}
 
+{% block content %}
 <body>
     <h1>Create Formative Assessment</h1>
     <div id="create_formative_assessment_form">
-        <form action="{{url_for('create_assessment')}}" method="POST">
+        <form action="{{url_for('create_formative_assessment')}}" method="POST">
             {{form.csrf_token}}
             <div id="assignment_title">
             {{form.assignment_title.label}}
@@ -31,4 +26,4 @@
         </form>
     </div>
 </body>
-</html>
+{% endblock content %}

@@ -1,4 +1,5 @@
 from flask import render_template, url_for
+from flask_login import login_required, current_user
 
 from .. import app, db
 from ..models import *
@@ -15,7 +16,8 @@ def home():
 
 # Create a formative assessment
 @app.route("/create-formative", methods=['GET', 'POST'])
-def create_assessment():
+@login_required
+def create_formative_assessment():
     form = CreateFormAss()
     form.add_question.query = Question.query
     form.module_id.query = Module.query
@@ -36,9 +38,19 @@ def create_assessment():
     return render_template('create_formative.html', title='Create Assessment', form = form)
 
 
+# Create a summative assessment
+@app.route('/create-summative', methods=['GET', 'POST'])
+@login_required
+def create_summative_assessment():
+    return render_template('create_summative.html')
+
+
+
 # Create a type 1 question
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
+@login_required
 def create_question_type1():
+    # if current_user
     qt1_form = QuestonType1Form()
     if qt1_form.validate_on_submit():
         correct_answers = []
@@ -58,6 +70,7 @@ def create_question_type1():
 
 # Create a type 2 question
 @app.route("/staff/question/create/type2", methods=["POST", "GET"])
+@login_required
 def create_question_type2():
     form = QuestonType2Form()
     if form.validate_on_submit():
