@@ -6,10 +6,14 @@ from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
 from ..forms.question_type_2 import QuestonType2Form
 
+
+# Home
 @app.route("/")
 def home():
     return render_template('home.html', title='Home')
 
+
+# Create a formative assessment
 @app.route("/create-formative", methods=['GET', 'POST'])
 def create_assessment():
     form = CreateFormAss()
@@ -31,6 +35,8 @@ def create_assessment():
             FormativeAssignment.add_question(assignment, question, question_no)
     return render_template('create_formative.html', title='Create Assessment', form = form)
 
+
+# Create a type 1 question
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
 def create_question_type1():
     qt1_form = QuestonType1Form()
@@ -49,6 +55,8 @@ def create_question_type1():
 
     return render_template('create-question-type1.html', qt1_form=qt1_form)
 
+
+# Create a type 2 question
 @app.route("/staff/question/create/type2", methods=["POST", "GET"])
 def create_question_type2():
     form = QuestonType2Form()

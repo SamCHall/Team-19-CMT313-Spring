@@ -1,0 +1,13 @@
+#qt1 {
+
+    max-width: 800px;
+
+    #preview {
+        font-size: 1.5rem;
+        border: none;
+        color: $secondary;
+        pointer-events: none;
+        cursor: default;
+        word-wrap: break-word;
+    }
+}

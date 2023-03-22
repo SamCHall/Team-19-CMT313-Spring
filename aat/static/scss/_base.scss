@@ -1,4 +1,17 @@
 body {
-    background-color: lightblue;
-    font-family: sans-serif;
+    display: grid;
+    grid-template-rows: 70px 1fr 70px;
+    background-color: lighten($primary, 40%);
+
+    .navbar {
+        z-index: 9999999;
+    }
+
+    .nav-link {
+        color: $primary;
+
+        &:hover {
+            color: inherit;
+        }
+    }
 }
