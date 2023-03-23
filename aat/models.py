@@ -194,6 +194,8 @@ class Submission(db.Model):
             db.session.add(question_submission)
             db.session.commit()
 
+    def get_current_attempt_number(student_id, assignment_id):
+        return Submission.query.filter_by(student_id=student_id, assignment_id=assignment_id).count()
 
 class SubmissionAnswers(db.Model):
     id = db.Column(db.Integer, primary_key=True)

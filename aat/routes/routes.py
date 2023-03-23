@@ -160,12 +160,13 @@ def submit_assessment(assessment_id):
 
     total_available_mark = len(type1_correct_answers_list) + len(type2_correct_answers_list)
     total_answer_mark = type1_mark + type2_mark
-    
+    current_attempt_number = Submission.get_current_attempt_number(current_user.id, assessment_id)
+
     submission = Submission(
             assignment_id = assignment.id,
             student_id = current_user.id,
             mark = total_answer_mark,
-            attempt_number = 1
+            attempt_number = current_attempt_number + 1
             )
     
     for question in questions:
