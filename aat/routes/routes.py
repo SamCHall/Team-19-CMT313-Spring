@@ -171,11 +171,18 @@ def submit_assessment(assessment_id):
     
     for question in questions:
         if question.question_type == 'question_type1':
-            continue # Type 1 question submission to be added later
-
+            num_blanks = QuestionType1.num_of_blanks(question)
+            submitted_answer = []
+            mark = 0
+            for i in range(num_blanks):
+                submitted_answer.append(type1_answer_values[i])    
+                if submitted_answer[i] == type1_correct_answers_list[i]:
+                    mark += 1
+            submission.add_question_answer(question, str(submitted_answer), mark)
+            type1_answer_values = type1_answer_values[num_blanks:] # Trims off the start of the list so the for loop begins again at the next question.
         else:
-            # Gets the index of the question in the list of questions and uses that to get the answer from the list of answers.
-            submitted_answer = type2_answer_values[type2_questions.index(question)]
+        
+            submitted_answer = type2_answer_values[type2_questions.index(question)] # Gets the index of the question in the list of questions and uses that to get the answer from the list of answers.
             
             if question.correctOption == submitted_answer:
                 submission.add_question_answer(question, submitted_answer, 1)    
