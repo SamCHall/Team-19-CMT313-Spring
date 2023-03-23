@@ -129,15 +129,13 @@ def submit_assessment(assessment_id):
     type1_answer_values = request.get_json()['optionValues']
     type2_answer_values = request.get_json()['type2Values']
 
-    type1_questions = []
-    type2_questions = []
+    type2_questions = [] # Needed for marking individual questions in later step
 
     type1_correct_answers_list = []
     type2_correct_answers_list = []
     
     for question in questions:
         if question.question_type == 'question_type1':
-            type1_questions.append(question)
             correct_answers = ast.literal_eval(question.correct_answers)
 
             for correct_answer in correct_answers:
@@ -146,19 +144,18 @@ def submit_assessment(assessment_id):
         elif question.question_type == 'question_type2':
             type2_questions.append(question)
             type2_correct_answers_list.append(question.correctOption)
-            
+
+    # The below code is used to mark the overall assessment before adding a submission to the database            
     type1_mark = 0
     for answer in range(len(type1_answer_values)):
         if type1_answer_values[answer] == type1_correct_answers_list[answer]:
             type1_mark += 1
-    
+                                                                        
     type2_mark = 0
     for answer in range(len(type2_answer_values)):
         if type2_answer_values[answer] == type2_correct_answers_list[answer]:
             type2_mark += 1
     
-
-    total_available_mark = len(type1_correct_answers_list) + len(type2_correct_answers_list)
     total_answer_mark = type1_mark + type2_mark
     current_attempt_number = Submission.get_current_attempt_number(current_user.id, assessment_id)
 
@@ -169,6 +166,7 @@ def submit_assessment(assessment_id):
             attempt_number = current_attempt_number + 1
             )
     
+    # The below code is used to add the answers to the database with their individual marks.
     for question in questions:
         if question.question_type == 'question_type1':
             num_blanks = QuestionType1.num_of_blanks(question)
@@ -189,4 +187,5 @@ def submit_assessment(assessment_id):
             else:
                 submission.add_question_answer(question, submitted_answer, 0)
     
+    # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
