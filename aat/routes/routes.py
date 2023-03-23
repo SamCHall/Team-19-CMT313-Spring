@@ -1,10 +1,10 @@
 import random
 import ast
-from flask import render_template, url_for, session, abort, request, jsonify, redirect
+from flask import render_template, abort, request, redirect
 from flask_login import current_user, login_required
 from .. import app, db
 from ..models import *
-from ..forms.formative_forms import CreateFormAss, AnswerFormAss
+from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
 from ..forms.question_type_2 import QuestonType2Form
 
@@ -125,20 +125,28 @@ def view_assessment(assessment_id):
 def submit_assessment(assessment_id):
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
 
-    correct_answers_list = []
+    type1_correct_answers_list = []
+    type2_correct_answers_list = []
     for question in questions:
         if question.question_type == 'question_type1':
             correct_answers = ast.literal_eval(question.correct_answers)
-        for correct_answer in correct_answers:
-            correct_answers_list.append(correct_answer)
+            for correct_answer in correct_answers:
+                type1_correct_answers_list.append(correct_answer)
+        else:
+            type2_correct_answers_list.append(question.correctOption)
+        
     
     type1_answer_values = request.get_json()['optionValues']
 
     type1_mark = 0
     for answer in range(len(type1_answer_values)):
-        if type1_answer_values[answer] == correct_answers_list[answer]:
+        if type1_answer_values[answer] == type1_correct_answers_list[answer]:
             type1_mark += 1
     
     type2_answer_values = request.get_json()['type2Values']
+    type2_mark = 0
+    for answer in range(len(type2_answer_values)):
+        if type2_answer_values[answer] == type2_correct_answers_list[answer]:
+            type2_mark += 1
 
     return redirect(request.referrer)
