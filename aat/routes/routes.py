@@ -123,30 +123,62 @@ def view_assessment(assessment_id):
 @app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
 @login_required
 def submit_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+
+    type1_answer_values = request.get_json()['optionValues']
+    type2_answer_values = request.get_json()['type2Values']
+
+    type1_questions = []
+    type2_questions = []
 
     type1_correct_answers_list = []
     type2_correct_answers_list = []
+    
     for question in questions:
         if question.question_type == 'question_type1':
+            type1_questions.append(question)
             correct_answers = ast.literal_eval(question.correct_answers)
+
             for correct_answer in correct_answers:
                 type1_correct_answers_list.append(correct_answer)
-        else:
-            type2_correct_answers_list.append(question.correctOption)
         
-    
-    type1_answer_values = request.get_json()['optionValues']
-
+        elif question.question_type == 'question_type2':
+            type2_questions.append(question)
+            type2_correct_answers_list.append(question.correctOption)
+            
     type1_mark = 0
     for answer in range(len(type1_answer_values)):
         if type1_answer_values[answer] == type1_correct_answers_list[answer]:
             type1_mark += 1
     
-    type2_answer_values = request.get_json()['type2Values']
     type2_mark = 0
     for answer in range(len(type2_answer_values)):
         if type2_answer_values[answer] == type2_correct_answers_list[answer]:
             type2_mark += 1
+    
 
+    total_available_mark = len(type1_correct_answers_list) + len(type2_correct_answers_list)
+    total_answer_mark = type1_mark + type2_mark
+    
+    submission = Submission(
+            assignment_id = assignment.id,
+            student_id = current_user.id,
+            mark = total_answer_mark,
+            attempt_number = 1
+            )
+    
+    for question in questions:
+        if question.question_type == 'question_type1':
+            continue # Type 1 question submission to be added later
+
+        else:
+            # Gets the index of the question in the list of questions and uses that to get the answer from the list of answers.
+            submitted_answer = type2_answer_values[type2_questions.index(question)]
+            
+            if question.correctOption == submitted_answer:
+                submission.add_question_answer(question, submitted_answer, 1)    
+            else:
+                submission.add_question_answer(question, submitted_answer, 0)
+    
     return redirect(request.referrer)
