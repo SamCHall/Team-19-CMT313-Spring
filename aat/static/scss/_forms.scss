@@ -8,6 +8,10 @@ form {
     .errors {
         color: red;
     }
+
+    ul#add_question{
+        list-style: none;
+    }
 }
 
 form #question_template{

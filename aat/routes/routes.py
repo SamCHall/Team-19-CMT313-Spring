@@ -31,11 +31,12 @@ def create_assessment():
         for i in range(len(form.add_question.data)):
             question_list.append(form.add_question.data[i])
 
-        question_no = 0
+        question_order = [int(q) for q in form.question_order.data.split(',')]
+
         for question in question_list:
-            question_no += 1
-            FormativeAssignment.add_question(assignment, question, question_no)
-    return render_template('create_formative.html', title='Create Assessment', form = form)
+            FormativeAssignment.add_question(assignment, question, question_order.pop(0))
+            
+    return render_template('create_formative.html', title='Create Assessment', form = form, error=form.errors.get('question_order'))
 
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
 def create_question_type1():

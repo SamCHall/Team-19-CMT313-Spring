@@ -4,7 +4,7 @@
     <h1>Create Formative Assessment</h1>
     <div id="create_formative_assessment_form">
         <form action="{{url_for('create_assessment')}}" method="POST">
-            {{form.csrf_token}}
+            {{form.hidden_tag()}}
             <div id="assignment_title">
             {{form.assignment_title.label}}
             {{form.assignment_title}}
@@ -17,38 +17,23 @@
             {{form.add_question.label}}
             {{form.add_question}}
             </div>
+            <div id="question_order">
+            {{form.question_order.label}}
+            {{form.question_order}} 
+            {% if form.question_order.errors %}
+            <ul class="errors">
+                {% for error in form.question_order.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            </div>
             <div id="is_active">
             {{form.is_active.label}}
             {{form.is_active}}
             </div>
             {{form.submit}}
+           
         </form>
     </div>
 {% endblock content %}
-
-<body>
-    <h1>Create Formative Assessment</h1>
-    <div id="create_formative_assessment_form">
-        <form action="{{url_for('create_assessment')}}" method="POST">
-            {{form.csrf_token}}
-            <div id="assignment_title">
-            {{form.assignment_title.label}}
-            {{form.assignment_title}}
-            </div>
-            <div id="module_selection">
-            {{form.module_id.label}}
-            {{form.module_id}}
-            </div>
-            <div id="add_questions_checkboxes">
-            {{form.add_question.label}}
-            {{form.add_question}}
-            </div>
-            <div id="is_active">
-            {{form.is_active.label}}
-            {{form.is_active}}
-            </div>
-            {{form.submit}}
-        </form>
-    </div>
-</body>
-</html>
