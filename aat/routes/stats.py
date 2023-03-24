@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from .. import app, db
 from ..models import Assignment, Question, QuestionType1, QuestionType2
 
-@app.route('/question/<int:id>/stats')
+@app.route('/staff/question/<int:id>/stats')
 @login_required
 def question_stats(id):
     if current_user.user_type != "staff":
@@ -17,7 +17,7 @@ def question_stats(id):
             return render_template('stats/question_type1_stats.html', title=question.title, question=question)
 
         case "question_type2":
-            abort(501)
+            return render_template('stats/question_type2_stats.html', title=question.title, question=question)
 
     abort(500)
 
