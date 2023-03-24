@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<section id="qt2" class="container">
+
     <h1>{% block title %} Add a new question {% endblock %}</h1>
 
     <form action="" method="POST">
@@ -85,4 +87,5 @@
         {% endif %}
 
         {{ form.Submit(class="button") }}
+</section>
 {% endblock %}

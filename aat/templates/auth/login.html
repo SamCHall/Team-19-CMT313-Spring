@@ -1,37 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Login</h1>
+<section class="container" id="login">
+    <div class="card">
 
-<form method="POST" action="">
-    {{ form.csrf_token }}
-
-    <div class="form-element">
-        {{ form.username.label }}
-        {{ form.username }}
-        {% if form.username.errors %}
-        <div class="alert">
-        {% for error in form.username.errors %}
-            {{ error }}
-        {% endfor %}
+        <div class="card-header">
+            <h1 class="card-title">Login</h1>
         </div>
-        {% endif %}
-    </div>
+        
+        <div class="card-body">
+            <form method="POST" action="">
+                {{ form.csrf_token }}
+                <!-- Username -->
+                {{ form.username.label }}
+                {{ form.username(class="form-control", autofocus=True) }}
 
-    <div class="form-element">
-        {{ form.password.label }}
-        {{ form.password }}
-        {% if form.password.errors %}
-        <div class="alert">
-        {% for error in form.password.errors %}
-            {{ error }}
-        {% endfor %}
+                {% if form.username.errors %}
+                    <ul class=errors>
+                    {% for error in form.username.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Password -->
+                {{ form.password.label }}
+                {{ form.password(class="form-control") }}
+                
+                {% if form.password.errors %}
+                    <ul class=errors>
+                    {% for error in form.password.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Remember me -->
+                <div class="form-check">
+                    {{ form.remember_me(class='form-check-input', id='remember_me') }}
+                    <label for="remember_me" class="form-check-label">Remember me</label>
+                </div>
+
+                <!-- Submit button -->
+                {{ form.submit(class="btn btn-primary") }}
+            </form>
         </div>
-        {% endif %}
     </div>
-
-    <div class="form-element">
-        {{ form.submit }}
-    </div>
-</form>
+</section>
 {% endblock content %}

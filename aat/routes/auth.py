@@ -16,7 +16,7 @@ def login():
     form = Login_form()
     if form.validate_on_submit():
         user = User.query.filter_by(username = form.username.data).first()
-        login_user(user)
+        login_user(user, remember=form.remember_me.data)
         flash('Login Successful', 'info')
         return redirect(url_for('home'))
 

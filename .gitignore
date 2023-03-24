@@ -4,6 +4,7 @@ gen
 aat.db
 development.db
 Pipfile
+qt1_proofOfConcept.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
