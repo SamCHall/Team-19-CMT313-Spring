@@ -21,9 +21,9 @@ def question_stats(id):
 
     abort(500)
 
-@app.route('/assignment/<int:id>/stats')
+@app.route('/staff/assessment/<int:id>/stats')
 @login_required
-def assignment_stats(id):
+def assessment_stats(id):
     if current_user.user_type != "staff":
         abort(403, description="This page can only be accessed by staff.")
 

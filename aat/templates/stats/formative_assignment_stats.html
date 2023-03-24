@@ -19,4 +19,21 @@
     <li>Average Mark: {{ assignment.average_mark() }}</li>
 </ul>
 
+{% set mark_dist = assignment.mark_dist() %}
+
+<div id="overallGraph" class="graph"></div>
+
+<script type="text/javascript">
+{
+    let data = [
+        {
+            x : {{ mark_dist.keys() | list }},
+            y : {{ mark_dist.values() | list }},
+            type : 'bar'
+        }
+    ];
+    displayGraph('overallGraph', 'Mark distribution', data)
+}
+</script>
+
 {% endblock content %}
