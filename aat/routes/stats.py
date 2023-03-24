@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from .. import app, db
 from ..models import Question, QuestionType1, QuestionType2
 
-@app.route('/question/<int:id>/stats')
+@app.route('/staff/question/<int:id>/stats')
 @login_required
 def question_stats(id):
     if current_user.user_type != "staff":
