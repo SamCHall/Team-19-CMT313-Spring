@@ -137,6 +137,43 @@ class Assignment(db.Model):
     def add_question(self, question, question_no):
         return AssignQuestion.add_question(self.id, question.id, question_no)
 
+    def number_of_submissions(self):
+        return len(self.submissions)
+
+    def number_of_students_submitted(self):
+        students = set([submission.student for submission in self.submissions])
+        return len(students)
+
+    def number_of_students_not_submitted(self):
+        return len(self.module.get_students()) - self.number_of_students_submitted()
+
+    def mark_dist(self):
+        """
+        Returns a dictionary for the mark distrubition of the assignment where keys and values are as follows:
+            keys: the mark given
+            value: the number of submissions for a given mark
+        """
+
+        marks = {}
+
+        for submission in self.submissions:
+            if submission.mark in marks:
+                marks[submission.mark] += 1
+            else:
+                marks[submission.mark] = 1
+
+        sorted_by_mark = dict(sorted(marks.items()))
+        return sorted_by_mark
+
+    def lowest_mark(self):
+        return min(list(self.mark_dist().keys()))
+
+    def highest_mark(self):
+        return max(list(self.mark_dist().keys()))
+
+    def average_mark(self):
+        return statistics.mean([submission.mark for submission in self.submissions])
+
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
