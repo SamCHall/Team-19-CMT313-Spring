@@ -109,6 +109,10 @@ class Module(db.Model):
     def get_staff(self):
         return [user for user in self.user if user.user_type == "staff"]
 
+    def check_student(self, student):
+        """ Returns true if given student is enrolled on the module"""
+        return student in self.get_students()
+
 
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -143,6 +147,43 @@ class Assignment(db.Model):
 
     def add_question(self, question, question_no):
         return AssignQuestion.add_question(self.id, question.id, question_no)
+
+    def number_of_submissions(self):
+        return len(self.submissions)
+
+    def number_of_students_submitted(self):
+        students = set([submission.student for submission in self.submissions])
+        return len(students)
+
+    def number_of_students_not_submitted(self):
+        return len(self.module.get_students()) - self.number_of_students_submitted()
+
+    def mark_dist(self):
+        """
+        Returns a dictionary for the mark distrubition of the assignment where keys and values are as follows:
+            keys: the mark given
+            value: the number of submissions for a given mark
+        """
+
+        marks = {}
+
+        for submission in self.submissions:
+            if submission.mark in marks:
+                marks[submission.mark] += 1
+            else:
+                marks[submission.mark] = 1
+
+        sorted_by_mark = dict(sorted(marks.items()))
+        return sorted_by_mark
+
+    def lowest_mark(self):
+        return min(list(self.mark_dist().keys()))
+
+    def highest_mark(self):
+        return max(list(self.mark_dist().keys()))
+
+    def average_mark(self):
+        return statistics.mean([submission.mark for submission in self.submissions])
 
 
 class FormativeAssignment(Assignment):
@@ -205,6 +246,8 @@ class Submission(db.Model):
             db.session.add(question_submission)
             db.session.commit()
 
+    def get_current_attempt_number(student_id, assignment_id):
+        return Submission.query.filter_by(student_id=student_id, assignment_id=assignment_id).count()
 
 class SubmissionAnswers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -428,3 +471,24 @@ class QuestionType2(Question):
 
     def mark(self):
         return 0
+
+    def correct_submissions_number(self):
+        return sum([submission.mark for submission in self.submissions])
+
+    def correct_submissions_percent(self):
+        if len(self.submissions) > 0:
+            return 100 * self.correct_submissions_number() / len(self.submissions)
+        return None
+
+    def option_choice_quantity(self):
+        count = {
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "D": 0
+        }
+
+        for submission in self.submissions:
+            count[submission.submission_answer] += 1
+
+        return count

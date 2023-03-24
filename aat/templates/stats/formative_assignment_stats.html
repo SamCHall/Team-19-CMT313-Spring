@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% assets "graph" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<section class="container">
+<h1>{{ assignment.title }} - Stats</h1>
+
+<h2>Overall Stats</h2>
+
+<ul>
+    <li>Number of submissions: {{ assignment.number_of_submissions() }}</li>
+    <li>Number of students who have submitted: {{ assignment.number_of_students_submitted()}}</li>
+    <li>Number of students who have not submitted: {{ assignment.number_of_students_not_submitted()}}</li>
+
+    <li>Highest Mark: {{ assignment.highest_mark() }}</li>
+    <li>Lowest Mark: {{ assignment.lowest_mark() }}</li>
+    <li>Average Mark: {{ assignment.average_mark() }}</li>
+</ul>
+
+{% set mark_dist = assignment.mark_dist() %}
+
+<div id="overallGraph" class="graph"></div>
+
+<script type="text/javascript">
+{
+    let data = [
+        {
+            x : {{ mark_dist.keys() | list }},
+            y : {{ mark_dist.values() | list }},
+            type : 'bar'
+        }
+    ];
+    displayGraph('overallGraph', 'Mark distribution', data)
+}
+</script>
+
+</section>
+
+{% endblock content %}
