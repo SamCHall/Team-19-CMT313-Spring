@@ -76,7 +76,7 @@ def create_question_type2():
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
-@app.route("/questions")
+@app.route("/display-questions")
 def questions():
-    questions = question_type2.query.all()
-    return render_template('questions.html', title='Questions',questions=questions)
+    questions = Question.query.all()
+    return render_template('display-questions.html', title='Questions',questions=questions)

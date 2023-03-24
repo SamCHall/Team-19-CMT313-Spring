@@ -1,0 +1,16 @@
+{% extends "home.html" %}
+
+{% block content %}
+<section id="list-question" class="container">
+    <h1>List of Questions</h1>>
+    
+    <div class="content">
+        {% for question in questions %}
+            <div class="question2">
+                <p>{{ question.title }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock content%}
