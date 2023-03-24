@@ -104,6 +104,12 @@ def create_question_type2():
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
+
+@app.route("/display-questions")
+def questions():
+    questions = Question.query.all()
+    return render_template('display-questions.html', title='Questions',questions=questions)
+
 @app.route("/assessments", methods=['GET'])
 def view_assessments():
     assignments = Assignment.query.all()
@@ -208,3 +214,4 @@ def submit_assessment(assessment_id):
 
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
+
