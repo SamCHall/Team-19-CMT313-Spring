@@ -5,7 +5,8 @@
 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
 
-<h1>{{ question.title }} - Stats</h1>
+<section class="container">
+    <h1>{{ question.title }} - Stats</h1>
 
 {# Include html file with code to display question here #}
 
@@ -18,5 +19,7 @@
 {% else %}
 <p>There are currently no submissions for this question.</p>
 {% endif %}
+
+</section>
 
 {% endblock content %}

@@ -2,6 +2,8 @@ from flask_assets import Bundle
 
 bundles = {
     'js': Bundle(
+        'bootstrap/js/popper.js',
+        'bootstrap/js/bootstrap.js',
         'js/script.js',
         'js/dropzones.js',
         'js/form-submit.js',
@@ -10,6 +12,7 @@ bundles = {
         output='gen/script.%(version)s.js'
     ),
 
+    # JS used to graphs, only imported on pages with graphs
     'graph': Bundle(
         'js/plotly-2.18.2.min.js',
         'js/display-graph.js',

@@ -1,13 +1,16 @@
 import random
 import ast
-from flask import render_template, abort, request, redirect
+from flask import render_template, abort, flash, request, redirect
 from flask_login import current_user, login_required
+
 from .. import app, db
 from ..models import *
 from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
 from ..forms.question_type_2 import QuestonType2Form
 
+
+# Home
 @app.route("/")
 def home():
     return render_template('home.html', title='Home')
@@ -15,7 +18,7 @@ def home():
 
 @app.route("/staff/create-formative", methods=['GET', 'POST'])
 @login_required
-def create_assessment():
+def create_formative_assessment():
     if Staff.query.get(current_user.get_id()) == None:
         abort(403, description="This page can only be accessed by staff.")
     form = CreateFormAss()
@@ -38,8 +41,20 @@ def create_assessment():
 
     return render_template('create_formative.html', title='Create Assessment', form = form, error=form.errors.get('question_order'))
 
+
+# Create a summative assessment
+@app.route('/create-summative', methods=['GET', 'POST'])
+@login_required
+def create_summative_assessment():
+    return render_template('create_summative.html')
+
+
+
+# Create a type 1 question
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
+@login_required
 def create_question_type1():
+    # if current_user
     qt1_form = QuestonType1Form()
     if qt1_form.validate_on_submit():
         correct_answers = []
@@ -54,9 +69,15 @@ def create_question_type1():
         db.session.add(qt1)
         db.session.commit()
 
+        flash("You've created a new Fill in the Blank question!")
+        return redirect('/')
+
     return render_template('create-question-type1.html', qt1_form=qt1_form)
 
+
+# Create a type 2 question
 @app.route("/staff/question/create/type2", methods=["POST", "GET"])
+@login_required
 def create_question_type2():
     form = QuestonType2Form()
     if form.validate_on_submit():

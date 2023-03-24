@@ -25,3 +25,12 @@ python wsgi.py
 - Summative Assessment - Chris
 - Teaching Staff Review Statistics - Tim
 
+## Usage
+
+The following environment variables can be set:
+- ADMIN_PASSWORD
+    Specify a password for a default admin account. Username is always "admin", default password is "admin".
+- DATABASE_URI
+    The path to the database, default uses SQLite.
+- SECRET_KEY
+    Set a secret key, default is "development".

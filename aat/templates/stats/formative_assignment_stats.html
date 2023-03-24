@@ -5,6 +5,7 @@
 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
 
+<section class="container">
 <h1>{{ assignment.title }} - Stats</h1>
 
 <h2>Overall Stats</h2>
@@ -35,5 +36,7 @@
     displayGraph('overallGraph', 'Mark distribution', data)
 }
 </script>
+
+</section>
 
 {% endblock content %}

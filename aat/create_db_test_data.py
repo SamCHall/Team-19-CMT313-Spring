@@ -1,7 +1,7 @@
 from . import db
 from .models import *
 
-if User.query.first() is None:
+if User.query.count() <= 1:
     student1 = Student(
         username = "leia",
         password = "alpha",

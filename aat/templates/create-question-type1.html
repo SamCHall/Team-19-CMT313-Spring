@@ -1,50 +1,75 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section id="createQuestionType1">
-    <form id="qt1-form" action="{{ url_for('create_question_type1') }}" method="post" autocomplete="off">
-        <input autocomplete="false" name="hidden" type="text" style="display:none;">
-        {{ qt1_form.hidden_tag() }}
-        <!-- Title -->
-        {{ qt1_form.title(placeholder='Title', autofocus=true) }}
-        {% if qt1_form.title.errors %}
-            <ul class="errors">
-                {% for error in qt1_form.title.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <!-- Template -->
-        {{ qt1_form.question_template(placeholder='Provide a question template placing BLANK where appropriate.') }}
-        {% if qt1_form.question_template.errors %}
-            <ul class="errors">
-                {% for error in qt1_form.question_template.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <!-- Correct answers -->
-        {{ qt1_form.correct_answers(placeholder='Comma separated answers for the above template') }}
-        {% if qt1_form.correct_answers.errors %}
-            <ul class="errors">
-                {% for error in qt1_form.correct_answers.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <!-- Incorrect answers -->
-        {{ qt1_form.incorrect_answers(placeholder='Comma separated incorrect answers (optional)') }}
-        {% if qt1_form.incorrect_answers.errors %}
-            <ul class="errors">
-                {% for error in qt1_form.incorrect_answers.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <!-- Preview answer -->
-        <input id="preview" style="pointer-events: none; cursor: default;" placeholder="Preview">
-        <!-- Submit -->
-        {{ qt1_form.submit() }}
-    </form>
+<section id="qt1" class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Fill in the Blank</h1>
+        </div>
+
+        <div class="card-body">
+            <form id="qt1-form" action="{{ url_for('create_question_type1') }}" method="post" autocomplete="off">
+                <input autocomplete="false" name="hidden" type="text" style="display:none;">
+                {{ qt1_form.hidden_tag() }}
+
+                <!-- Title -->
+                {{ qt1_form.title.label }}
+                {{ qt1_form.title(autofocus=true, class="form-control") }}
+
+                {% if qt1_form.title.errors %}
+                    <ul class="errors">
+                        {% for error in qt1_form.title.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Template -->
+                {{ qt1_form.question_template.label }}
+                {{ qt1_form.question_template(class='form-control') }}
+
+                {% if qt1_form.question_template.errors %}
+                    <ul class="errors">
+                        {% for error in qt1_form.question_template.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Correct answers -->
+                {{ qt1_form.correct_answers.label }}
+                {{ qt1_form.correct_answers(class='form-control') }}
+
+                {% if qt1_form.correct_answers.errors %}
+                    <ul class="errors">
+                        {% for error in qt1_form.correct_answers.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Incorrect answers -->
+                {{ qt1_form.incorrect_answers.label }}
+                <label for="incorrect_answers" class="text-muted text-small">These will</label>
+                {{ qt1_form.incorrect_answers(class='form-control') }}
+                
+                {% if qt1_form.incorrect_answers.errors %}
+                    <ul class="errors">
+                        {% for error in qt1_form.incorrect_answers.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Preview answer -->
+                <label for="preview">Preview:</label>
+                <textarea id="preview" placeholder="Your question will appear here once a template is provided."></textarea>
+
+                <!-- Submit -->
+                {{ qt1_form.submit(class='btn btn-primary mt-2') }}
+            </form>
+        </div>
+    </div>
+
 </section>
 {% endblock content %}

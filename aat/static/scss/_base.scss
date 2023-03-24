@@ -1,4 +1,48 @@
 body {
-    background-color: lightblue;
-    font-family: sans-serif;
+    display: grid;
+    grid-template-rows: 70px 1fr 70px;
+    background-color: lighten($primary, 35%);
+}
+
+.navbar {
+    z-index: 9999999;
+
+    img {
+        transition-duration: 0.3s;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    .nav-link {
+        color: $light;
+        transition: text-decoration-color 0.3s;
+        text-decoration: underline transparent;
+
+        &:hover {
+            color: $primary;
+            text-decoration-color: $secondary;
+        }
+    }
+}
+
+#flash-list {
+    list-style: none;
+    max-width: 400px;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+
+    p {
+        padding-right: 20px;
+        min-width: 200px;
+        max-width: 380px;
+    }
+
+    button {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
 }

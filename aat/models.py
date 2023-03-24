@@ -2,6 +2,8 @@ from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from os import environ
+
 from . import app, db
 import abc
 import collections
@@ -22,9 +24,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String, unique=True, nullable=False)
     __password = db.Column(db.String, nullable=False)
 
-    first_name = db.Column(db.String, nullable=False)
-    surname = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
+    first_name = db.Column(db.String, nullable=True)
+    surname = db.Column(db.String, nullable=True)
+    email = db.Column(db.String, unique=True, nullable=True)
     user_type = db.Column(db.String, nullable=False)
 
     modules = db.relationship(
@@ -72,6 +74,15 @@ class Staff(User):
     __mapper_args__ = {
         "polymorphic_identity": "staff",
     }
+
+
+def create_admin() -> None:
+    """Create an admin account. Should be used while initialising the app."""
+    if Staff.query.filter_by(username="admin").first() == None:
+        password = environ.get('ADMIN_PASSWORD') if environ.get('ADMIN_PASSWORD') != None else 'admin'
+        user = Staff(username='admin', password=password, position="admin")
+        db.session.add(user)
+        db.session.commit()
 
 
 class Module(db.Model):

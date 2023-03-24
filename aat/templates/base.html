@@ -20,18 +20,71 @@
 <body>
 
     <header>
-        <nav>
-            {% if current_user.is_authenticated %}
-            <a class="menu-item" href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-            <a class="menu-item" href="{{ url_for('login') }}">Login</a>
-            {% endif %}
+        <!-- Nav -->
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+            <div class="container">
+                <a href="/" class="navbar-brand">
+                    {% cache 86400, 'profile' %}
+                    <img src="{{ url_for('static', filename='img/aat-logo.svg') }}" alt="Logo" height="50px">
+                    {% endcache %}
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                    <!-- NAV ITEMS -->
+                    <ul id="nav-items-right" class="navbar-nav ms-auto fs-3">
+                        <!-- Show when logged in -->
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown mx-auto">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                New
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="{{ url_for('create_question_type1') }}">Fill in the Blank</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('create_question_type2') }}">Multiple Choice</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('create_formative_assessment') }}">Formative Assessment</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('create_summative_assessment') }}">Summative Assessment</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item mx-auto">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                        {% else %}
+                        <!-- Show when logged out -->
+                        <li class="nav-item mx-auto">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <!-- END NAV ITEMS -->
+                </div>
+            </div>
         </nav>
     </header>
 
     <main>
+        <!-- Main content -->
         {% block content %}
         {% endblock content %}
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="flash-list">
+                    {% for message in messages %}
+                        <li class="alert alert-warning d-flex align-items-center" role="alert">
+                            <p>{{ message }}</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     </main>
+    <footer>
+
+    </footer>
 </body>
 </html>
