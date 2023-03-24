@@ -4,7 +4,9 @@ span.dropzone{
    max-width: fit-content;
    justify-content: center;
    height: 18px;
-   background-color: white;
+   position: relative;
+   top: 5px;
+   background-color: #3d71d890;
    padding: 2px;
    margin-left: 5px;
    margin-right: 5px;
