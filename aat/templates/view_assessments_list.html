@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<section class="container">
     {% for assignment in assignments %}
         {% if assignment.active == True %}
             {% for item in assignment.module.get_students() %}
@@ -13,4 +14,5 @@
             {% endfor %}
         {% endif %}
     {% endfor %}
+</section>
 {% endblock content %}
