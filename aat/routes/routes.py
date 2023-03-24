@@ -13,7 +13,7 @@ def home():
     return render_template('home.html', title='Home')
 
 
-@app.route("/create-formative", methods=['GET', 'POST'])
+@app.route("/staff/create-formative", methods=['GET', 'POST'])
 @login_required
 def create_assessment():
     if Staff.query.get(current_user.get_id()) == None:
@@ -35,7 +35,7 @@ def create_assessment():
 
         for question in question_list:
             FormativeAssignment.add_question(assignment, question, question_order.pop(0))
-            
+
     return render_template('create_formative.html', title='Create Assessment', form = form, error=form.errors.get('question_order'))
 
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
@@ -98,10 +98,7 @@ def view_assessment(assessment_id):
     if assignment.active == False:
         abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
 
-    id_list=[]   
-    for item in assignment.module.get_students():
-        id_list.append(item.id)
-    if current_user.id not in id_list:
+    if not assignment.module.check_student(current_user):
         abort(403, description="You are not enrolled on the correct module to take this assignment.")
 
     for question in questions:
@@ -113,12 +110,12 @@ def view_assessment(assessment_id):
             # Takes the string literal and converts it to a list of strings
             a = ast.literal_eval(question.correct_answers)
             b = ast.literal_eval(question.incorrect_answers)
-            # Making both lists into one    
+            # Making both lists into one
             c = a + b
-           
+
             # Randomises the order of options from correct_answers and incorrect_answers
             question.options = random.sample(c, len(c))
-    
+
     return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
 
 @app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
@@ -134,29 +131,29 @@ def submit_assessment(assessment_id):
 
     type1_correct_answers_list = []
     type2_correct_answers_list = []
-    
+
     for question in questions:
         if question.question_type == 'question_type1':
             correct_answers = ast.literal_eval(question.correct_answers)
 
             for correct_answer in correct_answers:
                 type1_correct_answers_list.append(correct_answer)
-        
+
         elif question.question_type == 'question_type2':
             type2_questions.append(question)
             type2_correct_answers_list.append(question.correctOption)
 
-    # The below code is used to mark the overall assessment before adding a submission to the database            
+    # The below code is used to mark the overall assessment before adding a submission to the database
     type1_mark = 0
     for answer in range(len(type1_answer_values)):
         if type1_answer_values[answer] == type1_correct_answers_list[answer]:
             type1_mark += 1
-                                                                        
+
     type2_mark = 0
     for answer in range(len(type2_answer_values)):
         if type2_answer_values[answer] == type2_correct_answers_list[answer]:
             type2_mark += 1
-    
+
     total_answer_mark = type1_mark + type2_mark
     current_attempt_number = Submission.get_current_attempt_number(current_user.id, assessment_id)
 
@@ -166,7 +163,7 @@ def submit_assessment(assessment_id):
             mark = total_answer_mark,
             attempt_number = current_attempt_number + 1
             )
-    
+
     # The below code is used to add the answers to the database with their individual marks.
     for question in questions:
         if question.question_type == 'question_type1':
@@ -174,19 +171,19 @@ def submit_assessment(assessment_id):
             submitted_answer = []
             mark = 0
             for i in range(num_blanks):
-                submitted_answer.append(type1_answer_values[i])    
+                submitted_answer.append(type1_answer_values[i])
                 if submitted_answer[i] == type1_correct_answers_list[i]:
                     mark += 1
             submission.add_question_answer(question, str(submitted_answer), mark)
             type1_answer_values = type1_answer_values[num_blanks:] # Trims off the start of the list so the for loop begins again at the next question.
         else:
-        
+
             submitted_answer = type2_answer_values[type2_questions.index(question)] # Gets the index of the question in the list of questions and uses that to get the answer from the list of answers.
-            
+
             if question.correctOption == submitted_answer:
-                submission.add_question_answer(question, submitted_answer, 1)    
+                submission.add_question_answer(question, submitted_answer, 1)
             else:
                 submission.add_question_answer(question, submitted_answer, 0)
-    
+
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
