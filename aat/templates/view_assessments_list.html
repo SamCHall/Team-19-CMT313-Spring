@@ -2,17 +2,35 @@
 
 {% block content %}
 <section class="container">
-    {% for assignment in assignments %}
-        {% if assignment.active == True %}
-            {% for item in assignment.module.get_students() %}
-                {% if current_user.id == item.id %}
-                    <div id="assignment_information">
-                        <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
-                        {{ assignment.module }}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Available Assessments</h1>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Assessment</th>
+                        <th scope="col">Module</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                        {% if assignment.active == True %}
+                            {% for item in assignment.module.get_students() %}
+                                {% if current_user.id == item.id %}
+                                    <tr>
+                                        <td><a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">
+                                            {{ assignment.title }}</a></td>
+                                        <td>{{ assignment.module }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
 {% endblock content %}

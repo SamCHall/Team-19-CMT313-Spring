@@ -12,38 +12,43 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 
                 {% for question in questions %}
-                    <div>
+                    <div class="question">
                         {% if question.question_type == "question_type1" %}
 
                             <label class ="form-label" for="{{ loop.index }}_answer" id="question_template">
-                                {{ question.question_template|safe }} 
+                                {{ loop.index }}. {{ question.question_template|safe }} 
                             </label>
 
                             <div id="type_1_options">
                                 {% for option in question.options %}
-                                    <option draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
+                                    <option class="border" draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
                                 {% endfor %}
                             </div>
                         
                         {% else %}
     
                             <label class="form-label" id="question_text">
-                                {{ question.question_text}}
+                                {{ loop.index }}. {{ question.question_text}}
                             </label>
                             
-                            <div>
+                            <div class="radio_options">
+                                <div class="radio_option">
                                 <input class= "form-check-input" id="flexRadioDefault1" type="radio" name="{{ loop.index }}" id="type2_radio" value="{{ question.option1 }}"> 
                                 <label class="form-check-label">{{ question.option1 }}</label>
-                                
+                                </div>
+                                <div class="radio_option">
                                 <input class="form-check-input" id="flexRadioDefault1" type="radio" name="{{ loop.index }}" id="type2_radio" value ="{{ question.option2 }}"> 
                                 <label class="form-check-label">{{ question.option2 }}</label>
-                        
+                                </div>
+                                <div class="radio_option">
                                 <input class= "form-check-input" id="flexRadioDefault1" type="radio" name="{{ loop.index }}" id="type2_radio" value ="{{ question.option3 }}"> 
                                 <label class="form-check-label">{{ question.option3 }}</label>
-                            
+                                </div>
+                                <div class="radio_option">
                                 <input class= "form-check-input" id="flexRadioDefault1" type="radio" name="{{ loop.index }}" id="type2_radio" value ="{{ question.option4 }}"> 
                                 <label class="form-check-label">{{ question.option4 }}</label>
-                
+                                </div>
+                            </div>
                         {% endif %}
                         </div>
                     {% endfor %}

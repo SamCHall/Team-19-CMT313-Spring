@@ -360,7 +360,11 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     }
 
     def __str__(self):
-        output = self.title + " " + self.question_type
+        if self.question_type == "question_type1":
+            question_type = "Fill in the blanks"
+        elif self.question_type == "question_type2":
+            question_type = "Multiple choice"
+        output = self.title + " | " + question_type
         return output
 
     @abc.abstractmethod
