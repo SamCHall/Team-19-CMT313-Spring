@@ -1,25 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Create Formative Assessment</h1>
-    <div id="create_formative_assessment_form">
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Create Formative Assessment</h1>
+        </div>
+    <div class="card-body">
         <form action="{{url_for('create_formative_assessment')}}" method="POST">
             {{form.csrf_token}}
             <div id="assignment_title">
-            {{form.assignment_title.label}}
-            {{form.assignment_title}}
+            {{form.assignment_title.label(class_="form-label")}}
+            {{form.assignment_title(class_="form-control")}}
             </div>
             <div id="module_selection">
-            {{form.module_id.label}}
-            {{form.module_id}}
+            {{form.module_id.label(class="form-label")}}
+            {{form.module_id(class="form-select")}}
             </div>
-            <div id="add_questions_checkboxes">
-            {{form.add_question.label}}
+            <div class="add_question">
+            {{form.add_question.label(class="form-label")}}
             {{form.add_question}}
             </div>
             <div id="question_order">
-            {{form.question_order.label}}
-            {{form.question_order}}
+            {{form.question_order.label(class="form-label")}}
+            {{form.question_order(class="form-control")}}
             {% if form.question_order.errors %}
             <ul class="errors">
                 {% for error in form.question_order.errors %}
@@ -29,11 +33,11 @@
             {% endif %}
             </div>
             <div id="is_active">
-            {{form.is_active.label}}
+            {{form.is_active.label(class="form-label")}}
             {{form.is_active}}
             </div>
-            {{form.submit}}
-
+            {{form.submit(class="btn btn-primary")}}
         </form>
     </div>
+</section>
 {% endblock content %}
