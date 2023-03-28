@@ -1,6 +1,6 @@
 import random
 import ast
-from flask import render_template, abort, flash, request, redirect
+from flask import render_template, abort, flash, request, redirect, url_for
 from flask_login import current_user, login_required
 
 from .. import app, db
@@ -101,11 +101,12 @@ def create_question_type2():
 
         db.session.add(qt2)
         db.session.commit()
+        flash("Question was added")
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
 
-@app.route("/display-questions")
+@app.route("/display-questions", methods=['GET','POST'])
 def questions():
     questions = Question.query.all()
     return render_template('display-questions.html', title='Questions',questions=questions)
@@ -215,3 +216,45 @@ def submit_assessment(assessment_id):
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
 
+@app.route('/questions/delete/<int:id>')
+def delete_question(id):
+    question_to_delete = Question.query.get_or_404(id)
+
+    try:
+        db.session.delete(question_to_delete)
+        db.session.commit()
+
+        flash("Question was deleted")
+    
+        questions = Question.query.all()
+        return render_template('display-questions.html', title='Questions',questions=questions)
+    
+    except:
+        flash("There was a problem deleting the question")
+        questions = Question.query.all()
+        return render_template('display-questions.html', title='Questions',questions=questions)
+
+@app.route('/questions/edit/<int:id>', methods=['GET','POST'])
+def edit_question(id):
+    question = Question.query.get_or_404(id)
+    form = QuestonType2Form()
+    if form.validate_on_submit():
+        question.title = form.title.data
+        question.option1 = form.option1.data
+        question.option2 = form.option2.data
+        question.option3 = form.option3.data
+        question.option4 = form.option4.data
+        question.correctOption = form.correctOption.data
+
+        db.session.add(question)
+        db.session.commit()
+        flash("Question successfully updated")
+        return redirect(url_for('questions',id=question.id))
+    
+    form.title.data = question.title
+    form.option1.data = question.option1
+    form.option2.data = question.option2
+    form.option3.data = question.option3
+    form.option4.data = question.option4
+    form.correctOption.data = question.correctOption
+    return render_template('edit-post.html', form = form)

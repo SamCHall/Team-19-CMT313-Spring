@@ -2,13 +2,15 @@
 
 {% block content %}
 <section id="list-question" class="container">
-    <h1>List of Questions</h1>>
+    <h1>List of Questions</h1>
     
     <div class="content">
         {% for question in questions %}
             <div class="question2">
                 <p>{{ question.title }}</p>
             </div>
+            <a href="{{ url_for('edit_question', id=question.id)}}" class="edit-question-button">Edit Question</a>
+            <a href="{{ url_for('delete_question', id=question.id)}}" class="delete-question-button">Delete Question</a>
         {% endfor %}
     </div>
 </section>
