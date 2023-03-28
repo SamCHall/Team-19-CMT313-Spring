@@ -258,3 +258,8 @@ def edit_question(id):
     form.option4.data = question.option4
     form.correctOption.data = question.correctOption
     return render_template('edit-post.html', form = form)
+
+@app.route('/display-questions/<int:id>')
+def view_question(id):
+    question = Question.query.get_or_404(id)
+    return render_template('view-questions-detailed.html', question=question)

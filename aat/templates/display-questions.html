@@ -9,8 +9,11 @@
             <div class="question2">
                 <p>{{ question.title }}</p>
             </div>
+            <a href="{{ url_for('view_question', id=question.id)}}" class="view-question-button">View Question</a>
             <a href="{{ url_for('edit_question', id=question.id)}}" class="edit-question-button">Edit Question</a>
             <a href="{{ url_for('delete_question', id=question.id)}}" class="delete-question-button">Delete Question</a>
+            <br>
+            <br>
         {% endfor %}
     </div>
 </section>
