@@ -30,6 +30,8 @@ def create_formative_assessment():
         db.session.add(assignment)
         db.session.commit()
 
+        flash("You've created a new formative assessment!")
+
         question_list = []
         for i in range(len(form.add_question.data)):
             question_list.append(form.add_question.data[i])
@@ -114,6 +116,14 @@ def questions():
 def view_assessments():
     assignments = Assignment.query.all()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
+
+@app.route("/staff/assessments", methods=['GET'])
+@login_required
+def view_staff_assessments():
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    assignments = Assignment.query.all()
+    return render_template('view_assessments_list_staff.html', title = 'Assessments - Staff View', assignments = assignments)
 
 
 @app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
@@ -212,6 +222,23 @@ def submit_assessment(assessment_id):
             else:
                 submission.add_question_answer(question, submitted_answer, 0)
 
+    
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
 
+@app.route('/delete-assessment/<int:assessment_id>', methods=['GET', 'POST'])
+@login_required
+def delete_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    if current_user not in assignment.module.get_staff():
+        print(assignment.module.get_staff())
+        abort(403, description="You are not a staff member for this module.")
+    
+    db.session.delete(assignment)
+    db.session.commit()
+
+    flash('The assessment has been deleted successfully.')
+    return redirect(request.referrer)

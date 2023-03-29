@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Assessments - Staff View</h1>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Assessment</th>
+                        <th scope="col">Module</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                        {% if assignment.active == True %}
+                            {% for item in assignment.module.get_staff() %}
+                                {% if current_user.id == item.id %}
+                                    <tr>
+                                        <td><a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">
+                                            {{ assignment.title }}</a></td>
+                                        <td>{{ assignment.module }}</td>
+                                        <td class="edit-buttons"><a>Edit</a><a href="{{ url_for('delete_assessment', assessment_id=assignment.id) }}">Delete</a></td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock content %}
