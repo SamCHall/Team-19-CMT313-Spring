@@ -68,8 +68,7 @@ def edit_formative_assessment(assessment_id):
             question_list.append(form.add_question.data[i])
 
         question_order = [int(q) for q in form.question_order.data.split(',')]
-        print(question_order)
-        print(question_list)
+
         for question in question_list:
             FormativeAssignment.add_question(assignment, question, question_order.pop(0)) # Add the questions to the assignment, question_order.pop(0) gets the first element in the list and removes it from the list
     assignment = FormativeAssignment.query.get(assessment_id)
