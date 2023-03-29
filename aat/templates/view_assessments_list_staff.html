@@ -23,8 +23,8 @@
                                         <td><a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">
                                             {{ assignment.title }}</a></td>
                                         <td>{{ assignment.module }}</td>
-                                        <td class="edit-buttons"><a>Edit</a><a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</button>
-                                        </td>
+                                        <td class="edit-buttons"><a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
+                                            <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</button></td>
                                     </tr>
                                 {% endif %}
                             {% endfor %}

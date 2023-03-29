@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Create Formative Assessment</h1>
+        </div>
+    <div class="card-body">
+        <form action="{{url_for('edit_formative_assessment', assessment_id=assignment.id)}}" method="POST">
+            {{form.csrf_token}}
+            <div id="assignment_title">
+            {{form.assignment_title.label(class_="form-label")}}
+            {{form.assignment_title(class_="form-control")}}
+            </div>
+            <div id="module_selection">
+            {{form.module_id.label(class="form-label")}}
+            {{form.module_id(class="form-select")}}
+            </div>
+            <div class="add_question">
+            {{form.add_question.label(class="form-label")}}
+            {{form.add_question}}
+            </div>
+            <div id="question_order">
+            {{form.question_order.label(class="form-label")}}
+            {{form.question_order(class="form-control")}}
+            {% if form.question_order.errors %}
+            <ul class="errors">
+                {% for error in form.question_order.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            </div>
+            <div id="is_active">
+            {{form.is_active.label(class="form-label")}}
+            {{form.is_active}}
+            </div>
+            {{form.submit(class="btn btn-primary")}}
+        </form>
+    </div>
+</section>
+{% endblock content %}
