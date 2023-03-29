@@ -477,7 +477,7 @@ class QuestionType2(Question):
         return 0
 
     def correct_submissions_number(self):
-        return sum([submission.mark for submission in self.submissions])
+        return sum([submission.question_mark for submission in self.submissions])
 
     def correct_submissions_percent(self):
         if len(self.submissions) > 0:
@@ -486,10 +486,10 @@ class QuestionType2(Question):
 
     def option_choice_quantity(self):
         count = {
-            "A": 0,
-            "B": 0,
-            "C": 0,
-            "D": 0
+            self.option1: 0,
+            self.option2: 0,
+            self.option3: 0,
+            self.option4: 0
         }
 
         for submission in self.submissions:
