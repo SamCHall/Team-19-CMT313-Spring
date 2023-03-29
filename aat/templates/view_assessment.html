@@ -12,9 +12,9 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 
                 {% for question in questions %}
-                    <div class="question">
+                <div class="question">
                         {% if question.question_type == "question_type1" %}
-
+                        <div class="question_type1">
                             <label class ="form-label" for="{{ loop.index }}_answer" id="question_template">
                                 {{ loop.index }}. {{ question.question_template|safe }} 
                             </label>
@@ -24,9 +24,9 @@
                                     <option class="border" draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
                                 {% endfor %}
                             </div>
-                        
+                        </div>
                         {% else %}
-    
+                        <div class="question_type2">
                             <label class="form-label" id="question_text">
                                 {{ loop.index }}. {{ question.question_text}}
                             </label>
@@ -49,8 +49,9 @@
                                 <label class="form-check-label">{{ question.option4 }}</label>
                                 </div>
                             </div>
-                        {% endif %}
                         </div>
+                        {% endif %}
+                    </div>
                     {% endfor %}
                 <input type="submit" class="btn btn-primary" id="submit-formative" value="Submit">
             </form>
