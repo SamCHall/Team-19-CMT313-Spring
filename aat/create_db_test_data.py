@@ -198,7 +198,7 @@ if User.query.count() <= 1:
     )
     db.session.add(assignment1)
 
-    assignment2 = SummativeAssignment(
+    assignment2 = FormativeAssignment(
         title = "Hardware devices",
         module = module2,
         active = True
@@ -242,6 +242,8 @@ if User.query.count() <= 1:
 
     db.session.commit()
 
+    assignment2.add_question(q6, 1)
+
     assignment4.add_question(q1, 1)
     assignment4.add_question(q2, 5)
     assignment4.add_question(q3, 3)
@@ -259,23 +261,27 @@ if User.query.count() <= 1:
         assignment = assignment4,
         student = student1,
         attempt_number = 1,
-        mark = 6
+        mark = 7
     )
     db.session.add(submission1)
     submission1.add_question_answer(q1, "['low-level', 'source']", 1)
     submission1.add_question_answer(q2, "['compiler', 'object']", 2)
     submission1.add_question_answer(q3, "['interpreter', 'line', 'source', 'executes']", 3)
+    submission1.add_question_answer(q4, "Multi purpose software", 1)
+    submission1.add_question_answer(q5, "Translator software", 0)
 
     submission2 = Submission(
         assignment = assignment4,
         student = student2,
         attempt_number = 1,
-        mark = 8
+        mark = 10
     )
     db.session.add(submission2)
     submission2.add_question_answer(q1, "['high-level', 'source']", 2)
     submission2.add_question_answer(q2, "['compiler', 'object']", 2)
     submission2.add_question_answer(q3, "['interpreter', 'statement', 'source', 'executes']", 4)
+    submission2.add_question_answer(q4, "Multi purpose software", 1)
+    submission2.add_question_answer(q5, "Video games", 1)
 
     submission3 = Submission(
         assignment = assignment4,
@@ -287,39 +293,110 @@ if User.query.count() <= 1:
     submission3.add_question_answer(q1, "['high-level', 'object']", 1)
     submission3.add_question_answer(q2, "['interpreter', 'source']", 0)
     submission3.add_question_answer(q3, "['compiler', 'line', 'machine', 'executes']", 1)
+    submission3.add_question_answer(q4, "General purpose software", 0)
+    submission3.add_question_answer(q5, "Utility programs", 0)
 
     submission4 = Submission(
         assignment = assignment4,
         student = student5,
         attempt_number = 1,
-        mark = 2
+        mark = 3
     )
     db.session.add(submission4)
     submission4.add_question_answer(q1, "['high', 'object']", 0)
     submission4.add_question_answer(q2, "['assemblers', 'machine']", 0)
     submission4.add_question_answer(q3, "['interpreter', 'line', 'object', 'executes']", 2)
+    submission4.add_question_answer(q4, "Special purpose software", 0)
+    submission4.add_question_answer(q5, "Video games", 1)
 
     submission5 = Submission(
         assignment = assignment4,
         student = student6,
         attempt_number = 1,
-        mark = 5
+        mark = 7
     )
     db.session.add(submission5)
     submission5.add_question_answer(q1, "['high-level', 'source']", 2)
     submission5.add_question_answer(q2, "['interpreter', 'object']", 1)
     submission5.add_question_answer(q3, "['compiler', 'statement', 'assembly', 'executes']", 2)
+    submission5.add_question_answer(q4, "Multi purpose software", 1)
+    submission5.add_question_answer(q5, "Video games", 1)
 
     submission6 = Submission(
         assignment = assignment4,
         student = student7,
         attempt_number = 1,
-        mark = 4
+        mark = 6
     )
     db.session.add(submission6)
     submission6.add_question_answer(q1, "['high-level', 'assembly']", 1)
     submission6.add_question_answer(q2, "['compiler', 'source']", 1)
     submission6.add_question_answer(q3, "['compiler', 'statement', 'machine', 'executes']", 2)
+    submission6.add_question_answer(q4, "Multi purpose software", 1)
+    submission6.add_question_answer(q5, "Video games", 1)
+
+    submission7 = Submission(
+        assignment = assignment2,
+        student = student1,
+        attempt_number = 1,
+        mark = 0
+    )
+    db.session.add(submission7)
+    submission7.add_question_answer(q6, "Mouse", 0)
+
+    submission8 = Submission(
+        assignment = assignment2,
+        student = student2,
+        attempt_number = 1,
+        mark = 1
+    )
+    db.session.add(submission8)
+    submission8.add_question_answer(q6, "Processor", 1)
+
+    submission9 = Submission(
+        assignment = assignment2,
+        student = student3,
+        attempt_number = 1,
+        mark = 0
+    )
+    db.session.add(submission9)
+    submission9.add_question_answer(q6, "Monitor", 0)
+
+    submission10 = Submission(
+        assignment = assignment2,
+        student = student4,
+        attempt_number = 1,
+        mark = 1
+    )
+    db.session.add(submission10)
+    submission10.add_question_answer(q6, "Processor", 1)
+
+    submission11 = Submission(
+        assignment = assignment2,
+        student = student5,
+        attempt_number = 1,
+        mark = 1
+    )
+    db.session.add(submission11)
+    submission11.add_question_answer(q6, "Processor", 1)
+
+    submission12 = Submission(
+        assignment = assignment2,
+        student = student6,
+        attempt_number = 1,
+        mark = 1
+    )
+    db.session.add(submission12)
+    submission12.add_question_answer(q6, "Processor", 1)
+
+    submission13 = Submission(
+        assignment = assignment2,
+        student = student7,
+        attempt_number = 1,
+        mark = 0
+    )
+    db.session.add(submission13)
+    submission13.add_question_answer(q6, "Monitor", 0)
 
     db.session.commit()
     print("Test data has been added to the database.")
