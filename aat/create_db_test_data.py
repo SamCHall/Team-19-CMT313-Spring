@@ -159,32 +159,35 @@ if User.query.count() <= 1:
     db.session.add(q3)
 
     q4 = QuestionType2(
-        title = "hi2",
-        option1 = "option 1",
-        option2 = "option 2",
-        option3 = "option 3",
-        option4 = "option 4",
-        correctOption = "option 3"
+        title = "Application Software 1",
+        question_text = "Which of the following is not a type of application software?",
+        option1 = "Bespoke application software",
+        option2 = "General purpose software",
+        option3 = "Multi purpose software",
+        option4 = "Special purpose software",
+        correctOption = "Multi purpose software"
     )
     db.session.add(q4)
 
     q5 = QuestionType2(
-        title = "hello2",
-        option1 = "option 1",
-        option2 = "option 2",
-        option3 = "option 3",
-        option4 = "option 4",
-        correctOption = "option 3"
+        title = "Application Software 2",
+        question_text = "Which of the following is a application software?",
+        option1 = "Video games",
+        option2 = "Utility programs",
+        option3 = "Operating Systems",
+        option4 = "Translator software",
+        correctOption = "Video games"
     )
     db.session.add(q5)
 
     q6 = QuestionType2(
-        title = "world2",
-        option1 = "option 1",
-        option2 = "option 2",
-        option3 = "option 3",
-        option4 = "option 4",
-        correctOption = "option 3"
+        title = "Hardware 1",
+        question_text = "Which of the following is internal component?",
+        option1 = "Mouse",
+        option2 = "Processor",
+        option3 = "Monitor",
+        option4 = "Keyboard",
+        correctOption = "Processor"
     )
     db.session.add(q6)
 
@@ -240,9 +243,11 @@ if User.query.count() <= 1:
     db.session.commit()
 
     assignment4.add_question(q1, 1)
-    assignment4.add_question(q2, 3)
-    assignment4.add_question(q3, 2)
-    
+    assignment4.add_question(q2, 5)
+    assignment4.add_question(q3, 3)
+    assignment4.add_question(q4, 2)
+    assignment4.add_question(q5, 4)
+
     assignment7.add_question(q1, 1)
     assignment7.add_question(q2, 2)
     assignment7.add_question(q3, 3)
