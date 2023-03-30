@@ -131,32 +131,41 @@ if User.query.count() <= 1:
     )
     db.session.add(module3)
 
+    # q1 = QuestionType1(
+    #     title = "Programming Language 1",
+    #     active = False,
+    #     question_template = "A {} language program is called {} code.",
+    #     correct_answers = "['high-level', 'source']",
+    #     incorrect_answers = "['high', 'low', 'low-level', 'machine', 'object', 'assembly']"
+    # )
+    # db.session.add(q1)
+
     q1 = QuestionType1(
-        title = "Programming Language 1",
-        active = True,
-        question_template = "A {} language program is called {} code.",
-        correct_answers = "['high-level', 'source']",
-        incorrect_answers = "['high', 'low', 'low-level', 'machine', 'object', 'assembly']"
+        title = 'String Theory',
+        question_type = 'question_type1',
+        active = False,
+        question_template = 'A string is a {}.',
+        correct_answers = '["class"]',
+        incorrect_answers = '["variable", "person", "fart"]'
     )
-    db.session.add(q1)
 
     q2 = QuestionType1(
-        title = "Translator 1",
-        active = True,
-        question_template = "A {} translates source code into {} code.",
-        correct_answers = "['compiler', 'object']",
-        incorrect_answers = "['interpreter', 'assemblers', 'executes', 'machine', 'source']"
+        title = 'Wing Leory',
+        question_type = 'question_type1',
+        active = False,
+        question_template = 'A string is a {}.',
+        correct_answers = '["class"]',
+        incorrect_answers = '["variable", "person", "fart"]'
     )
-    db.session.add(q2)
 
     q3 = QuestionType1(
-        title = "Running software 1",
-        active = True,
-        question_template = "An {} analyses each {} of the {} code as it {} the statement.",
-        correct_answers = "['interpreter', 'statement', 'source', 'executes']",
-        incorrect_answers = "['compiler', 'assemblers', 'machine', 'object', 'assembly', 'line']"
+        title = 'Sing Beery',
+        question_type = 'question_type1',
+        active = False,
+        question_template = 'A string is a {}.',
+        correct_answers = '["class"]',
+        incorrect_answers = '["variable", "person", "fart"]'
     )
-    db.session.add(q3)
 
     q4 = QuestionType2(
         title = "hi2",

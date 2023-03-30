@@ -6,8 +6,8 @@ from flask_login import current_user, login_required
 from .. import app, db
 from ..models import *
 from ..forms.formative_forms import CreateFormAss
-from ..forms.question_type_1 import QuestonType1Form
-from ..forms.question_type_2 import QuestonType2Form
+from ..forms.question_type_1 import QuestionType1FormCreate, QuestionType1FormEdit
+from ..forms.question_type_2 import QuestionType2FormCreate, QuestionType2FormEdit
 
 
 # Home
@@ -55,7 +55,7 @@ def create_summative_assessment():
 @login_required
 def create_question_type1():
     # if current_user
-    qt1_form = QuestonType1Form()
+    qt1_form = QuestionType1FormCreate()
     if qt1_form.validate_on_submit():
         correct_answers = []
         for answer in qt1_form.correct_answers.data.split(','):
@@ -79,7 +79,7 @@ def create_question_type1():
 @app.route("/staff/question/create/type2", methods=["POST", "GET"])
 @login_required
 def create_question_type2():
-    form = QuestonType2Form()
+    form = QuestionType2FormCreate()
     if form.validate_on_submit():
         question_text=form.title.data
         op1=form.option1.data
@@ -216,9 +216,13 @@ def submit_assessment(assessment_id):
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
 
+
+
 @app.route('/questions/delete/<int:id>')
 def delete_question(id):
     question_to_delete = Question.query.get_or_404(id)
+    if bool(question_to_delete.active):
+        flash("Question is active so it can't be deleted.")
 
     try:
         db.session.delete(question_to_delete)
@@ -229,35 +233,48 @@ def delete_question(id):
         questions = Question.query.all()
         return render_template('display-questions.html', title='Questions',questions=questions)
     
-    except:
+    except Exception as e:
+        print(e)
         flash("There was a problem deleting the question")
-        questions = Question.query.all()
-        return render_template('display-questions.html', title='Questions',questions=questions)
+        # questions = Question.query.all()
+        return redirect('/')
+        # return render_template('display-questions.html', title='Questions',questions=questions)
+
+
 
 @app.route('/questions/edit/<int:id>', methods=['GET','POST'])
 def edit_question(id):
     question = Question.query.get_or_404(id)
-    form = QuestonType2Form()
-    if form.validate_on_submit():
-        question.title = form.title.data
-        question.option1 = form.option1.data
-        question.option2 = form.option2.data
-        question.option3 = form.option3.data
-        question.option4 = form.option4.data
-        question.correctOption = form.correctOption.data
+    if question.question_type == 'question_type1':
+        form = QuestionType1FormEdit()
 
-        # db.session.add(question)
-        db.session.commit()
-        flash("Question successfully updated")
-        return redirect(url_for('questions',id=question.id))
+        return render_template('edit-qt1.html', form=form)
     
-    form.title.data = question.title
-    form.option1.data = question.option1
-    form.option2.data = question.option2
-    form.option3.data = question.option3
-    form.option4.data = question.option4
-    form.correctOption.data = question.correctOption
-    return render_template('edit-post.html', form = form)
+    else:
+        form = QuestionType2FormEdit()
+        if form.validate_on_submit():
+            question.title = form.title.data
+            question.option1 = form.option1.data
+            question.option2 = form.option2.data
+            question.option3 = form.option3.data
+            question.option4 = form.option4.data
+            question.correctOption = form.correctOption.data
+
+            # db.session.add(question)
+            db.session.commit()
+            flash("Question successfully updated")
+            return redirect(url_for('questions',id=question.id))
+        
+        form.title.data = question.title
+        form.option1.data = question.option1
+        form.option2.data = question.option2
+        form.option3.data = question.option3
+        form.option4.data = question.option4
+        form.correctOption.data = question.correctOption
+
+        return render_template('edit-qt2.html', form = form)
+
+
 
 @app.route('/display-questions/<int:id>')
 def view_question(id):
