@@ -58,7 +58,7 @@
     </div>
 </section>
 {% for number, question in assignment.get_questions().items() %}
-{% set submissions = assignment.get_question_submissions(question.question_id) %}
+{% set submissions = assignment.get_question_submissions(number) %}
 <section class="container">
     <div class="card">
         <div class="card-header">
