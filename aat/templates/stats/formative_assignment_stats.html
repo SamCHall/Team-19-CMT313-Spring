@@ -57,6 +57,34 @@
         </div>
     </div>
 </section>
+{% for number, question in assignment.get_questions().items() %}
+{% set submissions = assignment.get_question_submissions(question.question_id) %}
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Question {{ number }} - {{ question.title }}</h2>
+        </div>
+        <div class="card-body stats-outer">
+            <div class="card-group">
+                <div class="card stats-inner">
+                    <div class="card-body">
+                        <ul>
+                            <li>Average Mark: {{ '%0.1f' | format(question.average_mark(submissions)) }}</li>
+                            <li>Lowest Mark: {{ question.lowest_mark(submissions) }}</li>
+                            <li>Highest Mark: {{ question.highest_mark(submissions) }}</li>
+                        </ul>
+                        <a href="{{ url_for('assessment_question_stats', id=assignment.id, question_num=number) }}">Full Stats</a>
+                    </div>
+                </div>
+
+                <div class="card stats-inner">
+                    <div class="card-body">
+                    </div>
+                </div>
+        </div>
+    </div>
+</section>
+{% endfor %}
 
 {% else %}
 
