@@ -1,14 +1,4 @@
-{% extends "base.html" %}
-
-{% block head %}
-    {% assets "graph" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-{% endblock head %}
-
-{% block content %}
-
-{% if question.submissions | length > 0 %}
+{% if submissions | length > 0 %}
 <section class="container">
     <div class="card">
         <div class="card-header">
@@ -24,18 +14,18 @@
                         <h2>Overall performance</h2>
                         {# Stats for the question as a whole #}
                         <ul>
-                            <li>Number of submissions: {{ question.submissions | length }}</li>
+                            <li>Number of submissions: {{ submissions | length }}</li>
                             <li>Number of blanks: {{ question.num_of_blanks() }}</li>
-                            <li>Average Mark: {{ '%0.1f' | format(question.average_mark()) }}</li>
-                            <li>Lowest Mark: {{ question.lowest_mark() }}</li>
-                            <li>Highest Mark: {{ question.highest_mark() }}</li>
+                            <li>Average Mark: {{ '%0.1f' | format(question.average_mark(submissions)) }}</li>
+                            <li>Lowest Mark: {{ question.lowest_mark(submissions) }}</li>
+                            <li>Highest Mark: {{ question.highest_mark(submissions) }}</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="card stats-inner">
                     <div class="card-body">
-                        {% set mark_dist = question.mark_dist() %}
+                        {% set mark_dist = question.mark_dist(submissions) %}
 
                         <div id="overallGraph" class="graph"></div>
 
@@ -76,5 +66,3 @@
     </div>
 </section>
 {% endif %}
-
-{% endblock content %}

@@ -14,10 +14,10 @@ def question_stats(id):
 
     match question.question_type:
         case "question_type1":
-            return render_template('stats/question_type1_stats.html', title=question.title, question=question)
+            return render_template('stats/question_type1.html', title=question.title, question=question)
 
         case "question_type2":
-            return render_template('stats/question_type2_stats.html', title=question.title, question=question)
+            return render_template('stats/question_type2.html', title=question.title, question=question)
 
     abort(500)
 

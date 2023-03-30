@@ -1,13 +1,4 @@
-{% extends "base.html" %}
-
-{% block head %}
-    {% assets "graph" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-{% endblock head %}
-
-{% block content %}
-{% if question.submissions | length > 0 %}
+{% if submissions | length > 0 %}
 <section class="container">
     <div class="card">
         <div class="card-header">
@@ -21,16 +12,16 @@
             {# Include html file with code to display question here #}
 
                         <ul>
-                            <li>Number of submissions: {{ question.submissions | length }}</li>
-                            <li>Number of correct submissions: {{ question.correct_submissions_number() }}</li>
-                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_submissions_percent()) }}%</li>
+                            <li>Number of submissions: {{ submissions | length }}</li>
+                            <li>Number of correct submissions: {{ question.correct_submissions_number(submissions) }}</li>
+                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_submissions_percent(submissions)) }}%</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="card stats-inner">
                     <div class="card-body">
-                        {% set options = question.option_choice_quantity() %}
+                        {% set options = question.option_choice_quantity(submissions) %}
                         <div id="optionsGraph" class="graph"></div>
                         <script type="text/javascript">
                             {
@@ -64,5 +55,3 @@
     </div>
 </section>
 {% endif %}
-
-{% endblock content %}

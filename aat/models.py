@@ -149,10 +149,11 @@ class Assignment(db.Model):
         return AssignQuestion.add_question(self.id, question.id, question_no)
 
     def get_question_submissions(self, question_num):
+        question = self.get_questions()[question_num]
         question_submissions = []
         for submission in self.submissions:
             for submission_answer in submission.submission_answers:
-                if submission_answer.question_id == 1:
+                if submission_answer.question == question:
                     question_submissions.append(submission_answer)
         return question_submissions
 
@@ -331,7 +332,6 @@ class AssignQuestion(db.Model):
 
     @staticmethod
     def add_question(assignment_id, question_id, question_number):
-        print(assignment_id, question_id, question_number)
         assign = AssignQuestion(
             assignment_id = assignment_id,
             question_id = question_id,

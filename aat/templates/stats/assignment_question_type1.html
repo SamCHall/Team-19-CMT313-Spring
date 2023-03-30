@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {% assets "graph" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock head %}
+
+{% block content %}
+{# <h1 class="card-title">{{ assignment.title }} - Question Stats</h1> #}
+
+{% with submissions = assignment.get_question_submissions(question_number) %}
+    {% include "stats/question_type1_stats.html" %}
+{% endwith %}
+
+{% endblock content %}
