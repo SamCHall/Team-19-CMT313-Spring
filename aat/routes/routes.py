@@ -246,7 +246,7 @@ def edit_question(id):
         question.option4 = form.option4.data
         question.correctOption = form.correctOption.data
 
-        db.session.add(question)
+        # db.session.add(question)
         db.session.commit()
         flash("Question successfully updated")
         return redirect(url_for('questions',id=question.id))

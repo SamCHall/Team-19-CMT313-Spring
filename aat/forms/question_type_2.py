@@ -12,10 +12,17 @@ class QuestonType2Form(FlaskForm):
     correctOption = StringField('Correct Option',validators=[InputRequired()])
     Submit = SubmitField('Submit')
 
-    # def validate_title(self, title):
-    #     exists = QuestionType2.query.filter_by(title=title.data).first()
-    #     if exists:
-    #         raise ValidationError('A question with this title already exists')
+    def validate_title(self, title):
+        if self.title.data != self.title.data:
+            exists = QuestionType2.query.filter_by(title=title.data).first()
+            if exists:
+                raise ValidationError('A question with this title already exists')
+
+
+        # exists = QuestionType2.query.filter_by(title=title.data).first()
+        # id_exists = QuestionType2.id
+        # if title.data != QuestionType2.title and QuestionType2.query.filter_by(title=title.data).first():
+        #     raise ValidationError('A question with this title already exists')
 
     def validate_correctOption(self, correctOption):
         option1 = self.option1.data
