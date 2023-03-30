@@ -23,7 +23,7 @@
                         <ul>
                             <li>Number of submissions: {{ question.submissions | length }}</li>
                             <li>Number of correct submissions: {{ question.correct_submissions_number() }}</li>
-                            <li>Precentage of correct submissions: {{ question.correct_submissions_percent() }}</li>
+                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_submissions_percent()) }}%</li>
                         </ul>
                     </div>
                 </div>

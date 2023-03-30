@@ -16,17 +16,17 @@
                     <div class="card-body">
                         <ul>
                             <li>Number of correct submissions: {{ question.num_correct_for_blank(count) }}</li>
-                            <li>Precentage of correct submissions: {{ question.correct_precentage_for_blank(count) }}</li>
+                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_precentage_for_blank(count)) }}%</li>
                             {# Display the incorrect answers if there are any #}
                             {% if incorrect_answers | length > 0 %}
                             <li>Incorrect answers given:
                                 {% for answer in incorrect_answers %}
-                                {{ answer[0] }}{% if not loop.last %},{% endif %}
+                                {{ answer[0] }} ({{ answer[1] }}){% if not loop.last %},{% endif %}
                                 {% endfor %}
                             </li>
                             {% endif %}
                         </ul>
-                        <figure>
+                        {# <figure>
                             <figcaption>Table of answers with occurrences</figcaption>
                             <table>
                                 <tr>
@@ -40,7 +40,7 @@
                                 </tr>
                                 {% endfor %}
                             </table>
-                        </figure>
+                        </figure> #}
 
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                                     type : 'bar'
                                 }
                             ];
-                            displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - {{ correct_answer }}', data)
+                            displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - submissions', data)
                         }
                         </script>
                     </div>

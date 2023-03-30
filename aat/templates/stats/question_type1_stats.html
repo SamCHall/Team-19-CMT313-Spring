@@ -26,7 +26,7 @@
                         <ul>
                             <li>Number of submissions: {{ question.submissions | length }}</li>
                             <li>Number of blanks: {{ question.num_of_blanks() }}</li>
-                            <li>Average Mark: {{ question.average_mark() }}</li>
+                            <li>Average Mark: {{ '%0.1f' | format(question.average_mark()) }}</li>
                             <li>Lowest Mark: {{ question.lowest_mark() }}</li>
                             <li>Highest Mark: {{ question.highest_mark() }}</li>
                         </ul>
