@@ -73,7 +73,7 @@
                             <li>Lowest Mark: {{ question.lowest_mark(submissions) }}</li>
                             <li>Highest Mark: {{ question.highest_mark(submissions) }}</li>
                         </ul>
-                        <a href="{{ url_for('assessment_question_stats', id=assignment.id, question_num=number) }}">Full Stats</a>
+                        <a class="btn btn-primary" href="{{ url_for('assessment_question_stats', id=assignment.id, question_num=number) }}">Detailed question statistics</a>
                     </div>
                 </div>
 
