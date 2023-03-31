@@ -9,7 +9,6 @@ from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
 from ..forms.question_type_2 import QuestonType2Form
 
-
 # Home
 @app.route("/")
 def home():
@@ -158,8 +157,15 @@ def view_assessment(assessment_id):
 @app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
 @login_required
 def submit_assessment(assessment_id):
+    
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+
+    if assignment.active == False:
+        abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
+
+    if not assignment.module.check_student(current_user):
+        abort(403, description="You are not enrolled on the correct module to take this assignment.")
 
     type1_answer_values = request.get_json()['optionValues']
     type2_answer_values = request.get_json()['type2Values']
@@ -300,4 +306,38 @@ def delete_assessment(assessment_id):
     db.session.commit()
 
     flash('The assessment has been deleted successfully.')
+    return redirect(request.referrer)
+
+@app.route('/archive-assessment/<int:assessment_id>', methods=['GET', 'POST'])
+@login_required
+def archive_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    
+    if current_user not in assignment.module.get_staff():
+        print(assignment.module.get_staff())
+        abort(403, description="You are not a staff member for this module.")
+    
+    assignment.active = False
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+@app.route('/unarchive-assessment/<int:assessment_id>', methods=['GET', 'POST'])
+@login_required
+def unarchive_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    
+    if current_user not in assignment.module.get_staff():
+        print(assignment.module.get_staff())
+        abort(403, description="You are not a staff member for this module.")
+    
+    assignment.active = True
+    db.session.commit()
+
     return redirect(request.referrer)

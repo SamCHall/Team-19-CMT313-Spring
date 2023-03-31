@@ -28,7 +28,7 @@
             </thead>
             <tbody>
               {% for assignment in assignments %} 
-              {% if assignment.active ==True %} 
+              {% if assignment.active == True %} 
               {% for item in assignment.module.get_staff() %} 
               {% if current_user.id == item.id %}
               <tr>
@@ -43,6 +43,7 @@
                   {% elif assignment.assignment_type == "summative_assignment" %}
                   <a>Edit</a>
                   {% endif %}
+                  <a href="{{ url_for('archive_assessment', assessment_id=assignment.id )}}">Archive</a>
                   <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</a>
                 </td>
               </tr>
@@ -68,11 +69,7 @@
               {% if current_user.id == item.id %}
               <tr>
                 <td>
-                  <a
-                    href="{{ url_for('view_assessment', assessment_id = assignment.id)}}"
-                  >
-                    {{ assignment.title }}</a
-                  >
+                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
                 </td>
                 <td>{{ assignment.module }}</td>
 
@@ -82,6 +79,7 @@
                   {% elif assignment.assignment_type == "summative_assignment"%}
                   <a>Edit</a>
                   {% endif %}
+                  <a href="{{ url_for('unarchive_assessment', assessment_id=assignment.id )}}">Activate</a>
                   <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</a>
                 </td>
               </tr>
