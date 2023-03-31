@@ -1,38 +1,99 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <section class="container">
-    <div class="card">
-        <div class="card-header">
-            <h1 class="card-title">Assessments - Staff View</h1>
-        </div>
-        <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Assessment</th>
-                        <th scope="col">Module</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for assignment in assignments %}
-                        {% if assignment.active == True %}
-                            {% for item in assignment.module.get_staff() %}
-                                {% if current_user.id == item.id %}
-                                    <tr>
-                                        <td><a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">
-                                            {{ assignment.title }}</a></td>
-                                        <td>{{ assignment.module }}</td>
-                                        <td class="edit-buttons"><a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
-                                            <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</button></td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">Assessments - Staff View</h1>
     </div>
+    <div class="card-body">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
+            Active
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="archive-tab" data-bs-toggle="tab" data-bs-target="#archive" type="button" role="tab" aria-controls="archive" aria-selected="false">
+            Archived
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Assessment</th>
+                <th scope="col">Module</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for assignment in assignments %} 
+              {% if assignment.active ==True %} 
+              {% for item in assignment.module.get_staff() %} 
+              {% if current_user.id == item.id %}
+              <tr>
+                <td>
+                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                </td>
+                <td>{{ assignment.module }}</td>
+
+                <td class="edit-buttons">
+                  {% if assignment.assignment_type == "formative_assignment" %}
+                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
+                  {% elif assignment.assignment_type == "summative_assignment" %}
+                  <a>Edit</a>
+                  {% endif %}
+                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</a>
+                </td>
+              </tr>
+              {% endif %} 
+              {% endfor %} 
+              {% endif %} 
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive-tab">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Assessment</th>
+                <th scope="col">Module</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for assignment in assignments %} 
+              {% if assignment.active == False %} 
+              {% for item in assignment.module.get_staff() %} 
+              {% if current_user.id == item.id %}
+              <tr>
+                <td>
+                  <a
+                    href="{{ url_for('view_assessment', assessment_id = assignment.id)}}"
+                  >
+                    {{ assignment.title }}</a
+                  >
+                </td>
+                <td>{{ assignment.module }}</td>
+
+                <td class="edit-buttons">
+                  {% if assignment.assignment_type == "formative_assignment" %}
+                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
+                  {% elif assignment.assignment_type == "summative_assignment"%}
+                  <a>Edit</a>
+                  {% endif %}
+                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</a>
+                </td>
+              </tr>
+              {% endif %} 
+              {% endfor %} 
+              {% endif %} 
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock content %}
