@@ -186,7 +186,17 @@ class Assignment(db.Model):
 
     def average_mark(self):
         return statistics.mean([submission.mark for submission in self.submissions])
-
+    
+    def total_available_mark(self):
+        questions = self.get_questions().values()
+        total = 0
+        for question in questions:
+            if question.question_type == "question_type1":
+                print(question.num_of_blanks)
+                total += len(eval(question.correct_answers))
+            else:
+                total += 1
+        return total
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
@@ -251,6 +261,11 @@ class Submission(db.Model):
 
     def get_current_attempt_number(student_id, assignment_id):
         return Submission.query.filter_by(student_id=student_id, assignment_id=assignment_id).count()
+    
+    def get_student_highest_mark(self, student_id):
+        if Submission.query.filter_by(student_id=student_id, assignment_id=self.id).count() == 0:
+            return 0
+        return max([submission.mark for submission in Submission.query.filter_by(student_id=student_id, assignment_id=self.id).all()])
 
 class SubmissionAnswers(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -12,6 +12,7 @@
                     <tr>
                         <th scope="col">Assessment</th>
                         <th scope="col">Module</th>
+                        <th scope="col">Mark</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,6 +24,11 @@
                                         <td><a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">
                                             {{ assignment.title }}</a></td>
                                         <td>{{ assignment.module }}</td>
+                                        {% if not assignment.mark %}
+                                            <td>No data available</td>
+                                        {% else %}
+                                            <td>{{ assignment.mark }}/{{ assignment.total_mark }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
