@@ -129,12 +129,14 @@ class Assignment(db.Model):
     question_assignment = db.relationship(
         "AssignQuestion",
         back_populates = "assignment",
-        order_by = "AssignQuestion.question_number.asc()"
+        order_by = "AssignQuestion.question_number.asc()",
+        cascade = "all, delete"
     )
 
     submissions = db.relationship(
         "Submission",
-        back_populates = "assignment"
+        back_populates = "assignment",
+        cascade = "all, delete"
     )
 
     __mapper_args__ = {
@@ -222,7 +224,8 @@ class Submission(db.Model):
 
     submission_answers = db.relationship(
         "SubmissionAnswers",
-        back_populates = "submission"
+        back_populates = "submission",
+        cascade = "all, delete"
     )
 
     def add_question_answer(self, question, answer, mark):
@@ -271,6 +274,18 @@ class SubmissionAnswers(db.Model):
         "polymorphic_identity": "submission",
     }
 
+class SimplifiedSubmission(db.Model): 
+    # This is a simplified version of the Submission model that is dissimilar
+    # to the Submission model in that it does not contain the submission_answers
+    # relationship and is not associated to the Assignment model, 
+    # allowing permanent marks to be stored in the database when the assignment is deleted
+
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    assignment_title = db.Column(db.String, nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey("module.id"), nullable=False)
+    total_mark = db.Column(db.Integer, nullable=False)
+    total_available_mark = db.Column(db.Integer, nullable=False)
 
 class SubmissionType1(SubmissionAnswers):
     id = db.Column(db.Integer, db.ForeignKey("submission_answers.id"), primary_key=True)

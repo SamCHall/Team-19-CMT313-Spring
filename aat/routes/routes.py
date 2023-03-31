@@ -198,6 +198,7 @@ def submit_assessment(assessment_id):
             type2_mark += 1
 
     total_answer_mark = type1_mark + type2_mark
+    total_available_mark = len(type1_correct_answers_list) + len(type2_correct_answers_list)
     current_attempt_number = Submission.get_current_attempt_number(current_user.id, assessment_id)
 
     submission = Submission(
@@ -206,7 +207,16 @@ def submit_assessment(assessment_id):
             mark = total_answer_mark,
             attempt_number = current_attempt_number + 1
             )
-
+    
+    simplified_submission = SimplifiedSubmission(
+            assignment_title = assignment.title,
+            student_id = current_user.id,
+            total_mark = total_answer_mark,
+            total_available_mark = total_available_mark,
+            module_id = assignment.module.id
+    )
+    db.session.add(simplified_submission)
+    
     # The below code is used to add the answers to the database with their individual marks.
     for question in questions:
         if question.question_type == 'question_type1':
@@ -295,14 +305,13 @@ def delete_assessment(assessment_id):
     question_ids = []
     for question in questions:
         question_ids.append(question.id)
-
-    AssignQuestion.query.filter_by(assignment_id=assessment_id).delete()
+     
+    db.session.delete(assignment)
     
     for question_id in question_ids:
         if AssignQuestion.query.filter_by(question_id=question_id).first() is None:
             Question.query.filter_by(id=question_id).update({"active": False})
-
-    db.session.delete(assignment)
+    
     db.session.commit()
 
     flash('The assessment has been deleted successfully.')
