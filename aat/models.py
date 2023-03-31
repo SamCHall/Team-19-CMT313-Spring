@@ -324,6 +324,7 @@ class AssignQuestion(db.Model):
     @staticmethod
     def add_question(assignment_id, question_id, question_number):
         print(assignment_id, question_id, question_number)
+        Question.query.filter_by(id=question_id).update({"active": True})
         assign = AssignQuestion(
             assignment_id = assignment_id,
             question_id = question_id,

@@ -284,7 +284,18 @@ def delete_assessment(assessment_id):
     if current_user not in assignment.module.get_staff():
         print(assignment.module.get_staff())
         abort(403, description="You are not a staff member for this module.")
+
+    questions = list(Assignment.get_questions(assignment).values())
+    question_ids = []
+    for question in questions:
+        question_ids.append(question.id)
+
+    AssignQuestion.query.filter_by(assignment_id=assessment_id).delete()
     
+    for question_id in question_ids:
+        if AssignQuestion.query.filter_by(question_id=question_id).first() is None:
+            Question.query.filter_by(id=question_id).update({"active": False})
+
     db.session.delete(assignment)
     db.session.commit()
 
