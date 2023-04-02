@@ -192,7 +192,6 @@ class Assignment(db.Model):
         total = 0
         for question in questions:
             if question.question_type == "question_type1":
-                print(question.num_of_blanks)
                 total += len(eval(question.correct_answers))
             else:
                 total += 1
