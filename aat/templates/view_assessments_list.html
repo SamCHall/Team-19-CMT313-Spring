@@ -12,7 +12,7 @@
                     <tr>
                         <th scope="col">Assessment</th>
                         <th scope="col">Module</th>
-                        <th scope="col">Mark</th>
+                        <th scope="col" class="text-center">Highest Mark</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,9 +25,11 @@
                                             {{ assignment.title }}</a></td>
                                         <td>{{ assignment.module }}</td>
                                         {% if not assignment.mark %}
-                                            <td>No data available</td>
+                                            <td class="text-center"><span class="badge bg-no-data">No data available</span></td>
+                                        {% elif assignment.mark >= (assignment.total_mark)/2 %}
+                                            <td class="text-center"><span class="badge bg-pass">{{ assignment.mark }}/{{ assignment.total_mark }}</span></td>
                                         {% else %}
-                                            <td>{{ assignment.mark }}/{{ assignment.total_mark }}</td>
+                                            <td class="text-center"><span class="badge bg-fail">{{ assignment.mark }}/{{ assignment.total_mark }}</span></td>
                                         {% endif %}
                                     </tr>
                                 {% endif %}
