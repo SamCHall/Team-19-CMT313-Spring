@@ -112,6 +112,10 @@ class Module(db.Model):
     def check_student(self, student):
         """ Returns true if given student is enrolled on the module"""
         return student in self.get_students()
+    
+    def check_staff(self, staff):
+        """ Returns true if given staff is teaching the module"""
+        return staff in self.get_staff()
 
 
 class Assignment(db.Model):

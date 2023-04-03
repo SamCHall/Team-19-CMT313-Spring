@@ -134,12 +134,6 @@ def view_assessment(assessment_id):
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
 
-    if assignment.active == False:
-        abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
-
-    if not assignment.module.check_student(current_user):
-        abort(403, description="You are not enrolled on the correct module to take this assignment.")
-
     for question in questions:
         if question.question_type == "question_type1":
 
@@ -154,8 +148,21 @@ def view_assessment(assessment_id):
 
             # Randomises the order of options from correct_answers and incorrect_answers
             question.options = random.sample(c, len(c))
+    
+    if current_user.user_type == "student":
+        if assignment.active == False:
+            abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
 
-    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
+        if not assignment.module.check_student(current_user):
+            abort(403, description="You are not enrolled on the correct module to take this assignment.")
+
+        return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
+    
+    elif current_user.user_type == "staff":
+        if not assignment.module.check_staff(current_user):
+            abort(403, description="You are not a staff member on this module.")
+
+        return render_template('view_assessment_read_only.html', assignment = assignment, questions = questions, title = assignment.title)
 
 @app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
 @login_required
