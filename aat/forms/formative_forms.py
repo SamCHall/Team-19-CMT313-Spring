@@ -14,7 +14,7 @@ class CreateFormAss(FlaskForm):
 
     assignment_title = StringField(label='Assignment title:', validators=[DataRequired()])
     module_id = QuerySelectField('Select the module that can take this assignment:')
-    difficulty = SelectField(label='Difficulty:', choices=[('Very Easy'), ('Easy'), ('Normal'), ('Hard'), ('Very Hard')], validators=[DataRequired()])
+    difficulty = SelectField(label='Difficulty:', choices=[('Very Easy'), ('Easy'), ('Medium'), ('Hard'), ('Very Hard')], validators=[DataRequired()])
     add_question = QuerySelectMultipleFieldWithCheckboxes('Add questions:')
     question_order = StringField(label='Question order (comma separated):', validators=[DataRequired(), validate_question_number_length])
     is_active = BooleanField("Make assignment active?")

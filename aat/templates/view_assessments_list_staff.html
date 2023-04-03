@@ -34,6 +34,17 @@
               <tr>
                 <td>
                   <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                  {% if assignment.difficulty == "Very Easy" %}
+                    <span class="badge bg-very-easy">Very Easy</span>
+                  {% elif assignment.difficulty == "Easy" %}
+                    <span class="badge bg-easy">Easy</span>
+                  {% elif assignment.difficulty == "Medium" %}
+                    <span class="badge bg-medium">Medium</span>
+                  {% elif assignment.difficulty == "Hard" %}
+                    <span class="badge bg-hard">Hard</span>
+                  {% elif assignment.difficulty == "Very Hard" %}
+                    <span class="badge bg-very-hard">Very Hard</span>
+                  {% endif %}
                 </td>
                 <td>{{ assignment.module }}</td>
 
@@ -70,6 +81,17 @@
               <tr>
                 <td>
                   <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                  {% if assignment.difficulty == "Very Easy" %}
+                    <span class="badge bg-very-easy">Very Easy</span>
+                  {% elif assignment.difficulty == "Easy" %}
+                    <span class="badge bg-easy">Easy</span>
+                  {% elif assignment.difficulty == "Medium" %}
+                    <span class="badge bg-medium">Medium</span>
+                  {% elif assignment.difficulty == "Hard" %}
+                    <span class="badge bg-hard">Hard</span>
+                  {% elif assignment.difficulty == "Very Hard" %}
+                    <span class="badge bg-very-hard">Very Hard</span>
+                  {% endif %}
                 </td>
                 <td>{{ assignment.module }}</td>
 
