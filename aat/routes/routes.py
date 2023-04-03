@@ -25,7 +25,12 @@ def create_formative_assessment():
     form.module_id.query = Module.query
 
     if form.validate_on_submit():
-        assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data, module = form.module_id.data)
+        assignment = FormativeAssignment(title = form.assignment_title.data, 
+                                         assignment_type = 'formative_assignment', 
+                                         active = form.is_active.data, 
+                                         module = form.module_id.data,
+                                         difficulty = form.difficulty.data
+                                         )
         db.session.add(assignment)
         db.session.commit()
 

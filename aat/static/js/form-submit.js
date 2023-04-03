@@ -27,7 +27,6 @@ submitFormative.addEventListener("click", function(event) {
       type2Values.push("");
     }
   }
-  console.log(type2Values)
 
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/submit-assessment/' + assessmentId);

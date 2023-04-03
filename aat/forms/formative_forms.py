@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, widgets, StringField, BooleanField
+from wtforms import SubmitField, widgets, StringField, BooleanField, SelectField
 from wtforms.validators import DataRequired, ValidationError
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 
@@ -14,6 +14,7 @@ class CreateFormAss(FlaskForm):
 
     assignment_title = StringField(label='Assignment title:', validators=[DataRequired()])
     module_id = QuerySelectField('Select the module that can take this assignment:')
+    difficulty = SelectField(label='Difficulty:', choices=[('Very Easy'), ('Easy'), ('Normal'), ('Hard'), ('Very Hard')], validators=[DataRequired()])
     add_question = QuerySelectMultipleFieldWithCheckboxes('Add questions:')
     question_order = StringField(label='Question order (comma separated):', validators=[DataRequired(), validate_question_number_length])
     is_active = BooleanField("Make assignment active?")

@@ -210,6 +210,7 @@ class Assignment(db.Model):
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
+    difficulty = db.Column(db.String, nullable=False)
 
     __mapper_args__ = {
         "polymorphic_identity": "formative_assignment",
