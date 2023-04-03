@@ -116,7 +116,7 @@ def view_assessments():
     assignments = Assignment.query.all()
     for assignment in assignments:
         assignment.mark = Submission.get_student_highest_mark(assignment, current_user.id)
-        assignment.total_mark = Assignment.total_available_mark(assignment)
+        assignment.total_mark = assignment.total_available_mark()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
 
 @app.route("/staff/assessments", methods=['GET'])

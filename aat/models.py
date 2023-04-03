@@ -262,9 +262,9 @@ class Submission(db.Model):
         return Submission.query.filter_by(student_id=student_id, assignment_id=assignment_id).count()
     
     def get_student_highest_mark(self, student_id):
-        if Submission.query.filter_by(student_id=student_id, assignment_id=self.id).count() == 0:
+        if Submission.query.filter_by(student_id=student_id, assignment_id=self.assignment_id).count() == 0:
             return 0
-        return max([submission.mark for submission in Submission.query.filter_by(student_id=student_id, assignment_id=self.id).all()])
+        return max([submission.mark for submission in Submission.query.filter_by(student_id=student_id, assignment_id=self.assignment_id).all()])
 
 class SubmissionAnswers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
