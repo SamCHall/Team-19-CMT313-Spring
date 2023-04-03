@@ -200,6 +200,13 @@ class Assignment(db.Model):
             else:
                 total += 1
         return total
+    
+    def get_student_highest_mark(self, student_id):
+        attempt_marks = [submission.mark for submission in self.submissions if submission.student_id==student_id]
+        if len(attempt_marks) > 0:
+            return max(attempt_marks)
+        return 0
+
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
@@ -264,11 +271,6 @@ class Submission(db.Model):
 
     def get_current_attempt_number(student_id, assignment_id):
         return Submission.query.filter_by(student_id=student_id, assignment_id=assignment_id).count()
-    
-    def get_student_highest_mark(self, student_id):
-        if Submission.query.filter_by(student_id=student_id, assignment_id=self.assignment_id).count() == 0:
-            return 0
-        return max([submission.mark for submission in Submission.query.filter_by(student_id=student_id, assignment_id=self.assignment_id).all()])
 
 class SubmissionAnswers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
