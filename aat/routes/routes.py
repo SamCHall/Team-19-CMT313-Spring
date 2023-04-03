@@ -1,6 +1,6 @@
 import random
 import ast
-from flask import render_template, abort, flash, request, redirect
+from flask import render_template, abort, flash, request, redirect, url_for
 from flask_login import current_user, login_required
 
 from .. import app, db
@@ -273,6 +273,8 @@ def edit_formative_assessment(assessment_id):
 
         for question in question_list:
             FormativeAssignment.add_question(assignment, question, question_order.pop(0)) # Add the questions to the assignment, question_order.pop(0) gets the first element in the list and removes it from the list
+        
+        return redirect(url_for('view_staff_assessments'))
             
     assignment = FormativeAssignment.query.get(assessment_id)
 
