@@ -4,6 +4,8 @@ $light: #fff;
 $dark: #2a2a2a;
 $warning: yellow;
 $no-data: darkgray;
+$pass: green;
+$fail: red;
 $easy: green;
 $very-easy: lightgreen;
 $medium: rgba(255, 255, 0, 0.800);
@@ -17,6 +19,8 @@ $theme-colors: (
     "dark": $dark,
     "warning": $warning,
     "no-data": $no-data,
+    "pass": $pass,
+    "fail": $fail,
     "easy": $easy,
     "very-easy": $very-easy,
     "medium": $medium,
