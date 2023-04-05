@@ -265,27 +265,37 @@ def edit_formative_assessment(assessment_id):
     form = CreateFormAss()
     form.add_question.query = Question.query
     form.module_id.query = Module.query
+    questions = AssignQuestion.get_assignment_questions(assessment_id) # Get the questions in the assignment
 
     if form.validate_on_submit():
         assignment = FormativeAssignment.query.get(assessment_id)
         assignment.title = form.assignment_title.data 
         assignment.active = form.is_active.data
         assignment.module = form.module_id.data
-        db.session.commit()
-
-        flash("You've edited a formative assessment!")
-        AssignQuestion.__table__.delete().where(AssignQuestion.assignment_id == assessment_id) # Delete all questions from assignment
-        db.session.commit()
+        assignment.difficulty = form.difficulty.data
 
         question_list = []
         for i in range(len(form.add_question.data)):
             question_list.append(form.add_question.data[i])
 
-        question_order = [int(q) for q in form.question_order.data.split(',')]
+        question_order = [int(q) for q in form.question_order.data.split(',')] # Split the string into a list of integers
+        
+        for question in questions.values():
+                    if question not in question_list:
+                        AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id).delete()
 
         for question in question_list:
-            FormativeAssignment.add_question(assignment, question, question_order.pop(0)) # Add the questions to the assignment, question_order.pop(0) gets the first element in the list and removes it from the list
+            question_query = AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id)
+            if question_query.first() is not None:
+                question_query.update({'question_number': question_order.pop(0)})
+            else:
+                FormativeAssignment.add_question(assignment, question, question_order.pop(0))
         
+        
+        
+        db.session.commit()
+
+        flash("You've edited a formative assessment!")
         return redirect(url_for('view_staff_assessments'))
             
     assignment = FormativeAssignment.query.get(assessment_id)
@@ -293,10 +303,10 @@ def edit_formative_assessment(assessment_id):
     form.assignment_title.data = assignment.title
     form.is_active.data = assignment.active
     form.module_id.data = assignment.module
-        
+    form.difficulty.data = assignment.difficulty
 
     if AssignQuestion.query.filter_by(assignment_id=assessment_id).first() is not None: # If there are questions in the assignment
-        assignment.questions = AssignQuestion.get_assignment_questions(assessment_id) # Get the questions in the assignment
+        assignment.questions = questions
         form.add_question.data = [q for q in assignment.questions.values()] # Set the questions in the assignment to the form
         current_question_order = ""
         for question in Question.query:
@@ -304,6 +314,7 @@ def edit_formative_assessment(assessment_id):
                 current_question_order += str(list(assignment.questions.values()).index(question) + 1) + "," # Add the question order to the string
         current_question_order = current_question_order[:-1] # Remove the last comma
         form.question_order.data = current_question_order # Set the question order to the form
+
     return render_template('edit_formative.html', title='Edit Assessment', form = form, assignment = assignment, error=form.errors.get('question_order'))    
 
 
