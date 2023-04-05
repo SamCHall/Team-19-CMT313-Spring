@@ -379,6 +379,10 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     def mark(self):
         pass
 
+    @abc.abstractmethod
+    def max_mark(self):
+        pass
+
     def get_assignments(self):
         return [item.assignment for item in self.question_assignment]
 
@@ -408,6 +412,23 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         sorted_by_mark = dict(sorted(marks.items()))
         return sorted_by_mark
 
+    def marks_dist_cohort(self, submissions = None):
+
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+        marks = list(self.mark_dist(submissions).keys())
+
+        for cohort in cohorts:
+            results[cohort] = dict((mark, 0) for mark in range(self.max_mark()+1))
+
+        for submission in submissions:
+            results[submission.submission.student.cohort][submission.question_mark] += 1
+
+        return results
+
     def lowest_mark(self, submissions = None):
         if not submissions:
             submissions = self.submissions
@@ -432,6 +453,9 @@ class QuestionType1(Question):
 
     def mark(self):
         return 0
+
+    def max_mark(self):
+        return self.num_of_blanks()
 
     def list_correct_answers(self):
         """ Method to convert the string representation of the list in the db to a list """
@@ -500,6 +524,9 @@ class QuestionType2(Question):
 
     def mark(self):
         return 0
+
+    def max_mark(self):
+        return 1
 
     def correct_submissions_number(self, submissions = None):
         if not submissions:

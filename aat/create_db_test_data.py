@@ -55,7 +55,7 @@ if User.query.count() <= 1:
         cohort = 2013,
         course = "computing",
     )
-    db.session.add(student1)
+    db.session.add(student5)
 
     student6 = Student(
         username = "jada",
@@ -66,7 +66,7 @@ if User.query.count() <= 1:
         cohort = 2014,
         course = "computing"
     )
-    db.session.add(student2)
+    db.session.add(student6)
 
     student7 = Student(
         username = "kristina",
@@ -77,7 +77,7 @@ if User.query.count() <= 1:
         cohort = 2014,
         course = "computing"
     )
-    db.session.add(student3)
+    db.session.add(student7)
 
     student8 = Student(
         username = "eesa",
@@ -85,10 +85,10 @@ if User.query.count() <= 1:
         email = "j@example.com",
         first_name = "Eesa",
         surname = "Ray",
-        cohort = 2014,
+        cohort = 2012,
         course = "computing"
     )
-    db.session.add(student4)
+    db.session.add(student8)
 
     staff1 = Staff(
         username = "elena",
