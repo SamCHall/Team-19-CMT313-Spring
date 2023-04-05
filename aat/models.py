@@ -157,6 +157,9 @@ class Assignment(db.Model):
                     question_submissions.append(submission_answer)
         return question_submissions
 
+    def max_mark(self):
+        return sum([question.max_mark() for question in self.get_questions().values()])
+
     def number_of_submissions(self):
         return len(self.submissions)
 
@@ -174,22 +177,18 @@ class Assignment(db.Model):
             value: the number of submissions for a given mark
         """
 
-        marks = {}
+        marks = dict((i, 0) for i in range(self.max_mark()+1))
 
         for submission in self.submissions:
-            if submission.mark in marks:
-                marks[submission.mark] += 1
-            else:
-                marks[submission.mark] = 1
+            marks[submission.mark] += 1
 
-        sorted_by_mark = dict(sorted(marks.items()))
-        return sorted_by_mark
+        return marks
 
     def lowest_mark(self):
-        return min(list(self.mark_dist().keys()))
+        return min([submission.mark for submission in self.submissions])
 
     def highest_mark(self):
-        return max(list(self.mark_dist().keys()))
+        return max([submission.mark for submission in self.submissions])
 
     def average_mark(self):
         return statistics.mean([submission.mark for submission in self.submissions])
@@ -379,6 +378,10 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     def mark(self):
         pass
 
+    @abc.abstractmethod
+    def max_mark(self):
+        pass
+
     def get_assignments(self):
         return [item.assignment for item in self.question_assignment]
 
@@ -397,13 +400,10 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         if not submissions:
             submissions = self.submissions
 
-        marks = {}
+        marks = dict((i, 0) for i in range(self.max_mark()+1))
 
         for submission in submissions:
-            if submission.question_mark in marks:
-                marks[submission.question_mark] += 1
-            else:
-                marks[submission.question_mark] = 1
+            marks[submission.question_mark] += 1
 
         sorted_by_mark = dict(sorted(marks.items()))
         return sorted_by_mark
@@ -411,12 +411,12 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     def lowest_mark(self, submissions = None):
         if not submissions:
             submissions = self.submissions
-        return min(list(self.mark_dist(submissions).keys()))
+        return min([submission.question_mark for submission in submissions])
 
     def highest_mark(self, submissions = None):
         if not submissions:
             submissions = self.submissions
-        return max(list(self.mark_dist(submissions).keys()))
+        return max([submission.question_mark for submission in submissions])
 
 
 class QuestionType1(Question):
@@ -432,6 +432,9 @@ class QuestionType1(Question):
 
     def mark(self):
         return 0
+
+    def max_mark(self):
+        return self.num_of_blanks()
 
     def list_correct_answers(self):
         """ Method to convert the string representation of the list in the db to a list """
@@ -500,6 +503,9 @@ class QuestionType2(Question):
 
     def mark(self):
         return 0
+
+    def max_mark(self):
+        return 1
 
     def correct_submissions_number(self, submissions = None):
         if not submissions:
