@@ -260,8 +260,13 @@ def submit_assessment(assessment_id):
 @app.route('/staff/edit-formative/<int:assessment_id>', methods=['GET', 'POST'])
 @login_required
 def edit_formative_assessment(assessment_id):
+
     if Staff.query.get(current_user.get_id()) == None:
         abort(403, description="This page can only be accessed by staff.")
+    
+    if not assignment.module.check_staff(current_user):
+            abort(403, description="You are not a staff member on this module.")
+
     form = CreateFormAss()
     form.add_question.query = Question.query
     form.module_id.query = Module.query
@@ -282,21 +287,19 @@ def edit_formative_assessment(assessment_id):
         
         for question in questions.values():
                     if question not in question_list:
-                        AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id).delete()
+                        AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id).delete() # Delete the question from the assignment if it's not in the list of questions
 
         for question in question_list:
-            question_query = AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id)
-            if question_query.first() is not None:
-                question_query.update({'question_number': question_order.pop(0)})
+            question_query = AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id) # Get the question from the assignment
+            if question_query.first() is not None: # If the question is already in the assignment
+                question_query.update({'question_number': question_order.pop(0)}) # Update the question number
             else:
-                FormativeAssignment.add_question(assignment, question, question_order.pop(0))
-        
-        
+                FormativeAssignment.add_question(assignment, question, question_order.pop(0)) # Add the question to the assignment
         
         db.session.commit()
 
         flash("You've edited a formative assessment!")
-        return redirect(url_for('view_staff_assessments'))
+        return redirect(url_for('view_staff_assessments')) # Redirect to the staff assessments page
             
     assignment = FormativeAssignment.query.get(assessment_id)
 
@@ -325,8 +328,8 @@ def delete_assessment(assessment_id):
 
     if Staff.query.get(current_user.get_id()) == None:
         abort(403, description="This page can only be accessed by staff.")
+        
     if current_user not in assignment.module.get_staff():
-        print(assignment.module.get_staff())
         abort(403, description="You are not a staff member for this module.")
 
     questions = list(Assignment.get_questions(assignment).values())
@@ -354,7 +357,6 @@ def archive_assessment(assessment_id):
         abort(403, description="This page can only be accessed by staff.")
     
     if current_user not in assignment.module.get_staff():
-        print(assignment.module.get_staff())
         abort(403, description="You are not a staff member for this module.")
     
     assignment.active = False
@@ -371,7 +373,6 @@ def unarchive_assessment(assessment_id):
         abort(403, description="This page can only be accessed by staff.")
     
     if current_user not in assignment.module.get_staff():
-        print(assignment.module.get_staff())
         abort(403, description="You are not a staff member for this module.")
     
     assignment.active = True
