@@ -46,20 +46,12 @@
 
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
-                                {% set mark_dist = assignment.mark_dist() %}
-
                                 <div id="overallGraph" class="graph"></div>
 
                                 <script type="text/javascript">
                                 {
-                                    let data = [
-                                        {
-                                            x : {{ mark_dist.keys() | list }},
-                                            y : {{ mark_dist.values() | list }},
-                                            type : 'bar'
-                                        }
-                                    ];
-                                    displayGraph('overallGraph', 'Mark distribution', data)
+                                    let data = barGraphData({{ assignment.mark_dist() }});
+                                    displayGraph('overallGraph', 'Mark distribution', data);
                                 }
                                 </script>
                             </div>
@@ -67,25 +59,11 @@
                             <div class="tab-pane fade" id="cohort" role="tabpanel" aria-labelledby="cohort-tab">
                                 <div id="overallGraphCohort" class="graph"></div>
                                 <script type="text/javascript">
-                                    {
-                                        let results = {{ assignment.mark_dist_cohort() }};
-
-                                        let data = [];
-
-                                        let i = 0;
-                                        for ([cohort, mark_dist] of Object.entries(results)) {
-                                            data[i] = {
-                                                x : Object.keys(mark_dist),
-                                                y : Object.values(mark_dist),
-                                                name : cohort,
-                                                type : 'bar'
-                                            }
-                                            i++;
-                                        }
-
-                                        displayGraph('overallGraphCohort', 'Mark distribution by cohort', data)
-                                    }
-                                    </script>
+                                {
+                                    let data = cohortBarGraphData({{ assignment.mark_dist_cohort() }});
+                                    displayGraph('overallGraphCohort', 'Mark distribution by cohort', data);
+                                }
+                                </script>
                             </div>
                         </div>
                     </div>

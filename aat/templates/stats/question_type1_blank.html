@@ -61,17 +61,10 @@
 
                                 <div id="blank{{ count }}Graph" class="graph"></div>
 
-                                {% set answer_dict = dict(answers) %}
                                 <script type="text/javascript">
                                 {
-                                    let data = [
-                                        {
-                                            x : {{ answer_dict.keys() | list | safe }},
-                                            y : {{ answer_dict.values() | list }},
-                                            type : 'bar'
-                                        }
-                                    ];
-                                    displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - submissions', data)
+                                    let data = barGraphData({{ dict(answers) | safe }});
+                                    displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - submissions', data);
                                 }
                                 </script>
                             </div>
@@ -80,22 +73,8 @@
 
                                 <script type="text/javascript">
                                 {
-                                    let results = {{ question.answer_occur_for_blank_cohort(count, submissions) | safe }};
-
-                                    let data = [];
-
-                                    let i = 0;
-                                    for ([cohort, mark_dist] of Object.entries(results)) {
-                                        data[i] = {
-                                            x : Object.keys(mark_dist),
-                                            y : Object.values(mark_dist),
-                                            name : cohort,
-                                            type : 'bar'
-                                        }
-                                        i++;
-                                    }
-
-                                    displayGraph('blank{{ count }}GraphCohort', 'Blank {{ count+1 }} by cohort', data)
+                                    let data = cohortBarGraphData({{ question.answer_occur_for_blank_cohort(count, submissions) | safe }});
+                                    displayGraph('blank{{ count }}GraphCohort', 'Blank {{ count+1 }} by cohort', data);
                                 }
                                 </script>
 
