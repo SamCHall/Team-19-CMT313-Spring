@@ -34,3 +34,7 @@ function cohortBarGraphData(data) {
 
     return displayData;
 }
+
+function resize(graph) {
+    Plotly.relayout(graph, {autosize: true});
+}
