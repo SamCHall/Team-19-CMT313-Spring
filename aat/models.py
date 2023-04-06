@@ -184,6 +184,18 @@ class Assignment(db.Model):
 
         return marks
 
+    def mark_dist_cohort(self):
+        cohorts = set([submission.student.cohort for submission in self.submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = dict((mark, 0) for mark in range(self.max_mark()+1))
+
+        for submission in self.submissions:
+            results[submission.student.cohort][submission.mark] += 1
+
+        return results
+
     def lowest_mark(self):
         return min([submission.mark for submission in self.submissions])
 
