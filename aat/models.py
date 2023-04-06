@@ -415,7 +415,6 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
         cohorts = set([submission.submission.student.cohort for submission in submissions])
         results = {}
-        marks = list(self.mark_dist(submissions).keys())
 
         for cohort in cohorts:
             results[cohort] = dict((mark, 0) for mark in range(self.max_mark()+1))
@@ -503,6 +502,24 @@ class QuestionType1(Question):
         # https://stackoverflow.com/a/11230132
         sorted_answers = collections.Counter(answers).most_common()
         return sorted_answers
+
+    def answer_occur_for_blank_cohort(self, blank_no, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = {}
+
+        for submission in submissions:
+            if (answer:= submission.list_submission()[blank_no]) in results[submission.submission.student.cohort].keys():
+                results[submission.submission.student.cohort][answer] += 1
+            else:
+                results[submission.submission.student.cohort][answer] = 1
+
+        return results
 
 
 class QuestionType2(Question):
