@@ -569,3 +569,23 @@ class QuestionType2(Question):
             count[submission.submission_answer] += 1
 
         return count
+
+    def option_choice_quantity_cohort(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = {
+                self.option1: 0,
+                self.option2: 0,
+                self.option3: 0,
+                self.option4: 0
+            }
+
+        for submission in submissions:
+            results[submission.submission.student.cohort][submission.submission_answer] += 1
+
+        return results

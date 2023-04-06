@@ -21,20 +21,60 @@
 
                 <div class="card stats-inner">
                     <div class="card-body">
-                        {% set options = question.option_choice_quantity(submissions) %}
-                        <div id="optionsGraph" class="graph"></div>
-                        <script type="text/javascript">
-                            {
-                                let data = [
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">All</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="cohort-tab" data-bs-toggle="tab" data-bs-target="#cohort" type="button" role="tab" aria-controls="cohort" aria-selected="false">Cohort</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+
+                                {% set options = question.option_choice_quantity(submissions) %}
+                                <div id="optionsGraph" class="graph"></div>
+                                <script type="text/javascript">
                                     {
-                                        x : {{ options.keys() | list | safe }},
-                                        y : {{ options.values() | list }},
-                                        type : 'bar'
+                                        let data = [
+                                            {
+                                                x : {{ options.keys() | list | safe }},
+                                                y : {{ options.values() | list }},
+                                                type : 'bar'
+                                            }
+                                        ];
+                                        displayGraph('optionsGraph', 'Options', data)
                                     }
-                                ];
-                                displayGraph('optionsGraph', 'Options', data)
-                            }
-                        </script>
+                                </script>
+
+                            </div>
+
+                            <div class="tab-pane fade" id="cohort" role="tabpanel" aria-labelledby="cohort-tab">
+                                <div id="optionsGraphCohort" class="graph"></div>
+
+                                <script type="text/javascript">
+                                {
+                                    let results = {{ question.option_choice_quantity_cohort(submissions) | safe }};
+
+                                    let data = [];
+
+                                    let i = 0;
+                                    for ([cohort, mark_dist] of Object.entries(results)) {
+                                        data[i] = {
+                                            x : Object.keys(mark_dist),
+                                            y : Object.values(mark_dist),
+                                            name : cohort,
+                                            type : 'bar'
+                                        }
+                                        i++;
+                                    }
+
+                                    displayGraph('optionsGraphCohort', 'Options by cohort', data)
+                                }
+                                </script>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
