@@ -1,5 +1,5 @@
 var submitFormative = document.querySelector('#submit-formative')
-
+if (submitFormative) {
 submitFormative.addEventListener("click", function(event) {
   event.preventDefault();
 
@@ -44,3 +44,4 @@ submitFormative.addEventListener("click", function(event) {
   
   xhr.send(JSON.stringify(requestData))
 });
+}

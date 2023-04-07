@@ -3,7 +3,8 @@ import ast
 from flask import render_template, abort, flash, request, redirect, url_for
 from flask_login import current_user, login_required
 
-from .. import app, db
+from .. import app, db, assets
+from flask_assets import Bundle
 from ..models import *
 from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
