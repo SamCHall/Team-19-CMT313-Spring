@@ -73,11 +73,13 @@
           </table>
         </div>
         <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive-tab">
-          <table id="data-staff" class="table">
+          <table id="data-staff-archive" class="table">
             <thead>
               <tr>
                 <th scope="col">Assessment</th>
+                <th scope="col">Difficulty</th>
                 <th scope="col">Module</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -88,16 +90,18 @@
               <tr>
                 <td>
                   <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                </td>
+                <td>
                   {% if assignment.difficulty == "Very Easy" %}
-                    <span class="badge bg-very-easy">Very Easy</span>
+                      <span class="badge bg-very-easy">Very Easy</span>
                   {% elif assignment.difficulty == "Easy" %}
-                    <span class="badge bg-easy">Easy</span>
+                      <span class="badge bg-easy">Easy</span>
                   {% elif assignment.difficulty == "Medium" %}
-                    <span class="badge bg-medium">Medium</span>
+                      <span class="badge bg-medium">Medium</span>
                   {% elif assignment.difficulty == "Hard" %}
-                    <span class="badge bg-hard">Hard</span>
+                      <span class="badge bg-hard">Hard</span>
                   {% elif assignment.difficulty == "Very Hard" %}
-                    <span class="badge bg-very-hard">Very Hard</span>
+                      <span class="badge bg-very-hard">Very Hard</span>
                   {% endif %}
                 </td>
                 <td>{{ assignment.module }}</td>

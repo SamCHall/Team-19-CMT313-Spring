@@ -22,6 +22,17 @@ $(document).ready(function() {
       ]
   } );
 
+  $('#data-staff-archive').DataTable( {
+    "columnDefs": [
+      { type: 'difficulty', "targets": 1 }
+    ],
+      "aoColumns": [
+          { "bSortable": true },  // 0  
+          { "bSortable": true },  // 1
+          { "bSortable": true },  // 2
+          { "bSortable": false },  // 3
+      ]
+  } );
 
   $('#data').DataTable( {
     "columnDefs": [
