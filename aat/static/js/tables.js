@@ -24,7 +24,8 @@ $(document).ready(function() {
           { "bSortable": true },  // 0  
           { "bSortable": true },  // 1
           { "bSortable": true },  // 2
-          { "bSortable": false }  // 3
+          { "bSortable": false,
+            "bSearchable": false }  // 3
       ]
   } );
 
@@ -36,7 +37,8 @@ $(document).ready(function() {
           { "bSortable": true },  // 0  
           { "bSortable": true },  // 1
           { "bSortable": true },  // 2
-          { "bSortable": false }  // 3
+          { "bSortable": false,
+            "bSearchable": false }  // 3
       ]
   } );
 
