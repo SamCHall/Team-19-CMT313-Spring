@@ -24,7 +24,7 @@ $(document).ready(function() {
           { "bSortable": true },  // 0  
           { "bSortable": true },  // 1
           { "bSortable": true },  // 2
-          { "bSortable": false },  // 3
+          { "bSortable": false }  // 3
       ]
   } );
 
@@ -36,27 +36,19 @@ $(document).ready(function() {
           { "bSortable": true },  // 0  
           { "bSortable": true },  // 1
           { "bSortable": true },  // 2
-          { "bSortable": false },  // 3
+          { "bSortable": false }  // 3
       ]
   } );
 
   $('#data').DataTable( {
     "columnDefs": [
-      { type: 'rank', targets: 1 }
+      { type: 'difficulty', "targets": 1 }
     ],
       "aoColumns": [
-          {
-              "bSortable": true
-          },
-          {
-              "bSortable": true
-          },
-          {
-              "bSortable": true
-          },
-          {
-              "bSortable": true
-          }
+          { "bSortable": true }, // 0
+          { "bSortable": true }, // 1
+          { "bSortable": true }, // 2
+          { "bSortable": true } // 3
       ]
   } );
 } );
