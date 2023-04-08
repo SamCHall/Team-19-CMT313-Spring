@@ -28,7 +28,7 @@
                                         <td><a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">
                                             {{ assignment.title }}</a>
                                         </td>
-                                        <td class = "difficulty"> 
+                                        <td class = "text-center"> 
                                             {% if assignment.difficulty == "Very Easy" %}
                                                 <span class="badge bg-very-easy">Very Easy</span>
                                             {% elif assignment.difficulty == "Easy" %}
