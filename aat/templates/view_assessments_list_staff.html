@@ -10,12 +10,12 @@
     <div class="card-body">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
+          <button class="nav-link active" id="active-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
             Active
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="archive-tab" data-bs-toggle="tab" data-bs-target="#archive" type="button" role="tab" aria-controls="archive" aria-selected="false">
+          <button class="nav-link" id="archive-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#archive" type="button" role="tab" aria-controls="archive" aria-selected="false">
             Archived
           </button>
         </li>
@@ -109,7 +109,7 @@
                 <td class="edit-buttons">
                   {% if assignment.assignment_type == "formative_assignment" %}
                   <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
-                  {% elif assignment.assignment_type == "summative_assignment"%}
+                  {% elif assignment.assignment_type == "summative_assignment" %}
                   <a>Edit</a>
                   {% endif %}
                   <a href="{{ url_for('unarchive_assessment', assessment_id=assignment.id )}}">Activate</a>

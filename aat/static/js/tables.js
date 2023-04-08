@@ -8,8 +8,14 @@ $.fn.dataTable.ext.type.order['difficulty-pre'] = function ( d ) {
   case '': return 6; 
   } 
   return 0; }; 
+  
 
 $(document).ready(function() {
+  $('button[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+});
+ // fixes column widths on tab change
+
   $('#data-staff').DataTable( {
     "columnDefs": [
       { type: 'difficulty', "targets": 1 }
@@ -53,4 +59,4 @@ $(document).ready(function() {
           }
       ]
   } );
-});
+} );
