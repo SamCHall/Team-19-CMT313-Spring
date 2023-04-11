@@ -5,7 +5,32 @@
         </div>
 
         <div class="card-body">
-
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Module</th>
+                        <th scope="col">Completed Assessments</th>
+                        <th scope="col">Incomplete Assessments</th>
+                        <th scope="col">Average Mark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for module in student.modules %}
+                    <tr>
+                        <td><a href="#{{ module.code }}">{{ module.code }} - {{ module.name }}</a></td>
+                        <td>{{ module.completed_assessments(student) }}</td>
+                        <td>{{ module.not_completed_assessments(student) }}</td>
+                        <td>
+                            {% if module.completed_assessments(student) > 0 %}
+                            {{ '%0.1f' | format(module.average_percent(student)) }}%
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
@@ -14,7 +39,7 @@
 <section class="container">
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title">{{ module.code }} - {{ module.name }} performance</h2>
+            <h2 class="card-title" id="{{ module.code }}">{{ module.code }} - {{ module.name }} performance</h2>
         </div>
 
         <div class="card-body">
