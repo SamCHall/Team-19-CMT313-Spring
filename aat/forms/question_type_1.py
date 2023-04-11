@@ -23,7 +23,6 @@ class QuestionType1FormCreate(FlaskForm):
 
     def validate_correct_answers(self, correct_answers):
         n_of_blanks = self.question_template.data.count('BLANK')
-        print(correct_answers.data.split(','))
         if not len(correct_answers.data.split(',')) == n_of_blanks:
             raise ValidationError('Number of correct answers must match the number of "BLANK"s in the template.')
         
@@ -36,17 +35,11 @@ class QuestionType1FormEdit(FlaskForm):
     incorrect_answers = StringField('Comma separated list of incorrect answers (optional).')
     submit = SubmitField('Confirm')
 
-    def validate_title(self, title):
-        exists = QuestionType1.query.filter_by(title=title.data).first()
-        if exists:
-            raise ValidationError('A question with this title already exists')
-
     def validate_question_template(self, question_template):
         if "BLANK" not in question_template.data:
             raise ValidationError('Your template must include at least one BLANK')
 
     def validate_correct_answers(self, correct_answers):
         n_of_blanks = self.question_template.data.count('BLANK')
-        print(correct_answers.data.split(','))
         if not len(correct_answers.data.split(',')) == n_of_blanks:
             raise ValidationError('Number of correct answers must match the number of "BLANK"s in the template.')

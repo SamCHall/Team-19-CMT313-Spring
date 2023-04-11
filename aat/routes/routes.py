@@ -245,10 +245,33 @@ def delete_question(id):
 @app.route('/questions/edit/<int:id>', methods=['GET','POST'])
 def edit_question(id):
     question = Question.query.get_or_404(id)
-    if question.question_type == 'question_type1':
-        form = QuestionType1FormEdit()
 
-        return render_template('edit-qt1.html', form=form)
+    if question.question_type == 'question_type1':
+        qt1_form = QuestionType1FormEdit()
+
+        if qt1_form.validate_on_submit():
+            correct_answers = []
+            for answer in qt1_form.correct_answers.data.split(','):
+                correct_answers.append(answer.strip())
+
+            incorrect_answers = []
+            for answer in qt1_form.incorrect_answers.data.split(','):
+                incorrect_answers.append(answer.strip())
+            
+            print(qt1_form.title.data)
+            question.title = qt1_form.title.data
+            question.question_template = qt1_form.question_template.data.replace('BLANK', '{}')
+            question.correct_answers = str(correct_answers)
+            question.incorrect_answers = str(incorrect_answers)
+            flash("Question successfully updated")
+            db.session.commit()
+            return redirect(url_for('questions', id=question.id))
+
+        qt1_form.title.data = question.title
+        qt1_form.question_template.data = question.question_template.replace('{}', 'BLANK')
+        qt1_form.correct_answers.data = ', '.join(ast.literal_eval(question.correct_answers))
+        qt1_form.incorrect_answers.data = ', '.join(ast.literal_eval(question.incorrect_answers))
+        return render_template('edit-qt1.html', qt1_form=qt1_form)
     
     else:
         form = QuestionType2FormEdit()
