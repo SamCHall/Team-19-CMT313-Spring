@@ -1,0 +1,51 @@
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{ student.first_name }} {{ student.surname }} stats</h1>
+        </div>
+
+        <div class="card-body">
+
+        </div>
+    </div>
+</section>
+
+{% for module in student.modules %}
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ module.code }} - {{ module.name }} performance</h2>
+        </div>
+
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Assessment</th>
+                        <th scope="col">Assessment Type</th>
+                        <th scope="col">Mark</th>
+                        <th scope="col">Precentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for asssignment in module.assignments %}
+                    <tr>
+                        <td>{{ asssignment.title }}</td>
+                        <td>{{ asssignment.assignment_type }}</td>
+                        <td>
+                            {% set mark = asssignment.get_student_highest_mark(student) %}
+                            {% if mark %}
+                            {{ mark }} / {{ asssignment.max_mark() }}
+                            {% else %}
+                            No submission
+                            {% endif %}
+                        </td>
+                        <td>-</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endfor %}

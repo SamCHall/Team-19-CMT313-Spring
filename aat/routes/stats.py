@@ -2,7 +2,7 @@ from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from .. import app, db
-from ..models import Assignment, Question, QuestionType1, QuestionType2
+from ..models import Assignment, Question, QuestionType1, QuestionType2, Student
 
 @app.route('/staff/question/<int:id>/stats')
 @login_required
@@ -56,3 +56,16 @@ def assessment_question_stats(id, question_num):
             return render_template('stats/assignment_question_type2.html', title=assignment.title, assignment=assignment, question=question, question_number=question_num)
 
     abort(500)
+
+@app.route('/student/<int:id>/stats')
+@login_required
+def student_stats_page(id):
+    student = Student.query.filter_by(id=id).first_or_404()
+
+    if current_user.id == id:
+        return render_template('stats/student_stats_student.html', title=f"{student.id} - Stats", student=student)
+
+    if current_user.user_type == "staff":
+        return render_template('stats/student_stats_staff.html', title=f"{student.id} - Stats", student=student)
+
+    abort(403)

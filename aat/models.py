@@ -66,6 +66,9 @@ class Student(User):
         "polymorphic_identity": "student",
     }
 
+    def student_assigments(self):
+        print(self.modules.assignments)
+
 
 class Staff(User):
     id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
@@ -156,6 +159,12 @@ class Assignment(db.Model):
                 if submission_answer.question == question:
                     question_submissions.append(submission_answer)
         return question_submissions
+
+    def get_student_highest_mark(self, student):
+        marks = [submission.mark for submission in self.submissions if submission.student == student]
+        if marks:
+            return max(marks)
+        return None
 
     def max_mark(self):
         return sum([question.max_mark() for question in self.get_questions().values()])
