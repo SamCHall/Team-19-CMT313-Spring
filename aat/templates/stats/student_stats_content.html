@@ -18,11 +18,62 @@
         </div>
 
         <div class="card-body">
+            <h3>Module Stats</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Summative</th>
+                        <th scope="col">Formative</th>
+                        <th scope="col">All</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Number of assessments completed</td>
+                        <td>{{ module.completed_assessments(student, 'summative_assignment') }}</td>
+                        <td>{{ module.completed_assessments(student, 'formative_assignment') }}</td>
+                        <td>{{ module.completed_assessments(student) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of assessments not completed</td>
+                        <td>{{ module.not_completed_assessments(student, 'summative_assignment') }}</td>
+                        <td>{{ module.not_completed_assessments(student, 'formative_assignment') }}</td>
+                        <td>{{ module.not_completed_assessments(student) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Average precentage</td>
+                        <td>
+                            {% if module.completed_assessments(student, 'summative_assignment') > 0 %}
+                            {{ '%0.1f' | format(module.average_percent(student, 'summative_assignment')) }}%
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if module.completed_assessments(student, 'formative_assignment') > 0 %}
+                            {{ '%0.1f' | format(module.average_percent(student, 'formative_assignment')) }}%
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if module.completed_assessments(student) > 0 %}
+                            {{ '%0.1f' | format(module.average_percent(student)) }}%
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Assessments</h3>
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">Assessment</th>
                         <th scope="col">Assessment Type</th>
+                        <th scope="col">Number of attempts</th>
                         <th scope="col">Mark</th>
                         <th scope="col">Precentage</th>
                     </tr>
@@ -33,6 +84,13 @@
                         <td>{{ asssignment.title }}</td>
                         <td>{{ asssignment.assignment_type }}</td>
                         <td>
+                            {% if asssignment.assignment_type == 'formative_assignment' %}
+                            {{ asssignment.num_of_attempts(student) }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
                             {% set mark = asssignment.get_student_highest_mark(student) %}
                             {% if mark %}
                             {{ mark }} / {{ asssignment.max_mark() }}
@@ -40,7 +98,13 @@
                             No submission
                             {% endif %}
                         </td>
-                        <td>-</td>
+                        <td>
+                            {% if mark %}
+                            {{ '%0.1f' | format(asssignment.student_percentage(student)) }}%
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

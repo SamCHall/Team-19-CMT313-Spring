@@ -116,6 +116,25 @@ class Module(db.Model):
         """ Returns true if given student is enrolled on the module"""
         return student in self.get_students()
 
+    def num_by_assessment_type(self, assessment_type=None):
+        if assessment_type:
+            return len([assessment for assessment in self.assignments if assessment.assignment_type==assessment_type])
+        return len(self.assignments)
+
+    def completed_assessments(self, student, assessment_type=None):
+        if assessment_type:
+            return len([assessment for assessment in self.assignments if assessment.student_submitted(student) and assessment.assignment_type==assessment_type])
+        return len([assessment for assessment in self.assignments if assessment.student_submitted(student)])
+
+    def not_completed_assessments(self, student, assessment_type=None):
+        return self.num_by_assessment_type(assessment_type) - self.completed_assessments(student, assessment_type)
+
+    def average_percent(self, student, assessment_type=None):
+        if self.completed_assessments(student, assessment_type) > 0:
+            if assessment_type:
+                return statistics.mean([assessment.student_percentage(student) for assessment in self.assignments if assessment.student_submitted(student) and assessment.assignment_type==assessment_type])
+            return statistics.mean([assessment.student_percentage(student) for assessment in self.assignments if assessment.student_submitted(student)])
+        return None
 
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -166,6 +185,12 @@ class Assignment(db.Model):
             return max(marks)
         return None
 
+    def student_percentage(self, student):
+        return self.get_student_highest_mark(student) / self.max_mark() * 100
+
+    def student_submitted(self, student):
+        return student in [submission.student for submission in self.submissions]
+
     def max_mark(self):
         return sum([question.max_mark() for question in self.get_questions().values()])
 
@@ -210,6 +235,8 @@ class FormativeAssignment(Assignment):
         "polymorphic_identity": "formative_assignment",
     }
 
+    def num_of_attempts(self, student):
+        return Submission.get_current_attempt_number(student.id, self.id)
 
 class SummativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
