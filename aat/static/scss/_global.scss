@@ -9,6 +9,10 @@ a {
     &:hover {
         color: $primary;
     }
+
+    &.btn:visited {
+        color: $light;
+    }
 }
 
 section {
@@ -22,4 +26,8 @@ section {
 .card-header {
     color: $primary;
     background-color: $light;
+}
+
+td {
+    vertical-align: middle;
 }

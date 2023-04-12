@@ -215,3 +215,9 @@ def submit_assessment(assessment_id):
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
 
+@app.route("/students")
+@login_required
+def student_list():
+    students = Student.query.all()
+
+    return render_template('student_list.html', title="Students", students=students)
