@@ -131,16 +131,31 @@ if User.query.count() <= 1:
     )
     db.session.add(module3)
 
-    # q1 = QuestionType1(
-    #     title = "Programming Language 1",
-    #     active = False,
-    #     question_template = "A {} language program is called {} code.",
-    #     correct_answers = "['high-level', 'source']",
-    #     incorrect_answers = "['high', 'low', 'low-level', 'machine', 'object', 'assembly']"
-    # )
-    # db.session.add(q1)
-
     q1 = QuestionType1(
+        title = "Programming Language 1",
+        question_template = "A {} language program is called {} code.",
+        correct_answers = "['high-level', 'source']",
+        incorrect_answers = "['high', 'low', 'low-level', 'machine', 'object', 'assembly']"
+    )
+    db.session.add(q1)
+
+    q2 = QuestionType1(
+        title = "Translator 1",
+        question_template = "A {} translates source code into {} code.",
+        correct_answers = "['compiler', 'object']",
+        incorrect_answers = "['interpreter', 'assemblers', 'executes', 'machine', 'source']"
+    )
+    db.session.add(q2)
+
+    q3 = QuestionType1(
+        title = "Running software 1",
+        question_template = "An {} analyses each {} of the {} code as it {} the statement.",
+        correct_answers = "['interpreter', 'statement', 'source', 'executes']",
+        incorrect_answers = "['compiler', 'assemblers', 'machine', 'object', 'assembly', 'line']"
+    )
+    db.session.add(q3)
+
+    q7 = QuestionType1(
         title = 'String Theory',
         question_type = 'question_type1',
         active = False,
@@ -148,8 +163,9 @@ if User.query.count() <= 1:
         correct_answers = '["class"]',
         incorrect_answers = '["variable", "person", "fart"]'
     )
+    db.session.add(q7)
 
-    q2 = QuestionType1(
+    q8 = QuestionType1(
         title = 'Wing Leory',
         question_type = 'question_type1',
         active = False,
@@ -157,8 +173,9 @@ if User.query.count() <= 1:
         correct_answers = '["class"]',
         incorrect_answers = '["variable", "person", "fart"]'
     )
+    db.session.add(q8)
 
-    q3 = QuestionType1(
+    q9 = QuestionType1(
         title = 'Sing Beery',
         question_type = 'question_type1',
         active = False,
@@ -166,6 +183,7 @@ if User.query.count() <= 1:
         correct_answers = '["class"]',
         incorrect_answers = '["variable", "person", "fart"]'
     )
+    db.session.add(q9)
 
     q4 = QuestionType2(
         title = "Application Software 1",
