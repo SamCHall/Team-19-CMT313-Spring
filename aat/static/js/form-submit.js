@@ -1,5 +1,5 @@
 var submitFormative = document.querySelector('#submit-formative')
-
+if (submitFormative) {
 submitFormative.addEventListener("click", function(event) {
   event.preventDefault();
 
@@ -27,7 +27,6 @@ submitFormative.addEventListener("click", function(event) {
       type2Values.push("");
     }
   }
-  console.log(type2Values)
 
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/submit-assessment/' + assessmentId);
@@ -45,3 +44,4 @@ submitFormative.addEventListener("click", function(event) {
   
   xhr.send(JSON.stringify(requestData))
 });
+}

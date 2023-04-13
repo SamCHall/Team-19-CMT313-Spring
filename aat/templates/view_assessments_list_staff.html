@@ -1,0 +1,130 @@
+{% extends 'base.html' %} {% block content %}
+{% assets "table" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+<section class="container">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">Assessments - Staff View</h1>
+    </div>
+    <div class="card-body">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="active-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
+            Active
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="archive-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#archive" type="button" role="tab" aria-controls="archive" aria-selected="false">
+            Archived
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+          <table id="data-staff" class="table">
+            <thead>
+              <tr>
+                <th scope="col">Assessment</th>
+                <th scope="col">Difficulty</th>
+                <th scope="col">Module</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for assignment in assignments %} 
+              {% if assignment.active == True %} 
+              {% for item in assignment.module.get_staff() %} 
+              {% if current_user.id == item.id %}
+              <tr>
+                <td>
+                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                </td>
+                <td class="text-center">
+                  {% if assignment.difficulty == "Very Easy" %}
+                      <span class="badge bg-very-easy">Very Easy</span>
+                  {% elif assignment.difficulty == "Easy" %}
+                      <span class="badge bg-easy">Easy</span>
+                  {% elif assignment.difficulty == "Medium" %}
+                      <span class="badge bg-medium">Medium</span>
+                  {% elif assignment.difficulty == "Hard" %}
+                      <span class="badge bg-hard">Hard</span>
+                  {% elif assignment.difficulty == "Very Hard" %}
+                      <span class="badge bg-very-hard">Very Hard</span>
+                  {% endif %}
+                </td>
+                <td>{{ assignment.module }}</td>
+
+                <td class="edit-buttons">
+                  {% if assignment.assignment_type == "formative_assignment" %}
+                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
+                  {% elif assignment.assignment_type == "summative_assignment" %}
+                  <a>Edit</a>
+                  {% endif %}
+                  <a href="{{ url_for('archive_assessment', assessment_id=assignment.id )}}">Archive</a>
+                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</a>
+                </td>
+              </tr>
+              {% endif %} 
+              {% endfor %} 
+              {% endif %} 
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive-tab">
+          <table id="data-staff-archive" class="table">
+            <thead>
+              <tr>
+                <th scope="col">Assessment</th>
+                <th scope="col">Difficulty</th>
+                <th scope="col">Module</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for assignment in assignments %} 
+              {% if assignment.active == False %} 
+              {% for item in assignment.module.get_staff() %} 
+              {% if current_user.id == item.id %}
+              <tr>
+                <td>
+                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                </td>
+                <td class="text-center">
+                  {% if assignment.difficulty == "Very Easy" %}
+                      <span class="badge bg-very-easy">Very Easy</span>
+                  {% elif assignment.difficulty == "Easy" %}
+                      <span class="badge bg-easy">Easy</span>
+                  {% elif assignment.difficulty == "Medium" %}
+                      <span class="badge bg-medium">Medium</span>
+                  {% elif assignment.difficulty == "Hard" %}
+                      <span class="badge bg-hard">Hard</span>
+                  {% elif assignment.difficulty == "Very Hard" %}
+                      <span class="badge bg-very-hard">Very Hard</span>
+                  {% endif %}
+                </td>
+                <td>{{ assignment.module }}</td>
+
+                <td class="edit-buttons">
+                  {% if assignment.assignment_type == "formative_assignment" %}
+                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
+                  {% elif assignment.assignment_type == "summative_assignment" %}
+                  <a>Edit</a>
+                  {% endif %}
+                  <a href="{{ url_for('unarchive_assessment', assessment_id=assignment.id )}}">Activate</a>
+                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" onclick="return confirmDelete(this)">Delete</a>
+                </td>
+              </tr>
+              {% endif %} 
+              {% endfor %} 
+              {% endif %} 
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
