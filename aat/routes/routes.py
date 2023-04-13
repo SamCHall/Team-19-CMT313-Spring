@@ -1,6 +1,6 @@
 import random
 import ast
-from flask import render_template, abort, flash, request, redirect
+from flask import render_template, abort, flash, request, redirect, url_for
 from flask_login import current_user, login_required
 
 from .. import app, db
@@ -8,7 +8,6 @@ from ..models import *
 from ..forms.formative_forms import CreateFormAss
 from ..forms.question_type_1 import QuestonType1Form
 from ..forms.question_type_2 import QuestonType2Form
-
 
 # Home
 @app.route("/")
@@ -26,9 +25,16 @@ def create_formative_assessment():
     form.module_id.query = Module.query
 
     if form.validate_on_submit():
-        assignment = FormativeAssignment(title = form.assignment_title.data, assignment_type = 'formative_assignment', active = form.is_active.data, module = form.module_id.data)
+        assignment = FormativeAssignment(title = form.assignment_title.data, 
+                                         assignment_type = 'formative_assignment', 
+                                         active = form.is_active.data, 
+                                         module = form.module_id.data,
+                                         difficulty = form.difficulty.data
+                                         )
         db.session.add(assignment)
         db.session.commit()
+
+        flash("You've created a new formative assessment!")
 
         question_list = []
         for i in range(len(form.add_question.data)):
@@ -113,7 +119,18 @@ def questions():
 @app.route("/assessments", methods=['GET'])
 def view_assessments():
     assignments = Assignment.query.all()
+    for assignment in assignments:
+        assignment.mark = assignment.get_student_highest_mark(current_user.id)
+        assignment.total_mark = assignment.total_available_mark()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
+
+@app.route("/staff/assessments", methods=['GET'])
+@login_required
+def view_staff_assessments():
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    assignments = Assignment.query.all()
+    return render_template('view_assessments_list_staff.html', title = 'Assessments - Staff View', assignments = assignments)
 
 
 @app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
@@ -121,12 +138,6 @@ def view_assessments():
 def view_assessment(assessment_id):
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
-
-    if assignment.active == False:
-        abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
-
-    if not assignment.module.check_student(current_user):
-        abort(403, description="You are not enrolled on the correct module to take this assignment.")
 
     for question in questions:
         if question.question_type == "question_type1":
@@ -142,14 +153,34 @@ def view_assessment(assessment_id):
 
             # Randomises the order of options from correct_answers and incorrect_answers
             question.options = random.sample(c, len(c))
+    
+    if current_user.user_type == "student":
+        if assignment.active == False:
+            abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
 
-    return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
+        if not assignment.module.check_student(current_user):
+            abort(403, description="You are not enrolled on the correct module to take this assignment.")
+
+        return render_template('view_assessment.html', assignment = assignment, questions = questions, title = assignment.title)
+    
+    elif current_user.user_type == "staff":
+        if not assignment.module.check_staff(current_user):
+            abort(403, description="You are not a staff member on this module.")
+
+        return render_template('view_assessment_read_only.html', assignment = assignment, questions = questions, title = assignment.title)
 
 @app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
 @login_required
 def submit_assessment(assessment_id):
+    
     assignment = Assignment.query.get_or_404(assessment_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+
+    if assignment.active == False:
+        abort(403, description="This assignment is currently not active. Please wait for staff to make it available")
+
+    if not assignment.module.check_student(current_user):
+        abort(403, description="You are not enrolled on the correct module to take this assignment.")
 
     type1_answer_values = request.get_json()['optionValues']
     type2_answer_values = request.get_json()['type2Values']
@@ -182,6 +213,7 @@ def submit_assessment(assessment_id):
             type2_mark += 1
 
     total_answer_mark = type1_mark + type2_mark
+    total_available_mark = len(type1_correct_answers_list) + len(type2_correct_answers_list)
     current_attempt_number = Submission.get_current_attempt_number(current_user.id, assessment_id)
 
     submission = Submission(
@@ -190,7 +222,16 @@ def submit_assessment(assessment_id):
             mark = total_answer_mark,
             attempt_number = current_attempt_number + 1
             )
-
+    
+    simplified_submission = SimplifiedSubmission(
+            assignment_title = assignment.title,
+            student_id = current_user.id,
+            total_mark = total_answer_mark,
+            total_available_mark = total_available_mark,
+            module_id = assignment.module.id
+    )
+    db.session.add(simplified_submission)
+    
     # The below code is used to add the answers to the database with their individual marks.
     for question in questions:
         if question.question_type == 'question_type1':
@@ -212,6 +253,131 @@ def submit_assessment(assessment_id):
             else:
                 submission.add_question_answer(question, submitted_answer, 0)
 
+    
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
 
+@app.route('/staff/edit-formative/<int:assessment_id>', methods=['GET', 'POST'])
+@login_required
+def edit_formative_assessment(assessment_id):
+    assignment = FormativeAssignment.query.get(assessment_id)
+
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    
+    if not assignment.module.check_staff(current_user):
+            abort(403, description="You are not a staff member on this module.")
+
+    form = CreateFormAss()
+    form.add_question.query = Question.query
+    form.module_id.query = Module.query
+    questions = AssignQuestion.get_assignment_questions(assessment_id) # Get the questions in the assignment
+
+    if form.validate_on_submit():
+        assignment.title = form.assignment_title.data 
+        assignment.active = form.is_active.data
+        assignment.module = form.module_id.data
+        assignment.difficulty = form.difficulty.data
+
+        question_list = []
+        for i in range(len(form.add_question.data)):
+            question_list.append(form.add_question.data[i])
+
+        question_order = [int(q) for q in form.question_order.data.split(',')] # Split the string into a list of integers
+        
+        for question in questions.values():
+                    if question not in question_list:
+                        AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id).delete() # Delete the question from the assignment if it's not in the list of questions
+
+        for question in question_list:
+            question_query = AssignQuestion.query.filter_by(assignment_id=assessment_id, question_id=question.id) # Get the question from the assignment
+            if question_query.first() is not None: # If the question is already in the assignment
+                question_query.update({'question_number': question_order.pop(0)}) # Update the question number
+            else:
+                FormativeAssignment.add_question(assignment, question, question_order.pop(0)) # Add the question to the assignment
+        
+        db.session.commit()
+
+        flash("You've edited a formative assessment!")
+        return redirect(url_for('view_staff_assessments')) # Redirect to the staff assessments page
+
+            
+    
+
+    form.assignment_title.data = assignment.title
+    form.is_active.data = assignment.active
+    form.module_id.data = assignment.module
+    form.difficulty.data = assignment.difficulty
+
+    if AssignQuestion.query.filter_by(assignment_id=assessment_id).first() is not None: # If there are questions in the assignment
+        assignment.questions = questions
+        form.add_question.data = [q for q in assignment.questions.values()] # Set the questions in the assignment to the form
+        current_question_order = ""
+        for question in Question.query:
+            if question in assignment.questions.values():
+                current_question_order += str(list(assignment.questions.values()).index(question) + 1) + "," # Add the question order to the string
+        current_question_order = current_question_order[:-1] # Remove the last comma
+        form.question_order.data = current_question_order # Set the question order to the form
+
+    return render_template('edit_formative.html', title='Edit Assessment', form = form, assignment = assignment, error=form.errors.get('question_order'))    
+
+
+@app.route('/delete-assessment/<int:assessment_id>', methods=['GET', 'POST'])
+@login_required
+def delete_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+        
+    if current_user not in assignment.module.get_staff():
+        abort(403, description="You are not a staff member for this module.")
+
+    questions = list(Assignment.get_questions(assignment).values())
+    question_ids = []
+    for question in questions:
+        question_ids.append(question.id)
+     
+    db.session.delete(assignment)
+    
+    for question_id in question_ids:
+        if AssignQuestion.query.filter_by(question_id=question_id).first() is None:
+            Question.query.filter_by(id=question_id).update({"active": False})
+    
+    db.session.commit()
+
+    flash('The assessment has been deleted successfully.')
+    return redirect(request.referrer)
+
+@app.route('/archive-assessment/<int:assessment_id>', methods=['GET', 'POST'])
+@login_required
+def archive_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    
+    if current_user not in assignment.module.get_staff():
+        abort(403, description="You are not a staff member for this module.")
+    
+    assignment.active = False
+    db.session.commit()
+    flash('The assessment has been archived successfully.')
+
+    return redirect(request.referrer)
+
+@app.route('/unarchive-assessment/<int:assessment_id>', methods=['GET', 'POST'])
+@login_required
+def unarchive_assessment(assessment_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    
+    if current_user not in assignment.module.get_staff():
+        abort(403, description="You are not a staff member for this module.")
+    
+    assignment.active = True
+    db.session.commit()
+    flash('The assessment has been activated successfully.')
+    return redirect(request.referrer)
