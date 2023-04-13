@@ -1,25 +1,76 @@
-{% extends "base.html" %}
-
-{% block content %}
-{% assets "graph" %}
-<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
-
+{% if submissions | length > 0 %}
 <section class="container">
-    <h1>{{ question.title }} - Stats</h1>
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{ question.title }} - Stats</h1>
+        </div>
 
-{# Include html file with code to display question here #}
+        <div class="card-body stats-outer">
+            <div class="card-group">
+                <div class="card stats-inner">
+                    <div class="card-body">
+            {# Include html file with code to display question here #}
 
-{% if question.submissions | length > 0 %}
-<ul>
-    <li>Number of submissions: {{ question.submissions | length }}</li>
-    <li>Number of correct submissions: {{ question.correct_submissions_number() }}</li>
-    <li>Precentage of correct submissions: {{ question.correct_submissions_percent() }}</li>
-</ul>
-{% else %}
-<p>There are currently no submissions for this question.</p>
-{% endif %}
+                        <ul>
+                            <li>Number of submissions: {{ submissions | length }}</li>
+                            <li>Number of correct submissions: {{ question.correct_submissions_number(submissions) }}</li>
+                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_submissions_percent(submissions)) }}%</li>
+                        </ul>
+                    </div>
+                </div>
 
+                <div class="card stats-inner">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">All</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="cohort-tab" data-bs-toggle="tab" data-bs-target="#cohort" type="button" role="tab" aria-controls="cohort" aria-selected="false" onclick="resize('optionsGraphCohort')">Cohort</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+
+                                <div id="optionsGraph" class="graph"></div>
+                                <script type="text/javascript">
+                                {
+                                    let data = barGraphData({{ question.option_choice_quantity(submissions) | safe }});
+                                    displayGraph('optionsGraph', 'Options', data);
+                                }
+                                </script>
+
+                            </div>
+
+                            <div class="tab-pane fade" id="cohort" role="tabpanel" aria-labelledby="cohort-tab">
+                                <div id="optionsGraphCohort" class="graph"></div>
+
+                                <script type="text/javascript">
+                                {
+                                    let data = cohortBarGraphData({{ question.option_choice_quantity_cohort(submissions) | safe }});
+                                    displayGraph('optionsGraphCohort', 'Options by cohort', data);
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
-{% endblock content %}
+{% else %}
+
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{ question.title }} - Stats</h1>
+        </div>
+        <div class="card-body">
+            <p>There are currently no submissions for this question.</p>
+        </div>
+    </div>
+</section>
+{% endif %}

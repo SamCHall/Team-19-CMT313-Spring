@@ -66,6 +66,9 @@ class Student(User):
         "polymorphic_identity": "student",
     }
 
+    def student_assigments(self):
+        print(self.modules.assignments)
+
 
 class Staff(User):
     id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
@@ -113,6 +116,30 @@ class Module(db.Model):
         """ Returns true if given student is enrolled on the module"""
         return student in self.get_students()
 
+    def num_by_assessment_type(self, assessment_type=None):
+        if assessment_type:
+            return len([assessment for assessment in self.assignments if assessment.assignment_type==assessment_type])
+        return len(self.assignments)
+
+    def completed_assessments(self, student, assessment_type=None):
+        if assessment_type:
+            return len([assessment for assessment in self.assignments if assessment.student_submitted(student) and assessment.assignment_type==assessment_type])
+        return len([assessment for assessment in self.assignments if assessment.student_submitted(student)])
+
+    def not_completed_assessments(self, student, assessment_type=None):
+        return self.num_by_assessment_type(assessment_type) - self.completed_assessments(student, assessment_type)
+
+    def average_percent(self, student, assessment_type=None):
+        if self.completed_assessments(student, assessment_type) > 0:
+            if assessment_type:
+                return statistics.mean([assessment.student_percentage(student) for assessment in self.assignments if assessment.student_submitted(student) and assessment.assignment_type==assessment_type])
+            return statistics.mean([assessment.student_percentage(student) for assessment in self.assignments if assessment.student_submitted(student)])
+        return None
+
+    def check_staff(self, staff):
+        """ Returns true if given staff is teaching the module"""
+        return staff in self.get_staff()
+
 
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -129,12 +156,14 @@ class Assignment(db.Model):
     question_assignment = db.relationship(
         "AssignQuestion",
         back_populates = "assignment",
-        order_by = "AssignQuestion.question_number.asc()"
+        order_by = "AssignQuestion.question_number.asc()",
+        cascade = "all, delete"
     )
 
     submissions = db.relationship(
         "Submission",
-        back_populates = "assignment"
+        back_populates = "assignment",
+        cascade = "all, delete"
     )
 
     __mapper_args__ = {
@@ -147,6 +176,30 @@ class Assignment(db.Model):
 
     def add_question(self, question, question_no):
         return AssignQuestion.add_question(self.id, question.id, question_no)
+
+    def get_question_submissions(self, question_num):
+        question = self.get_questions()[question_num]
+        question_submissions = []
+        for submission in self.submissions:
+            for submission_answer in submission.submission_answers:
+                if submission_answer.question == question:
+                    question_submissions.append(submission_answer)
+        return question_submissions
+
+    def get_student_highest_mark(self, student):
+        marks = [submission.mark for submission in self.submissions if submission.student == student]
+        if marks:
+            return max(marks)
+        return None
+
+    def student_percentage(self, student):
+        return self.get_student_highest_mark(student) / self.max_mark() * 100
+
+    def student_submitted(self, student):
+        return student in [submission.student for submission in self.submissions]
+
+    def max_mark(self):
+        return sum([question.max_mark() for question in self.get_questions().values()])
 
     def number_of_submissions(self):
         return len(self.submissions)
@@ -165,34 +218,61 @@ class Assignment(db.Model):
             value: the number of submissions for a given mark
         """
 
-        marks = {}
+        marks = dict((i, 0) for i in range(self.max_mark()+1))
 
         for submission in self.submissions:
-            if submission.mark in marks:
-                marks[submission.mark] += 1
-            else:
-                marks[submission.mark] = 1
+            marks[submission.mark] += 1
 
-        sorted_by_mark = dict(sorted(marks.items()))
-        return sorted_by_mark
+        return marks
+
+    def mark_dist_cohort(self):
+        cohorts = set([submission.student.cohort for submission in self.submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = dict((mark, 0) for mark in range(self.max_mark()+1))
+
+        for submission in self.submissions:
+            results[submission.student.cohort][submission.mark] += 1
+
+        return results
 
     def lowest_mark(self):
-        return min(list(self.mark_dist().keys()))
+        return min([submission.mark for submission in self.submissions])
 
     def highest_mark(self):
-        return max(list(self.mark_dist().keys()))
+        return max([submission.mark for submission in self.submissions])
 
     def average_mark(self):
         return statistics.mean([submission.mark for submission in self.submissions])
 
+    def total_available_mark(self):
+        questions = self.get_questions().values()
+        total = 0
+        for question in questions:
+            if question.question_type == "question_type1":
+                total += len(eval(question.correct_answers))
+            else:
+                total += 1
+        return total
+
+    def get_student_highest_mark(self, student_id):
+        attempt_marks = [submission.mark for submission in self.submissions if submission.student_id==student_id]
+        if len(attempt_marks) > 0:
+            return max(attempt_marks)
+        return 0
+
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
+    difficulty = db.Column(db.String, nullable=False)
 
     __mapper_args__ = {
         "polymorphic_identity": "formative_assignment",
     }
 
+    def num_of_attempts(self, student):
+        return Submission.get_current_attempt_number(student.id, self.id)
 
 class SummativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
@@ -222,7 +302,8 @@ class Submission(db.Model):
 
     submission_answers = db.relationship(
         "SubmissionAnswers",
-        back_populates = "submission"
+        back_populates = "submission",
+        cascade = "all, delete"
     )
 
     def add_question_answer(self, question, answer, mark):
@@ -271,6 +352,18 @@ class SubmissionAnswers(db.Model):
         "polymorphic_identity": "submission",
     }
 
+class SimplifiedSubmission(db.Model):
+    # This is a simplified version of the Submission model that is dissimilar
+    # to the Submission model in that it does not contain the submission_answers
+    # relationship and is not associated to the Assignment model,
+    # allowing permanent marks to be stored in the database when the assignment is deleted
+
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    assignment_title = db.Column(db.String, nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey("module.id"), nullable=False)
+    total_mark = db.Column(db.Integer, nullable=False)
+    total_available_mark = db.Column(db.Integer, nullable=False)
 
 class SubmissionType1(SubmissionAnswers):
     id = db.Column(db.Integer, db.ForeignKey("submission_answers.id"), primary_key=True)
@@ -323,7 +416,7 @@ class AssignQuestion(db.Model):
 
     @staticmethod
     def add_question(assignment_id, question_id, question_number):
-        print(assignment_id, question_id, question_number)
+        Question.query.filter_by(id=question_id).update({"active": True})
         assign = AssignQuestion(
             assignment_id = assignment_id,
             question_id = question_id,
@@ -361,42 +454,72 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     }
 
     def __str__(self):
-        output = self.title + " " + self.question_type
+        if self.question_type == "question_type1":
+            question_type = "Fill in the blanks"
+        elif self.question_type == "question_type2":
+            question_type = "Multiple choice"
+        output = self.title + " | " + question_type
         return output
 
     @abc.abstractmethod
     def mark(self):
         pass
 
+    @abc.abstractmethod
+    def max_mark(self):
+        pass
+
     def get_assignments(self):
         return [item.assignment for item in self.question_assignment]
 
-    def average_mark(self):
-        return statistics.mean([submission.question_mark for submission in self.submissions])
+    def average_mark(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return statistics.mean([submission.question_mark for submission in submissions])
 
-    def mark_dist(self):
+    def mark_dist(self, submissions = None):
         """
         Returns a dictionary for the mark distrubition of the question where keys and values are as follows:
             keys: the mark given
             value: the number of submissions for a given mark
         """
 
-        marks = {}
+        if not submissions:
+            submissions = self.submissions
 
-        for submission in self.submissions:
-            if submission.question_mark in marks:
-                marks[submission.question_mark] += 1
-            else:
-                marks[submission.question_mark] = 1
+        marks = dict((i, 0) for i in range(self.max_mark()+1))
+
+        for submission in submissions:
+            marks[submission.question_mark] += 1
 
         sorted_by_mark = dict(sorted(marks.items()))
         return sorted_by_mark
 
-    def lowest_mark(self):
-        return min(list(self.mark_dist().keys()))
+    def marks_dist_cohort(self, submissions = None):
 
-    def highest_mark(self):
-        return max(list(self.mark_dist().keys()))
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = dict((mark, 0) for mark in range(self.max_mark()+1))
+
+        for submission in submissions:
+            results[submission.submission.student.cohort][submission.question_mark] += 1
+
+        return results
+
+    def lowest_mark(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return min([submission.question_mark for submission in submissions])
+
+    def highest_mark(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return max([submission.question_mark for submission in submissions])
 
 
 class QuestionType1(Question):
@@ -413,6 +536,9 @@ class QuestionType1(Question):
     def mark(self):
         return 0
 
+    def max_mark(self):
+        return self.num_of_blanks()
+
     def list_correct_answers(self):
         """ Method to convert the string representation of the list in the db to a list """
         return eval(self.correct_answers)
@@ -425,19 +551,24 @@ class QuestionType1(Question):
         """ Method to count the number of blanks in the question """
         return len(self.list_correct_answers())
 
-    def num_correct_for_blank(self, blank_no):
+    def num_correct_for_blank(self, blank_no, submissions = None):
         """ Method to count the number of correct submissions for the given blank """
+        if not submissions:
+            submissions = self.submissions
+
         correct = 0
-        for submission in self.submissions:
+        for submission in submissions:
             if submission.list_submission()[blank_no] == self.list_correct_answers()[blank_no]:
                 correct += 1
         return correct
 
-    def correct_precentage_for_blank(self, blank_no):
+    def correct_precentage_for_blank(self, blank_no, submissions = None):
         """ Method to provide the precentage of correct answers for the given blank """
-        return 100 * self.num_correct_for_blank(blank_no) / len(self.submissions)
+        if not submissions:
+            submissions = self.submissions
+        return 100 * self.num_correct_for_blank(blank_no, submissions) / len(submissions)
 
-    def answer_occur_for_blank(self, blank_no):
+    def answer_occur_for_blank(self, blank_no, submissions = None):
         """
         Method to produce a list of truples which contain the following
             string: A answer a student has selected for a given blank
@@ -446,8 +577,11 @@ class QuestionType1(Question):
         The list is sorted with most common answers first
         """
 
+        if not submissions:
+            submissions = self.submissions
+
         answers = {}
-        for submission in self.submissions:
+        for submission in submissions:
             if (answer:= submission.list_submission()[blank_no]) in answers.keys():
                 answers[answer] += 1
             else:
@@ -455,6 +589,24 @@ class QuestionType1(Question):
         # https://stackoverflow.com/a/11230132
         sorted_answers = collections.Counter(answers).most_common()
         return sorted_answers
+
+    def answer_occur_for_blank_cohort(self, blank_no, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = {}
+
+        for submission in submissions:
+            if (answer:= submission.list_submission()[blank_no]) in results[submission.submission.student.cohort].keys():
+                results[submission.submission.student.cohort][answer] += 1
+            else:
+                results[submission.submission.student.cohort][answer] = 1
+
+        return results
 
 
 class QuestionType2(Question):
@@ -473,23 +625,54 @@ class QuestionType2(Question):
     def mark(self):
         return 0
 
-    def correct_submissions_number(self):
-        return sum([submission.mark for submission in self.submissions])
+    def max_mark(self):
+        return 1
 
-    def correct_submissions_percent(self):
-        if len(self.submissions) > 0:
-            return 100 * self.correct_submissions_number() / len(self.submissions)
+    def correct_submissions_number(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return sum([submission.question_mark for submission in submissions])
+
+    def correct_submissions_percent(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        if len(submissions) > 0:
+            return 100 * self.correct_submissions_number(submissions) / len(submissions)
         return None
 
-    def option_choice_quantity(self):
+    def option_choice_quantity(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
         count = {
-            "A": 0,
-            "B": 0,
-            "C": 0,
-            "D": 0
+            self.option1: 0,
+            self.option2: 0,
+            self.option3: 0,
+            self.option4: 0
         }
 
-        for submission in self.submissions:
+        for submission in submissions:
             count[submission.submission_answer] += 1
 
         return count
+
+    def option_choice_quantity_cohort(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = {
+                self.option1: 0,
+                self.option2: 0,
+                self.option3: 0,
+                self.option4: 0
+            }
+
+        for submission in submissions:
+            results[submission.submission.student.cohort][submission.submission_answer] += 1
+
+        return results

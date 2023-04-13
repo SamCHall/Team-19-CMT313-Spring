@@ -1,0 +1,88 @@
+{# Setting variables #}
+{% set correct_answer = question.list_correct_answers()[count] %}
+{% set answers = question.answer_occur_for_blank(count, submissions) %}
+
+{# Removing the correct answer to get a list of only incorrect answers #}
+{% set incorrect_answers = answers | reject('equalto', (correct_answer, question.num_correct_for_blank(count, submissions))) | list %}
+
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Blank {{ count+1 }} - {{ correct_answer }}</h2>
+        </div>
+        <div class="card-body stats-outer">
+            <div class="card-group">
+                <div class="card stats-inner">
+                    <div class="card-body">
+                        <ul>
+                            <li>Number of correct submissions: {{ question.num_correct_for_blank(count, submissions) }}</li>
+                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_precentage_for_blank(count, submissions)) }}%</li>
+                            {# Display the incorrect answers if there are any #}
+                            {% if incorrect_answers | length > 0 %}
+                            <li>Incorrect answers given:
+                                {% for answer in incorrect_answers %}
+                                {{ answer[0] }} ({{ answer[1] }}){% if not loop.last %},{% endif %}
+                                {% endfor %}
+                            </li>
+                            {% endif %}
+                        </ul>
+                        {# <figure>
+                            <figcaption>Table of answers with occurrences</figcaption>
+                            <table>
+                                <tr>
+                                    <td>Answer</td>
+                                    <td>Occurrences</td>
+                                </tr>
+                                {% for answer in answers %}
+                                <tr>
+                                    <td>{{ answer[0] }}</td>
+                                    <td>{{ answer[1] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </figure> #}
+
+                    </div>
+                </div>
+
+                <div class="card stats-inner">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="blank-{{count}}-all-tab" data-bs-toggle="tab" data-bs-target="#blank-{{count}}-all" type="button" role="tab" aria-controls="blank-{{count}}-all" aria-selected="true">All</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="blank-{{count}}-cohort-tab" data-bs-toggle="tab" data-bs-target="#blank-{{count}}-cohort" type="button" role="tab" aria-controls="blank-{{count}}-cohort" aria-selected="false" onclick="resize('blank{{ count }}GraphCohort')">Cohort</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="blank-{{count}}-all" role="tabpanel" aria-labelledby="blank-{{count}}-all-tab">
+
+                                <div id="blank{{ count }}Graph" class="graph"></div>
+
+                                <script type="text/javascript">
+                                {
+                                    let data = barGraphData({{ dict(answers) | safe }});
+                                    displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - submissions', data);
+                                }
+                                </script>
+                            </div>
+                            <div class="tab-pane fade" id="blank-{{count}}-cohort" role="tabpanel" aria-labelledby="blank-{{count}}-cohort-tab">
+                                <div id="blank{{ count }}GraphCohort" class="graph"></div>
+
+                                <script type="text/javascript">
+                                {
+                                    let data = cohortBarGraphData({{ question.answer_occur_for_blank_cohort(count, submissions) | safe }});
+                                    displayGraph('blank{{ count }}GraphCohort', 'Blank {{ count+1 }} by cohort', data);
+                                }
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

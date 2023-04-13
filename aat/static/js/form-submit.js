@@ -1,5 +1,5 @@
 var submitFormative = document.querySelector('#submit-formative')
-
+if (submitFormative) {
 submitFormative.addEventListener("click", function(event) {
   event.preventDefault();
 
@@ -11,13 +11,22 @@ submitFormative.addEventListener("click", function(event) {
     optionValues.push(dropzones[i].textContent);
   }
 
-  var radio_answers = document.querySelectorAll(`input[id="type2_radio"]:checked`);
   var type2Values = [];
-  for (var i = 0; i < radio_answers.length; i++){
-    type2Values.push(radio_answers[i].value);
+  var radio_questions = document.querySelectorAll(`.question_type2`);
+  for (var i = 0; i < radio_questions.length; i++) {
+    var radio_options = radio_questions[i].querySelectorAll(`input[type="radio"]`);
+    var found_checked = false;
+    for (var j = 0; j < radio_options.length; j++) {
+      if (radio_options[j].checked) {
+        type2Values.push(radio_options[j].value);
+        found_checked = true;
+        break;
+      }
+    }
+    if (!found_checked) {
+      type2Values.push("");
+    }
   }
-  console.log(type2Values);
-  
 
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/submit-assessment/' + assessmentId);
@@ -35,3 +44,4 @@ submitFormative.addEventListener("click", function(event) {
   
   xhr.send(JSON.stringify(requestData))
 });
+}

@@ -1,11 +1,14 @@
 span.dropzone{
    display: flex; 
-   min-width: 40px;
+   min-width: 60px;
    max-width: fit-content;
+   align-items: center;
    justify-content: center;
-   height: 18px;
-   background-color: white;
-   padding: 2px;
+   justify-items: center;
+   height: 24px;
+   position: relative;
+   background-color: #d2def6;
+   padding: 5px;
    margin-left: 5px;
    margin-right: 5px;
 }

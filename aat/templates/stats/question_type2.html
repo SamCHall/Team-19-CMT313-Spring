@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {% assets "graph" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock head %}
+
+{% block content %}
+
+{% with submissions = question.submissions %}
+    {% include "stats/question_type2_stats.html" %}
+{% endwith %}
+
+{% endblock content %}

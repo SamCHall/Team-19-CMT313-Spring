@@ -29,9 +29,28 @@ form #type_1_options{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
 }
 
 form #type_1_options option{
-    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+form .question{
+    padding-bottom: 5px;
+}
+
+form .radio_option{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+form .radio_options{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
