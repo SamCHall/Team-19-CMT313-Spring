@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired, Length, EqualTo, ValidationError
-from ..models import QuestionType2
+from ..models import Question
 
 class QuestionType2FormEdit(FlaskForm):
     title = StringField('Title', validators=[InputRequired(message='Please provide a title for this question'),Length(max=100)])
@@ -35,7 +35,7 @@ class QuestionType2FormCreate(FlaskForm):
     Submit = SubmitField('Submit')
 
     def validate_title(self, title):
-        exists = QuestionType2.query.filter_by(title=title.data).first()
+        exists = Question.query.filter_by(title=title.data).first()
         if exists:
             raise ValidationError('A question with this title already exists')
         

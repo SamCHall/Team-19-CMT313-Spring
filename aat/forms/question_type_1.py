@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired, ValidationError
-from ..models import QuestionType1
+from ..models import Question
 
 
 class QuestionType1FormCreate(FlaskForm):
@@ -13,7 +13,7 @@ class QuestionType1FormCreate(FlaskForm):
     submit = SubmitField('Confirm')
 
     def validate_title(self, title):
-        exists = QuestionType1.query.filter_by(title=title.data).first()
+        exists = Question.query.filter_by(title=title.data).first()
         if exists:
             raise ValidationError('A question with this title already exists')
 
