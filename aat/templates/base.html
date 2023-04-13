@@ -40,27 +40,34 @@
                     <ul id="nav-items-right" class="navbar-nav ms-auto fs-3">
                         <!-- Show when logged in -->
                         {% if current_user.is_authenticated %}
+
                         {% if current_user.user_type == 'staff' %}
-                                <li class="nav-item mx-auto">
-                                    <a class="nav-link" href="{{ url_for('view_staff_assessments') }}">Assessments</a>
-                                </li>
-                            {% else %}
-                                <li class="nav-item mx-auto">
-                                    <a class="nav-link" href="{{ url_for('view_assessments') }}">Assessments</a>
-                                </li>
+                            <!-- Staff menu items -->
+                            <li class="nav-item mx-auto">
+                                <a class="nav-link" href="{{ url_for('view_staff_assessments') }}">Assessments</a>
+                            </li>
+                            <li class="nav-item mx-auto">
+                                <a class="nav-link" href="{{ url_for('student_list') }}">Students</a>
+                            </li>
+                            <li class="nav-item dropdown mx-auto">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    New
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{{ url_for('create_question_type1') }}">Fill in the Blank</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('create_question_type2') }}">Multiple Choice</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('create_formative_assessment') }}">Formative Assessment</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('create_summative_assessment') }}">Summative Assessment</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <!-- Student menu items -->
+                            <li class="nav-item mx-auto">
+                                <a class="nav-link" href="{{ url_for('view_assessments') }}">Assessments</a>
+                            </li>
                         {% endif %}
-                        <li class="nav-item dropdown mx-auto">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                New
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="{{ url_for('create_question_type1') }}">Fill in the Blank</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('create_question_type2') }}">Multiple Choice</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('create_formative_assessment') }}">Formative Assessment</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('create_summative_assessment') }}">Summative Assessment</a></li>
-                            </ul>
-                        </li>
+
                         <li class="nav-item mx-auto">
                             <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                         </li>

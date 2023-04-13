@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Students</h1>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <th scope="col">Student Number</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col"></th>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.first_name }} {{ student.surname }}</td>
+                        <td><a href="{{ url_for('student_stats_page', id=student.id) }}" class="btn btn-primary">Performance</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
