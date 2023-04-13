@@ -112,7 +112,7 @@ class Module(db.Model):
     def check_student(self, student):
         """ Returns true if given student is enrolled on the module"""
         return student in self.get_students()
-    
+
     def check_staff(self, staff):
         """ Returns true if given staff is teaching the module"""
         return staff in self.get_staff()
@@ -154,6 +154,18 @@ class Assignment(db.Model):
     def add_question(self, question, question_no):
         return AssignQuestion.add_question(self.id, question.id, question_no)
 
+    def get_question_submissions(self, question_num):
+        question = self.get_questions()[question_num]
+        question_submissions = []
+        for submission in self.submissions:
+            for submission_answer in submission.submission_answers:
+                if submission_answer.question == question:
+                    question_submissions.append(submission_answer)
+        return question_submissions
+
+    def max_mark(self):
+        return sum([question.max_mark() for question in self.get_questions().values()])
+
     def number_of_submissions(self):
         return len(self.submissions)
 
@@ -171,26 +183,22 @@ class Assignment(db.Model):
             value: the number of submissions for a given mark
         """
 
-        marks = {}
+        marks = dict((i, 0) for i in range(self.max_mark()+1))
 
         for submission in self.submissions:
-            if submission.mark in marks:
-                marks[submission.mark] += 1
-            else:
-                marks[submission.mark] = 1
+            marks[submission.mark] += 1
 
-        sorted_by_mark = dict(sorted(marks.items()))
-        return sorted_by_mark
+        return marks
 
     def lowest_mark(self):
-        return min(list(self.mark_dist().keys()))
+        return min([submission.mark for submission in self.submissions])
 
     def highest_mark(self):
-        return max(list(self.mark_dist().keys()))
+        return max([submission.mark for submission in self.submissions])
 
     def average_mark(self):
         return statistics.mean([submission.mark for submission in self.submissions])
-    
+
     def total_available_mark(self):
         questions = self.get_questions().values()
         total = 0
@@ -200,7 +208,7 @@ class Assignment(db.Model):
             else:
                 total += 1
         return total
-    
+
     def get_student_highest_mark(self, student_id):
         attempt_marks = [submission.mark for submission in self.submissions if submission.student_id==student_id]
         if len(attempt_marks) > 0:
@@ -295,10 +303,10 @@ class SubmissionAnswers(db.Model):
         "polymorphic_identity": "submission",
     }
 
-class SimplifiedSubmission(db.Model): 
+class SimplifiedSubmission(db.Model):
     # This is a simplified version of the Submission model that is dissimilar
     # to the Submission model in that it does not contain the submission_answers
-    # relationship and is not associated to the Assignment model, 
+    # relationship and is not associated to the Assignment model,
     # allowing permanent marks to be stored in the database when the assignment is deleted
 
     id = db.Column(db.Integer, primary_key=True)
@@ -359,7 +367,6 @@ class AssignQuestion(db.Model):
 
     @staticmethod
     def add_question(assignment_id, question_id, question_number):
-        print(assignment_id, question_id, question_number)
         Question.query.filter_by(id=question_id).update({"active": True})
         assign = AssignQuestion(
             assignment_id = assignment_id,
@@ -408,35 +415,45 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     def mark(self):
         pass
 
+    @abc.abstractmethod
+    def max_mark(self):
+        pass
+
     def get_assignments(self):
         return [item.assignment for item in self.question_assignment]
 
-    def average_mark(self):
-        return statistics.mean([submission.question_mark for submission in self.submissions])
+    def average_mark(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return statistics.mean([submission.question_mark for submission in submissions])
 
-    def mark_dist(self):
+    def mark_dist(self, submissions = None):
         """
         Returns a dictionary for the mark distrubition of the question where keys and values are as follows:
             keys: the mark given
             value: the number of submissions for a given mark
         """
 
-        marks = {}
+        if not submissions:
+            submissions = self.submissions
 
-        for submission in self.submissions:
-            if submission.question_mark in marks:
-                marks[submission.question_mark] += 1
-            else:
-                marks[submission.question_mark] = 1
+        marks = dict((i, 0) for i in range(self.max_mark()+1))
+
+        for submission in submissions:
+            marks[submission.question_mark] += 1
 
         sorted_by_mark = dict(sorted(marks.items()))
         return sorted_by_mark
 
-    def lowest_mark(self):
-        return min(list(self.mark_dist().keys()))
+    def lowest_mark(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return min([submission.question_mark for submission in submissions])
 
-    def highest_mark(self):
-        return max(list(self.mark_dist().keys()))
+    def highest_mark(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return max([submission.question_mark for submission in submissions])
 
 
 class QuestionType1(Question):
@@ -453,6 +470,9 @@ class QuestionType1(Question):
     def mark(self):
         return 0
 
+    def max_mark(self):
+        return self.num_of_blanks()
+
     def list_correct_answers(self):
         """ Method to convert the string representation of the list in the db to a list """
         return eval(self.correct_answers)
@@ -465,19 +485,24 @@ class QuestionType1(Question):
         """ Method to count the number of blanks in the question """
         return len(self.list_correct_answers())
 
-    def num_correct_for_blank(self, blank_no):
+    def num_correct_for_blank(self, blank_no, submissions = None):
         """ Method to count the number of correct submissions for the given blank """
+        if not submissions:
+            submissions = self.submissions
+
         correct = 0
-        for submission in self.submissions:
+        for submission in submissions:
             if submission.list_submission()[blank_no] == self.list_correct_answers()[blank_no]:
                 correct += 1
         return correct
 
-    def correct_precentage_for_blank(self, blank_no):
+    def correct_precentage_for_blank(self, blank_no, submissions = None):
         """ Method to provide the precentage of correct answers for the given blank """
-        return 100 * self.num_correct_for_blank(blank_no) / len(self.submissions)
+        if not submissions:
+            submissions = self.submissions
+        return 100 * self.num_correct_for_blank(blank_no, submissions) / len(submissions)
 
-    def answer_occur_for_blank(self, blank_no):
+    def answer_occur_for_blank(self, blank_no, submissions = None):
         """
         Method to produce a list of truples which contain the following
             string: A answer a student has selected for a given blank
@@ -486,8 +511,11 @@ class QuestionType1(Question):
         The list is sorted with most common answers first
         """
 
+        if not submissions:
+            submissions = self.submissions
+
         answers = {}
-        for submission in self.submissions:
+        for submission in submissions:
             if (answer:= submission.list_submission()[blank_no]) in answers.keys():
                 answers[answer] += 1
             else:
@@ -513,23 +541,34 @@ class QuestionType2(Question):
     def mark(self):
         return 0
 
-    def correct_submissions_number(self):
-        return sum([submission.mark for submission in self.submissions])
+    def max_mark(self):
+        return 1
 
-    def correct_submissions_percent(self):
-        if len(self.submissions) > 0:
-            return 100 * self.correct_submissions_number() / len(self.submissions)
+    def correct_submissions_number(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return sum([submission.question_mark for submission in submissions])
+
+    def correct_submissions_percent(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        if len(submissions) > 0:
+            return 100 * self.correct_submissions_number(submissions) / len(submissions)
         return None
 
-    def option_choice_quantity(self):
+    def option_choice_quantity(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
         count = {
-            "A": 0,
-            "B": 0,
-            "C": 0,
-            "D": 0
+            self.option1: 0,
+            self.option2: 0,
+            self.option3: 0,
+            self.option4: 0
         }
 
-        for submission in self.submissions:
+        for submission in submissions:
             count[submission.submission_answer] += 1
 
         return count

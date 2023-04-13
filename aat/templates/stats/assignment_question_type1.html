@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {% assets "graph" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock head %}
+
+{% block content %}
+
+<section class="container">
+    <a class="btn btn-primary" href="{{ url_for('assessment_stats', id=assignment.id) }}">Back to assessment statistics</a>
+</section>
+
+{# <h1 class="card-title">{{ assignment.title }} - Question Stats</h1> #}
+
+{% with submissions = assignment.get_question_submissions(question_number) %}
+    {% include "stats/question_type1_stats.html" %}
+{% endwith %}
+
+{% endblock content %}
