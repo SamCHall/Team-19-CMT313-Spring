@@ -223,22 +223,21 @@ def delete_question(id):
     question_to_delete = Question.query.get_or_404(id)
     if bool(question_to_delete.active):
         flash("Question is active so it can't be deleted.")
-
-    try:
-        db.session.delete(question_to_delete)
-        db.session.commit()
-
-        flash("Question was deleted")
-    
-        questions = Question.query.all()
         return render_template('display-questions.html', title='Questions',questions=questions)
-    
-    except Exception as e:
-        print(e)
-        flash("There was a problem deleting the question")
-        # questions = Question.query.all()
-        return redirect('/')
-        # return render_template('display-questions.html', title='Questions',questions=questions)
+    else:
+        try:
+            db.session.delete(question_to_delete)
+            db.session.commit()
+
+            flash("Question was deleted")
+        
+            questions = Question.query.all()
+            return render_template('display-questions.html', title='Questions',questions=questions)
+        
+        except Exception as e:
+            print(e)
+            flash("There was a problem deleting the question")
+            return redirect('/')
 
 
 
