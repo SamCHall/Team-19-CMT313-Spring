@@ -9,8 +9,9 @@ class CustomCheckboxInput(widgets.CheckboxInput):
 
     def __call__(self, field, **kwargs):
         kwargs.setdefault('id', self.input_id or field.id)
-        kwargs.setdefault('class', 'custom-class')  # add your custom class here
+        kwargs.setdefault('class', 'form-check-input')
         return super().__call__(field, **kwargs)
+    
 class QuerySelectMultipleFieldWithCheckboxes(QuerySelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = CustomCheckboxInput()
@@ -33,5 +34,5 @@ class CreateFormAss(FlaskForm):
     difficulty = SelectField(label='Difficulty:', choices=[('Very Easy'), ('Easy'), ('Medium'), ('Hard'), ('Very Hard')], validators=[DataRequired()])
     add_question = QuerySelectMultipleFieldWithCheckboxes('Add questions:')
     question_order = StringField(label='Question order (comma separated):', validators=[DataRequired(), validate_question_number_length])
-    is_active = BooleanField("Make assignment active?")
+    is_active = BooleanField("Make assignment active?", render_kw={'class': 'form-check-input'})
     submit = SubmitField('Save')

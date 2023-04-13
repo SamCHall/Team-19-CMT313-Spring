@@ -274,7 +274,6 @@ def edit_formative_assessment(assessment_id):
     questions = AssignQuestion.get_assignment_questions(assessment_id) # Get the questions in the assignment
 
     if form.validate_on_submit():
-        assignment = FormativeAssignment.query.get(assessment_id)
         assignment.title = form.assignment_title.data 
         assignment.active = form.is_active.data
         assignment.module = form.module_id.data
@@ -301,6 +300,7 @@ def edit_formative_assessment(assessment_id):
 
         flash("You've edited a formative assessment!")
         return redirect(url_for('view_staff_assessments')) # Redirect to the staff assessments page
+
             
     
 
