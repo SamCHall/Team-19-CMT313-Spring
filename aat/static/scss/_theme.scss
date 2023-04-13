@@ -2,7 +2,10 @@ $primary: #3d71d8;
 $secondary: orange;
 $light: #fff;
 $dark: #2a2a2a;
-$warning: yellow;
+
+$success: green;
+$warning: orange;
+$danger: red;
 $no-data: darkgray;
 $pass: green;
 $fail: red;
@@ -12,12 +15,15 @@ $medium: #CCCC00;
 $hard: orange;
 $very-hard: red;
 
+
 $theme-colors: (
     "primary": $primary,
     "secondary": $secondary,
     "light": $light,
     "dark": $dark,
+    "success": $success,
     "warning": $warning,
+    "danger": $danger,
     "no-data": $no-data,
     "pass": $pass,
     "fail": $fail,

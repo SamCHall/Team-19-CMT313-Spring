@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="qt2" class="container">
+
+    <h1>{% block title %} Edit the question {% endblock %}</h1>
+
+    <form action="" method="POST">
+        {{ form.csrf_token }}
+
+        <p>
+            {{ form.title.label }}
+            {{ form.title(size=20) }}
+        </p>
+
+        {% if form.title.errors %}
+            <ul class="errors">
+                {% for error in form.title.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>
+            {{ form.option1.label }}
+            {{ form.option1(size=20) }}
+        </p>
+
+        {% if form.option1.errors %}
+        <ul class="errors">
+            {% for error in form.option1.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <p>
+            {{ form.option2.label }}
+            {{ form.option2(size=20) }}
+        </p>
+
+        {% if form.option2.errors %}
+        <ul class="errors">
+            {% for error in form.option2.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <p>
+            {{ form.option3.label }}
+            {{ form.option3(size=20) }}
+        </p>
+
+        {% if form.option3.errors %}
+        <ul class="errors">
+            {% for error in form.option3.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <p>
+            {{ form.option4.label }}
+            {{ form.option4(size=20) }}
+        </p>
+
+        {% if form.option4.errors %}
+        <ul class="errors">
+            {% for error in form.option4.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <p>
+            {{ form.correctOption.label }}
+            {{ form.correctOption(size=20) }}
+        </p>
+
+        {% if form.correctOption.errors %}
+        <ul class="errors">
+            {% for error in form.correctOption.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {{ form.Submit(class="button") }}
+</section>
+<a href="{{ url_for('questions')}}" class="view-question-button">Return to Questions</a>
+
+{% endblock content%}

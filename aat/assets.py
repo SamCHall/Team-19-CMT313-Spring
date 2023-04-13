@@ -5,7 +5,7 @@ bundles = {
         'js/jquery-3.6.4.min.js',
         'bootstrap/js/popper.js',
         'bootstrap/js/bootstrap.js',
-        'js/script.js',
+        'js/preview.js',
         'js/dropzones.js',
         'js/form-submit.js',
         'js/confirm.js',

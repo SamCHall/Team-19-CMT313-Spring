@@ -6,13 +6,16 @@ from flask_login import current_user, login_required
 from .. import app, db
 from ..models import *
 from ..forms.formative_forms import CreateFormAss
-from ..forms.question_type_1 import QuestonType1Form
-from ..forms.question_type_2 import QuestonType2Form
+from ..forms.question_type_1 import QuestionType1FormCreate, QuestionType1FormEdit
+from ..forms.question_type_2 import QuestionType2FormCreate, QuestionType2FormEdit
+
+
 
 # Home
 @app.route("/")
 def home():
     return render_template('home.html', title='Home')
+
 
 
 @app.route("/staff/create-formative", methods=['GET', 'POST'])
@@ -48,6 +51,7 @@ def create_formative_assessment():
     return render_template('create_formative.html', title='Create Assessment', form = form, error=form.errors.get('question_order'))
 
 
+
 # Create a summative assessment
 @app.route('/create-summative', methods=['GET', 'POST'])
 @login_required
@@ -61,7 +65,7 @@ def create_summative_assessment():
 @login_required
 def create_question_type1():
     # if current_user
-    qt1_form = QuestonType1Form()
+    qt1_form = QuestionType1FormCreate()
     if qt1_form.validate_on_submit():
         correct_answers = []
         for answer in qt1_form.correct_answers.data.split(','):
@@ -81,11 +85,12 @@ def create_question_type1():
     return render_template('create-question-type1.html', qt1_form=qt1_form)
 
 
+
 # Create a type 2 question
 @app.route("/staff/question/create/type2", methods=["POST", "GET"])
 @login_required
 def create_question_type2():
-    form = QuestonType2Form()
+    form = QuestionType2FormCreate()
     if form.validate_on_submit():
         question_text=form.title.data
         op1=form.option1.data
@@ -107,14 +112,18 @@ def create_question_type2():
 
         db.session.add(qt2)
         db.session.commit()
+        flash("Question was added")
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
 
-@app.route("/display-questions")
+
+@app.route("/display-questions", methods=['GET','POST'])
 def questions():
     questions = Question.query.all()
     return render_template('display-questions.html', title='Questions',questions=questions)
+
+
 
 @app.route("/assessments", methods=['GET'])
 def view_assessments():
@@ -124,6 +133,8 @@ def view_assessments():
         assignment.total_mark = assignment.total_available_mark()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
 
+
+
 @app.route("/staff/assessments", methods=['GET'])
 @login_required
 def view_staff_assessments():
@@ -131,6 +142,7 @@ def view_staff_assessments():
         abort(403, description="This page can only be accessed by staff.")
     assignments = Assignment.query.all()
     return render_template('view_assessments_list_staff.html', title = 'Assessments - Staff View', assignments = assignments)
+
 
 
 @app.route("/view-assessment/<int:assessment_id>", methods=['GET', 'POST'])
@@ -168,6 +180,8 @@ def view_assessment(assessment_id):
             abort(403, description="You are not a staff member on this module.")
 
         return render_template('view_assessment_read_only.html', assignment = assignment, questions = questions, title = assignment.title)
+
+
 
 @app.route('/submit-assessment/<int:assessment_id>', methods=['GET','POST'])
 @login_required
@@ -257,12 +271,102 @@ def submit_assessment(assessment_id):
     # This will need to redirect to a page that shows the results of the assessment eventually.
     return redirect(request.referrer)
 
+
+
+@app.route('/questions/delete/<int:id>')
+def delete_question(id):
+    question_to_delete = Question.query.get_or_404(id)
+    if bool(question_to_delete.active):
+        flash("Question is active so it can't be deleted.")
+        return render_template('display-questions.html', title='Questions',questions=questions)
+    else:
+        try:
+            db.session.delete(question_to_delete)
+            db.session.commit()
+
+            flash("Question was deleted")
+        
+            questions = Question.query.all()
+            return render_template('display-questions.html', title='Questions',questions=questions)
+        
+        except Exception as e:
+            print(e)
+            flash("There was a problem deleting the question")
+            return redirect('/')
+
+
+
+@app.route('/questions/edit/<int:id>', methods=['GET','POST'])
+def edit_question(id):
+    question = Question.query.get_or_404(id)
+
+    if question.question_type == 'question_type1':
+        qt1_form = QuestionType1FormEdit()
+
+        if qt1_form.validate_on_submit():
+            correct_answers = []
+            for answer in qt1_form.correct_answers.data.split(','):
+                correct_answers.append(answer.strip())
+
+            incorrect_answers = []
+            for answer in qt1_form.incorrect_answers.data.split(','):
+                incorrect_answers.append(answer.strip())
+            
+            print(qt1_form.title.data)
+            question.title = qt1_form.title.data
+            question.question_template = qt1_form.question_template.data.replace('BLANK', '{}')
+            question.correct_answers = str(correct_answers)
+            question.incorrect_answers = str(incorrect_answers)
+            flash("Question successfully updated")
+            db.session.commit()
+            return redirect(url_for('questions', id=question.id))
+
+        qt1_form.title.data = question.title
+        qt1_form.question_template.data = question.question_template.replace('{}', 'BLANK')
+        qt1_form.correct_answers.data = ', '.join(ast.literal_eval(question.correct_answers))
+        qt1_form.incorrect_answers.data = ', '.join(ast.literal_eval(question.incorrect_answers))
+        return render_template('edit-qt1.html', qt1_form=qt1_form)
+    
+    else:
+        form = QuestionType2FormEdit()
+        if form.validate_on_submit():
+            question.title = form.title.data
+            question.option1 = form.option1.data
+            question.option2 = form.option2.data
+            question.option3 = form.option3.data
+            question.option4 = form.option4.data
+            question.correctOption = form.correctOption.data
+
+            # db.session.add(question)
+            db.session.commit()
+            flash("Question successfully updated")
+            return redirect(url_for('questions',id=question.id))
+        
+        form.title.data = question.title
+        form.option1.data = question.option1
+        form.option2.data = question.option2
+        form.option3.data = question.option3
+        form.option4.data = question.option4
+        form.correctOption.data = question.correctOption
+
+        return render_template('edit-qt2.html', form = form)
+
+
+
+@app.route('/display-questions/<int:id>')
+def view_question(id):
+    question = Question.query.get_or_404(id)
+    return render_template('view-questions-detailed.html', question=question)
+
+
+
 @app.route("/students")
 @login_required
 def student_list():
     students = Student.query.all()
 
     return render_template('student_list.html', title="Students", students=students)
+
 
 
 @app.route('/staff/edit-formative/<int:assessment_id>', methods=['GET', 'POST'])
@@ -330,6 +434,7 @@ def edit_formative_assessment(assessment_id):
     return render_template('edit_formative.html', title='Edit Assessment', form = form, assignment = assignment, error=form.errors.get('question_order'))
 
 
+
 @app.route('/delete-assessment/<int:assessment_id>', methods=['GET', 'POST'])
 @login_required
 def delete_assessment(assessment_id):
@@ -357,6 +462,8 @@ def delete_assessment(assessment_id):
     flash('The assessment has been deleted successfully.')
     return redirect(request.referrer)
 
+
+
 @app.route('/archive-assessment/<int:assessment_id>', methods=['GET', 'POST'])
 @login_required
 def archive_assessment(assessment_id):
@@ -374,6 +481,8 @@ def archive_assessment(assessment_id):
 
     return redirect(request.referrer)
 
+
+
 @app.route('/unarchive-assessment/<int:assessment_id>', methods=['GET', 'POST'])
 @login_required
 def unarchive_assessment(assessment_id):
@@ -389,3 +498,4 @@ def unarchive_assessment(assessment_id):
     db.session.commit()
     flash('The assessment has been activated successfully.')
     return redirect(request.referrer)
+

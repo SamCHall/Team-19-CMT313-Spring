@@ -444,7 +444,8 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
     submissions = db.relationship(
         "SubmissionAnswers",
-        back_populates = "question"
+        back_populates = "question",
+        cascade="all,delete"
     )
 
     __mapper_args__ = {

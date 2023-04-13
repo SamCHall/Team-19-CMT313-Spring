@@ -2,12 +2,34 @@
 
 {% block content %}
 <section id="list-question" class="container">
-    <h1>List of Questions</h1>>
+    <h1 class="fw-light mb-4">Questions</h1>
     
     <div class="content">
+        <div id="categories" class="row py-2">
+            <div class="col">
+                <h2 class="fs-4">Title</h2>
+            </div>
+            <div class="col-7">
+                <h2 class="fs-4">Type</h2>
+            </div>
+        </div>
         {% for question in questions %}
-            <div class="question2">
-                <p>{{ question.title }}</p>
+            <div class="row question">
+                <div class="col">
+                    <h2 class="fw-normal fs-4">{{ question.title }}</h2>
+                </div>
+                <div class="col-1">
+                    <h2 class="fw-normal fs-4">{{ question.question_type[-1] }}</h2>
+                </div>
+                <div class="col-2">
+                    <a href="{{ url_for('view_question', id=question.id)}}" class="btn btn-success view-question-button">View Question</a>
+                </div>
+                <div class="col-2">
+                    <a href="{{ url_for('edit_question', id=question.id)}}" class="btn btn-warning edit-question-button">Edit Question</a>
+                </div>
+                <div class="col-2">
+                    <a href="{{ url_for('delete_question', id=question.id)}}" class="btn btn-danger delete-question-button">Delete Question</a>
+                </div>
             </div>
         {% endfor %}
     </div>

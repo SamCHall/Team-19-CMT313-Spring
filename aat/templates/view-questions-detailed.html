@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="list-question" class="container">
+    <h1>{{ question.title }}</h1>   
+    <div class="content">
+            <div class="question2">
+                <p>Option 1: {{ question.option1 }}</p>
+                <p>Option 2: {{ question.option2 }}</p>
+                <p>Option 3: {{ question.option3 }}</p>
+                <p>Option 4: {{ question.option4 }}</p>
+                <p>Correct Option: {{ question.correctOption }}</p>
+                <a href="{{ url_for('questions')}}" class="view-question-button">Display Questions</a>
+            </div>
+    </div>
+</section>
+
+{% endblock content%}
