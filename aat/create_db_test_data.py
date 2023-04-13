@@ -194,14 +194,15 @@ if User.query.count() <= 1:
     assignment1 = SummativeAssignment(
         title = "Procedures and functions",
         module = module1,
-        active = True
+        active = True,
     )
     db.session.add(assignment1)
 
     assignment2 = FormativeAssignment(
         title = "Hardware devices",
         module = module2,
-        active = True
+        active = True,
+        difficulty = "Medium"
     )
     db.session.add(assignment2)
 
@@ -209,6 +210,7 @@ if User.query.count() <= 1:
         title = "Web site design",
         module = module3,
         active = True
+
     )
     db.session.add(assignment3)
 
@@ -247,7 +249,8 @@ if User.query.count() <= 1:
     assignment8 = FormativeAssignment(
         title = "COMP2-8 All",
         module = module2,
-        active = True
+        active = True,
+        difficulty = "Hard"
     )
     db.session.add(assignment8)
 
