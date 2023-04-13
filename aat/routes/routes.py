@@ -260,6 +260,7 @@ def submit_assessment(assessment_id):
 @app.route('/staff/edit-formative/<int:assessment_id>', methods=['GET', 'POST'])
 @login_required
 def edit_formative_assessment(assessment_id):
+    assignment = FormativeAssignment.query.get(assessment_id)
 
     if Staff.query.get(current_user.get_id()) == None:
         abort(403, description="This page can only be accessed by staff.")
@@ -301,7 +302,7 @@ def edit_formative_assessment(assessment_id):
         flash("You've edited a formative assessment!")
         return redirect(url_for('view_staff_assessments')) # Redirect to the staff assessments page
             
-    assignment = FormativeAssignment.query.get(assessment_id)
+    
 
     form.assignment_title.data = assignment.title
     form.is_active.data = assignment.active
@@ -361,6 +362,7 @@ def archive_assessment(assessment_id):
     
     assignment.active = False
     db.session.commit()
+    flash('The assessment has been archived successfully.')
 
     return redirect(request.referrer)
 
@@ -377,5 +379,5 @@ def unarchive_assessment(assessment_id):
     
     assignment.active = True
     db.session.commit()
-
+    flash('The assessment has been activated successfully.')
     return redirect(request.referrer)
