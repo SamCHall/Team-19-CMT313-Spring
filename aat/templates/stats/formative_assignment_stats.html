@@ -27,7 +27,7 @@
 
                             <li>Highest Mark: {{ assignment.highest_mark() }}</li>
                             <li>Lowest Mark: {{ assignment.lowest_mark() }}</li>
-                            <li>Average Mark: {{ assignment.average_mark() }}</li>
+                            <li>Average Mark: {{ '%0.1f' | format( assignment.average_mark()) }}</li>
                         </ul>
 
                     </div>
