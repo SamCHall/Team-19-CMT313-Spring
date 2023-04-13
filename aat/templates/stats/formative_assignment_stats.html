@@ -27,7 +27,7 @@
 
                             <li>Highest Mark: {{ assignment.highest_mark() }}</li>
                             <li>Lowest Mark: {{ assignment.lowest_mark() }}</li>
-                            <li>Average Mark: {{ assignment.average_mark() }}</li>
+                            <li>Average Mark: {{ '%0.1f' | format( assignment.average_mark()) }}</li>
                         </ul>
 
                     </div>
@@ -35,22 +35,37 @@
 
                 <div class="card stats-inner">
                     <div class="card-body">
-                        {% set mark_dist = assignment.mark_dist() %}
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">All</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="cohort-tab" data-bs-toggle="tab" data-bs-target="#cohort" type="button" role="tab" aria-controls="cohort" aria-selected="false" onclick="resize('overallGraphCohort')">Cohort</button>
+                            </li>
+                        </ul>
 
-                        <div id="overallGraph" class="graph"></div>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                                <div id="overallGraph" class="graph"></div>
 
-                        <script type="text/javascript">
-                        {
-                            let data = [
+                                <script type="text/javascript">
                                 {
-                                    x : {{ mark_dist.keys() | list }},
-                                    y : {{ mark_dist.values() | list }},
-                                    type : 'bar'
+                                    let data = barGraphData({{ assignment.mark_dist() }});
+                                    displayGraph('overallGraph', 'Mark distribution', data);
                                 }
-                            ];
-                            displayGraph('overallGraph', 'Mark distribution', data)
-                        }
-                        </script>
+                                </script>
+                            </div>
+
+                            <div class="tab-pane fade" id="cohort" role="tabpanel" aria-labelledby="cohort-tab">
+                                <div id="overallGraphCohort" class="graph"></div>
+                                <script type="text/javascript">
+                                {
+                                    let data = cohortBarGraphData({{ assignment.mark_dist_cohort() }});
+                                    displayGraph('overallGraphCohort', 'Mark distribution by cohort', data);
+                                }
+                                </script>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

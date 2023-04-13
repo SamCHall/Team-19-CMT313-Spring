@@ -190,6 +190,18 @@ class Assignment(db.Model):
 
         return marks
 
+    def mark_dist_cohort(self):
+        cohorts = set([submission.student.cohort for submission in self.submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = dict((mark, 0) for mark in range(self.max_mark()+1))
+
+        for submission in self.submissions:
+            results[submission.student.cohort][submission.mark] += 1
+
+        return results
+
     def lowest_mark(self):
         return min([submission.mark for submission in self.submissions])
 
@@ -445,6 +457,22 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         sorted_by_mark = dict(sorted(marks.items()))
         return sorted_by_mark
 
+    def marks_dist_cohort(self, submissions = None):
+
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = dict((mark, 0) for mark in range(self.max_mark()+1))
+
+        for submission in submissions:
+            results[submission.submission.student.cohort][submission.question_mark] += 1
+
+        return results
+
     def lowest_mark(self, submissions = None):
         if not submissions:
             submissions = self.submissions
@@ -524,6 +552,24 @@ class QuestionType1(Question):
         sorted_answers = collections.Counter(answers).most_common()
         return sorted_answers
 
+    def answer_occur_for_blank_cohort(self, blank_no, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = {}
+
+        for submission in submissions:
+            if (answer:= submission.list_submission()[blank_no]) in results[submission.submission.student.cohort].keys():
+                results[submission.submission.student.cohort][answer] += 1
+            else:
+                results[submission.submission.student.cohort][answer] = 1
+
+        return results
+
 
 class QuestionType2(Question):
     id = db.Column(db.Integer, db.ForeignKey("question.id"), primary_key=True)
@@ -572,3 +618,23 @@ class QuestionType2(Question):
             count[submission.submission_answer] += 1
 
         return count
+
+    def option_choice_quantity_cohort(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        results = {}
+
+        for cohort in cohorts:
+            results[cohort] = {
+                self.option1: 0,
+                self.option2: 0,
+                self.option3: 0,
+                self.option4: 0
+            }
+
+        for submission in submissions:
+            results[submission.submission.student.cohort][submission.submission_answer] += 1
+
+        return results
