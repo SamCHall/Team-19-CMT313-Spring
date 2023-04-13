@@ -107,7 +107,7 @@
                     {% for asssignment in module.assignments %}
                     <tr>
                         <td>{{ asssignment.title }}</td>
-                        <td>{{ asssignment.assignment_type }}</td>
+                        <td>{{ asssignment.assignment_type | replace("_", " ") | title }}</td>
                         <td>
                             {% if asssignment.assignment_type == 'formative_assignment' %}
                             {{ asssignment.num_of_attempts(student) }}
