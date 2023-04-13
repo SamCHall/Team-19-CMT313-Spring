@@ -136,6 +136,11 @@ class Module(db.Model):
             return statistics.mean([assessment.student_percentage(student) for assessment in self.assignments if assessment.student_submitted(student)])
         return None
 
+    def check_staff(self, staff):
+        """ Returns true if given staff is teaching the module"""
+        return staff in self.get_staff()
+
+
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
@@ -151,12 +156,14 @@ class Assignment(db.Model):
     question_assignment = db.relationship(
         "AssignQuestion",
         back_populates = "assignment",
-        order_by = "AssignQuestion.question_number.asc()"
+        order_by = "AssignQuestion.question_number.asc()",
+        cascade = "all, delete"
     )
 
     submissions = db.relationship(
         "Submission",
-        back_populates = "assignment"
+        back_populates = "assignment",
+        cascade = "all, delete"
     )
 
     __mapper_args__ = {
@@ -227,9 +234,26 @@ class Assignment(db.Model):
     def average_mark(self):
         return statistics.mean([submission.mark for submission in self.submissions])
 
+    def total_available_mark(self):
+        questions = self.get_questions().values()
+        total = 0
+        for question in questions:
+            if question.question_type == "question_type1":
+                total += len(eval(question.correct_answers))
+            else:
+                total += 1
+        return total
+
+    def get_student_highest_mark(self, student_id):
+        attempt_marks = [submission.mark for submission in self.submissions if submission.student_id==student_id]
+        if len(attempt_marks) > 0:
+            return max(attempt_marks)
+        return 0
+
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
+    difficulty = db.Column(db.String, nullable=False)
 
     __mapper_args__ = {
         "polymorphic_identity": "formative_assignment",
@@ -266,7 +290,8 @@ class Submission(db.Model):
 
     submission_answers = db.relationship(
         "SubmissionAnswers",
-        back_populates = "submission"
+        back_populates = "submission",
+        cascade = "all, delete"
     )
 
     def add_question_answer(self, question, answer, mark):
@@ -315,6 +340,18 @@ class SubmissionAnswers(db.Model):
         "polymorphic_identity": "submission",
     }
 
+class SimplifiedSubmission(db.Model):
+    # This is a simplified version of the Submission model that is dissimilar
+    # to the Submission model in that it does not contain the submission_answers
+    # relationship and is not associated to the Assignment model,
+    # allowing permanent marks to be stored in the database when the assignment is deleted
+
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    assignment_title = db.Column(db.String, nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey("module.id"), nullable=False)
+    total_mark = db.Column(db.Integer, nullable=False)
+    total_available_mark = db.Column(db.Integer, nullable=False)
 
 class SubmissionType1(SubmissionAnswers):
     id = db.Column(db.Integer, db.ForeignKey("submission_answers.id"), primary_key=True)
@@ -367,6 +404,7 @@ class AssignQuestion(db.Model):
 
     @staticmethod
     def add_question(assignment_id, question_id, question_number):
+        Question.query.filter_by(id=question_id).update({"active": True})
         assign = AssignQuestion(
             assignment_id = assignment_id,
             question_id = question_id,
