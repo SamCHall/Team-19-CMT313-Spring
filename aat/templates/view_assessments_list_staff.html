@@ -108,6 +108,7 @@
                 <td>{{ assignment.module }}</td>
 
                 <td class="edit-buttons">
+                  <a href="{{ url_for('assessment_stats', id=assignment.id) }}">Statictics</a>
                   {% if assignment.assignment_type == "formative_assignment" %}
                   <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}">Edit</a>
                   {% elif assignment.assignment_type == "summative_assignment" %}
