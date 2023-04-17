@@ -11,7 +11,7 @@ def login():
     # Check to see if a user is already logged in
     if current_user.is_authenticated:
         flash(f"You are currently logged in as {current_user.username}", category='info')
-        return redirect(url_for('login'))
+        return redirect('/')
 
     form = Login_form()
     if form.validate_on_submit():
