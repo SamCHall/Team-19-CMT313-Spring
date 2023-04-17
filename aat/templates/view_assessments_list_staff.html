@@ -117,7 +117,7 @@
                   {% elif assignment.assignment_type == "summative_assignment" %}
                   <a data-toggle="tooltip" title="Edit (to be implemented)"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
                   {% endif %}
-                  <a href="{{ url_for('unarchive_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Activate"><i class="fa-solid fa-plus fa-large fa-fw"></i></a>
+                  <a href="{{ url_for('unarchive_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Unarchive"><i class="fa-solid fa-boxes-packing"></i></a>
                   <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Delete" onclick="return confirmDelete(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
                 </td>
               </tr>
