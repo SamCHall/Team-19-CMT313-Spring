@@ -12,6 +12,7 @@ bundles = {
         'dataTables/js/jquery.dataTables.min.js',
         'dataTables/js/dataTables.bootstrap5.min.js',
         'js/tables.js',
+        'js/tooltips.js',
         # 'js/example.js', <- Copy this format to add a file, making sure to include the comma at the end.
         filters='jsmin',
         output='gen/script.%(version)s.js'
@@ -29,6 +30,17 @@ bundles = {
         'dataTables/css/dataTables.bootstrap5.min.css',
         filters='cssmin',
         output='gen/table.%(version)s.css'
+    ),
+
+    'icons': Bundle(
+        'fontawesome/css/all.min.css', 
+        'fontawesome/css/v4-shims.min.css',
+        'fontawesome/css/brands.min.css',
+        'fontawesome/css/solid.min.css',
+        'fontawesome/css/regular.min.css',
+        'fontawesome/css/fontawesome.min.css',
+        filters='cssmin',
+        output='gen/icons.%(version)s.css'
     ),
 
     'css': Bundle(
