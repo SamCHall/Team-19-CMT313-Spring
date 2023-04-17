@@ -163,6 +163,7 @@ class Assignment(db.Model):
     submissions = db.relationship(
         "Submission",
         back_populates = "assignment",
+        order_by = "Submission.student_id.asc()",
         cascade = "all, delete"
     )
 
@@ -262,11 +263,11 @@ class Assignment(db.Model):
             return max(attempt_marks)
         return 0
 
-    def get_student_marks(self):
+    def get_student_marks_export(self):
 
-        out_string = "Student ID,Surname,First Name,Mark,Percentage\n"
+        out_string = "Student ID,Surname,First Name,Attempt Number,Mark,Percentage\n"
         for submission in self.submissions:
-            out_string += f"{submission.student.id},{submission.student.surname},{submission.student.first_name},{submission.mark},{submission.mark/self.max_mark()*100}\n"
+            out_string += f"{submission.student.id},{submission.student.surname},{submission.student.first_name},{submission.attempt_number},{submission.mark},{submission.mark/self.max_mark()*100}\n"
 
         return out_string
 
@@ -280,6 +281,23 @@ class FormativeAssignment(Assignment):
 
     def num_of_attempts(self, student):
         return Submission.get_current_attempt_number(student.id, self.id)
+
+    def get_student_marks(self):
+        out = {}
+
+        for submission in self.submissions:
+            if submission.student in out:
+                out[submission.student]["attempts"] += 1
+                if submission.mark > out[submission.student]["mark"]:
+                    out[submission.student]["mark"] = submission.mark
+                    out[submission.student]["percentage"] = submission.mark / self.max_mark() * 100
+            else:
+                out[submission.student] = ({
+                    "mark" : submission.mark,
+                    "percentage" : submission.mark / self.max_mark() * 100,
+                    "attempts" : 1
+                })
+        return out
 
 class SummativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)

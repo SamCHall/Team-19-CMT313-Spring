@@ -9,3 +9,17 @@
 .graph {
     width: 100%;
 }
+
+.header-button {
+    display: flex;
+    flex-direction: row;
+}
+
+.header-button > :first-child {
+    margin-right: auto;
+    margin-bottom: auto;
+}
+
+.header-button > a {
+    height: fit-content;
+}
