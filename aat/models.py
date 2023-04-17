@@ -187,14 +187,14 @@ class Assignment(db.Model):
                     question_submissions.append(submission_answer)
         return question_submissions
 
-    def get_student_highest_mark(self, student):
+    def student_highest_mark(self, student):
         marks = [submission.mark for submission in self.submissions if submission.student == student]
         if marks:
             return max(marks)
         return None
 
     def student_percentage(self, student):
-        return self.get_student_highest_mark(student) / self.max_mark() * 100
+        return self.student_highest_mark(student) / self.max_mark() * 100
 
     def student_submitted(self, student):
         return student in [submission.student for submission in self.submissions]

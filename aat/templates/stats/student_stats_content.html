@@ -116,7 +116,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% set mark = asssignment.get_student_highest_mark(student) %}
+                            {% set mark = asssignment.student_highest_mark(student) %}
                             {% if mark %}
                             {{ mark }} / {{ asssignment.max_mark() }}
                             {% else %}
