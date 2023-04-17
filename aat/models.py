@@ -262,6 +262,13 @@ class Assignment(db.Model):
             return max(attempt_marks)
         return 0
 
+    def get_student_marks(self):
+
+        out_string = "Student ID,Surname,First Name,Mark,Percentage\n"
+        for submission in self.submissions:
+            out_string += f"{submission.student.id},{submission.student.surname},{submission.student.first_name},{submission.mark},{submission.mark/self.max_mark()*100}\n"
+
+        return out_string
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)

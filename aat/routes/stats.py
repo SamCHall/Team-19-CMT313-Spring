@@ -1,4 +1,4 @@
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import abort, flash, redirect, render_template, request, Response
 from flask_login import current_user, login_required
 
 from .. import app, db
@@ -37,6 +37,20 @@ def assessment_stats(id):
             abort(501)
 
     abort(500)
+
+@app.route('/staff/assessment/<int:id>/stats/export-marks')
+@login_required
+def assessment_marks_export(id):
+    if current_user.user_type != "staff":
+        abort(403, description="This page can only be accessed by staff.")
+
+    assignment = Assignment.query.filter_by(id=id).first_or_404()
+
+    return Response(
+        assignment.get_student_marks(),
+        mimetype="text/csv",
+        headers={'Content-disposition': f'attachment; filename={assignment.title}-marks.csv'},
+    )
 
 @app.route('/staff/assessment/<int:id>/stats/<int:question_num>')
 @login_required
