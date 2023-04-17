@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="qt1" class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>{{ question.title }}</h1>
+        </div>
+        <div class="card-body">
+            <textarea id="preview">
+                {{ question.question_template }}
+            </textarea>
+        </div>
+    </div>
+</section>
+{% endblock %}

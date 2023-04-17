@@ -356,7 +356,10 @@ def edit_question(id):
 @app.route('/display-questions/<int:id>')
 def view_question(id):
     question = Question.query.get_or_404(id)
-    return render_template('view-questions-detailed.html', question=question)
+    if question.question_type == 'question_type1':
+        return render_template('view-question-type1.html', question=question)
+    else:
+        return render_template('view-question-type2.html', question=question)
 
 
 
