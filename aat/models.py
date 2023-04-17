@@ -191,6 +191,7 @@ class Assignment(db.Model):
         marks = [submission.mark for submission in self.submissions if submission.student == student]
         if marks:
             return max(marks)
+        print(f"{self.title} hi")
         return None
 
     def student_percentage(self, student):

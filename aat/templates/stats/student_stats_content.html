@@ -117,7 +117,7 @@
                         </td>
                         <td>
                             {% set mark = asssignment.student_highest_mark(student) %}
-                            {% if mark %}
+                            {% if mark != None %}
                             {{ mark }} / {{ asssignment.max_mark() }}
                             {% else %}
                             No submission
