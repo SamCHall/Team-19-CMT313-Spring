@@ -498,4 +498,3 @@ def unarchive_assessment(assessment_id):
     db.session.commit()
     flash('The assessment has been activated successfully.')
     return redirect(request.referrer)
-
