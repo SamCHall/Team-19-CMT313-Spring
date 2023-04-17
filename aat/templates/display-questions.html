@@ -1,10 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% assets "table" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+{% assets "icons" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+
 <section id="list-question" class="container">
-    <h1 class="fw-light mb-4">Questions</h1>
+    <div class="card">
+        <div class="card-header">
+            <h1>Questions</h1>
+        </div>
+        <div class="card-body">
+            <table id="display-questions" class="table table-striped">
+                <!-- Table head -->
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Question Type</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <!-- Table body -->
+                <tbody>
+                    {% for question in questions %}
+                        <tr>
+                            <td>{{ question.title }}</td>
+                            <td>
+                                {% if question.question_type == 'question_type1' %}
+                                    Fill in the Blank
+                                {% else %}
+                                    Multiple Choice
+                                {% endif %}
+                            </td>
+                            <td class="edit-buttons">
+                                <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
+                                <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
+                                <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
     
-    <div class="content">
+    <!-- <div class="content">
         <div id="categories" class="row py-2">
             <div class="col">
                 <h2 class="fs-4">Title</h2>
@@ -32,7 +77,7 @@
                 </div>
             </div>
         {% endfor %}
-    </div>
+    </div> -->
 </section>
 
 {% endblock content%}
