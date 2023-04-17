@@ -265,9 +265,9 @@ class Assignment(db.Model):
 
     def get_student_marks_export(self):
 
-        out_string = "Student ID,Surname,First Name,Attempt Number,Mark,Percentage\n"
+        out_string = "Student ID,Surname,First Name,Cohort,Attempt Number,Mark,Percentage\n"
         for submission in self.submissions:
-            out_string += f"{submission.student.id},{submission.student.surname},{submission.student.first_name},{submission.attempt_number},{submission.mark},{submission.mark/self.max_mark()*100}\n"
+            out_string += f"{submission.student.id},{submission.student.surname},{submission.student.first_name},{submission.student.cohort},{submission.attempt_number},{submission.mark},{submission.mark/self.max_mark()*100}\n"
 
         return out_string
 
