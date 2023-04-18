@@ -119,7 +119,7 @@ def create_question_type2():
         db.session.add(qt2)
         db.session.commit()
         flash("You've created a new Multiple Choice question!")
-        return redirect(url_for('questions'))
+        return redirect('/staff/question/create/type2')
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
