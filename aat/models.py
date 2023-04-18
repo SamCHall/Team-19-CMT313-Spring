@@ -435,6 +435,7 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False, unique=True)
     question_type = db.Column(db.String)
+    difficulty = db.Column(db.String, nullable=True)
     active = db.Column(db.Boolean, default=False)
     archived = db.Column(db.Boolean, default=False)
 

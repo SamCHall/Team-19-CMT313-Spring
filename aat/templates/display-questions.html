@@ -35,6 +35,7 @@
                             <tr>
                                 <th scope="col">Title</th>
                                 <th scope="col">Question Type</th>
+                                <th scope="col">Difficulty</th>
                                 <th scope="col">Active</th>
                                 <th scope="col"></th>
                             </tr>
@@ -51,6 +52,21 @@
                                             Multiple Choice
                                         {% endif %}
                                     </td>
+                                    <td class="text-center">
+                                        {% if question.difficulty %}
+                                            {% if question.difficulty == "Very Easy" %}
+                                                <span class="badge bg-very-easy">Very Easy</span>
+                                            {% elif question.difficulty == "Easy" %}
+                                                <span class="badge bg-easy">Easy</span>
+                                            {% elif question.difficulty == "Medium" %}
+                                                <span class="badge bg-medium">Medium</span>
+                                            {% elif question.difficulty == "Hard" %}
+                                                <span class="badge bg-hard">Hard</span>
+                                            {% elif question.difficulty == "Very Hard" %}
+                                                <span class="badge bg-very-hard">Very Hard</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if question.active %}
                                             <i class="fa-solid fa-check" style="color:rgb(0, 128, 0);"></i>
@@ -59,11 +75,11 @@
                                         {% endif %}
                                     </td>
                                     <td class="edit-buttons">
-                                        <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
-                                        <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
                                         {% if not question.active %}
                                             <a href="{{ url_for('archive_question', id=question.id) }}" data-toggle="tooltip" title="Archive"><i class="fa-solid fa-box-archive fa-large fa-fw"></i></a>
                                         {% endif %}
+                                        <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
+                                        <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
                                         <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
                                     </td>
                                 </tr>
@@ -79,6 +95,7 @@
                             <tr>
                                 <th scope="col">Title</th>
                                 <th scope="col">Question Type</th>
+                                <th scope="col">Difficulty</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -94,12 +111,27 @@
                                             Multiple Choice
                                         {% endif %}
                                     </td>
+                                    <td class="text-center">
+                                        {% if question.difficulty %}
+                                            {% if question.difficulty == "Very Easy" %}
+                                                <span class="badge bg-very-easy">Very Easy</span>
+                                            {% elif question.difficulty == "Easy" %}
+                                                <span class="badge bg-easy">Easy</span>
+                                            {% elif question.difficulty == "Medium" %}
+                                                <span class="badge bg-medium">Medium</span>
+                                            {% elif question.difficulty == "Hard" %}
+                                                <span class="badge bg-hard">Hard</span>
+                                            {% elif question.difficulty == "Very Hard" %}
+                                                <span class="badge bg-very-hard">Very Hard</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
                                     <td class="edit-buttons">
-                                        <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
-                                        <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
                                         {% if not question.active %}
                                             <a href="{{ url_for('archive_question', id=question.id) }}" data-toggle="tooltip" title="Re-activate"><i class="fa-solid fa-box-archive fa-large fa-fw"></i></a>
                                         {% endif %}
+                                        <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
+                                        <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
                                         <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
                                     </td>
                                 </tr>

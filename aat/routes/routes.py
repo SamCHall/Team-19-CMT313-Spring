@@ -64,7 +64,6 @@ def create_summative_assessment():
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
 @login_required
 def create_question_type1():
-    # if current_user
     qt1_form = QuestionType1FormCreate()
     if qt1_form.validate_on_submit():
         correct_answers = []
@@ -75,7 +74,14 @@ def create_question_type1():
         for answer in qt1_form.incorrect_answers.data.split(','):
             incorrect_answers.append(answer.strip())
 
-        qt1 = QuestionType1(title=qt1_form.title.data, question_template=qt1_form.question_template.data.replace('BLANK', '{}'), correct_answers=str(correct_answers), incorrect_answers=str(incorrect_answers))
+        qt1 = QuestionType1(
+            title=qt1_form.title.data,
+            question_template=qt1_form.question_template.data.replace('BLANK', '{}'),
+            correct_answers=str(correct_answers),
+            incorrect_answers=str(incorrect_answers),
+            difficulty=qt1_form.difficulty.data
+        )
+
         db.session.add(qt1)
         db.session.commit()
 
@@ -314,11 +320,11 @@ def edit_question(id):
             for answer in qt1_form.incorrect_answers.data.split(','):
                 incorrect_answers.append(answer.strip())
             
-            print(qt1_form.title.data)
             question.title = qt1_form.title.data
             question.question_template = qt1_form.question_template.data.replace('BLANK', '{}')
             question.correct_answers = str(correct_answers)
             question.incorrect_answers = str(incorrect_answers)
+            question.difficulty = qt1_form.difficulty.data
             flash("Question successfully updated")
             db.session.commit()
             return redirect(url_for('questions', id=question.id))

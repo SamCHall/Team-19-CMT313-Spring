@@ -55,27 +55,30 @@ $(document).ready(function() {
     } );
 
     $('#display-questions').DataTable( {
-      // "columnDefs": [
-      //   { type: 'difficulty', "targets": 1 }
-      // ],
+      "columnDefs": [
+        { type: 'difficulty', "targets": 1 }
+      ],
+        "aoColumns": [
+            { "bSortable": true },  // 0  
+            { "bSortable": true },  // 1
+            { "bSortable": true },  // 2
+            { "bSortable": false,
+              "bSearchable": false },  // 3
+            { "bSortable": false,
+              "bSearchable": false }  // 4
+        ]
+    } );
+
+    $('#display-questions-archive').DataTable( {
+      "columnDefs": [
+        { type: 'difficulty', "targets": 1 }
+      ],
         "aoColumns": [
             { "bSortable": true },  // 0  
             { "bSortable": true },  // 1
             { "bSortable": true },  // 2
             { "bSortable": false,
               "bSearchable": false }  // 3
-        ]
-    } );
-
-    $('#display-questions-archive').DataTable( {
-      // "columnDefs": [
-      //   { type: 'difficulty', "targets": 1 }
-      // ],
-        "aoColumns": [
-            { "bSortable": true },  // 0  
-            { "bSortable": true },  // 1
-            { "bSortable": false,
-              "bSearchable": false }  // 2
         ]
     } );
 } );
