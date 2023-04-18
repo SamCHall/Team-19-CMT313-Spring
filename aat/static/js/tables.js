@@ -56,7 +56,7 @@ $(document).ready(function() {
 
     $('#display-questions').DataTable( {
       "columnDefs": [
-        { type: 'difficulty', "targets": 1 }
+        { type: 'difficulty', "targets": 2 }
       ],
         "aoColumns": [
             { "bSortable": true },  // 0  
@@ -71,7 +71,7 @@ $(document).ready(function() {
 
     $('#display-questions-archive').DataTable( {
       "columnDefs": [
-        { type: 'difficulty', "targets": 1 }
+        { type: 'difficulty', "targets": 2 }
       ],
         "aoColumns": [
             { "bSortable": true },  // 0  
