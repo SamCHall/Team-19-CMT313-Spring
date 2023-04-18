@@ -2,92 +2,96 @@
 
 {% block content %}
 <section id="qt2" class="container">
+    <div class="card">
 
-    <h1>{% block title %} Edit the question {% endblock %}</h1>
+        <div class="card-header">
+            <h1>Multiple Choice</h1>
+        </div>
 
-    <form action="" method="POST">
-        {{ form.csrf_token }}
+        <div class="card-body">
+            <form action="" method="POST">
+                {{ form.csrf_token }}
 
-        <p>
-            {{ form.title.label }}
-            {{ form.title(size=20) }}
-        </p>
+                <p>
+                    {{ form.title.label }}
+                    {{ form.title(size=20, class="form-control") }}
+                </p>
 
-        {% if form.title.errors %}
-            <ul class="errors">
-                {% for error in form.title.errors %}
+                {% if form.title.errors %}
+                <ul class="errors">
+                    {% for error in form.title.errors %}
                     <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
-        <p>
-            {{ form.option1.label }}
-            {{ form.option1(size=20) }}
-        </p>
+                <p>
+                    {{ form.option1.label }}
+                    {{ form.option1(size=20, class="form-control") }}
+                </p>
 
-        {% if form.option1.errors %}
-        <ul class="errors">
-            {% for error in form.option1.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+                {% if form.option1.errors %}
+                <ul class="errors">
+                    {% for error in form.option1.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
-        <p>
-            {{ form.option2.label }}
-            {{ form.option2(size=20) }}
-        </p>
+                <p>
+                    {{ form.option2.label }}
+                    {{ form.option2(size=20, class="form-control") }}
+                </p>
 
-        {% if form.option2.errors %}
-        <ul class="errors">
-            {% for error in form.option2.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+                {% if form.option2.errors %}
+                <ul class="errors">
+                    {% for error in form.option2.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
-        <p>
-            {{ form.option3.label }}
-            {{ form.option3(size=20) }}
-        </p>
+                <p>
+                    {{ form.option3.label }}
+                    {{ form.option3(size=20, class="form-control") }}
+                </p>
 
-        {% if form.option3.errors %}
-        <ul class="errors">
-            {% for error in form.option3.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+                {% if form.option3.errors %}
+                <ul class="errors">
+                    {% for error in form.option3.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
-        <p>
-            {{ form.option4.label }}
-            {{ form.option4(size=20) }}
-        </p>
+                <p>
+                    {{ form.option4.label }}
+                    {{ form.option4(size=20, class="form-control") }}
+                </p>
 
-        {% if form.option4.errors %}
-        <ul class="errors">
-            {% for error in form.option4.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+                {% if form.option4.errors %}
+                <ul class="errors">
+                    {% for error in form.option4.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
-        <p>
-            {{ form.correctOption.label }}
-            {{ form.correctOption(size=20) }}
-        </p>
+                <p>
+                    {{ form.correctOption.label }}
+                    {{ form.correctOption(size=20, class="form-control") }}
+                </p>
 
-        {% if form.correctOption.errors %}
-        <ul class="errors">
-            {% for error in form.correctOption.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+                {% if form.correctOption.errors %}
+                <ul class="errors">
+                    {% for error in form.correctOption.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
-        {{ form.Submit(class="button") }}
-</section>
-<a href="{{ url_for('questions')}}" class="view-question-button">Return to Questions</a>
-
+                {{ form.Submit(class="button") }}
+            </form>
+            <a href="{{ url_for('questions')}}" class="button">Return to Questions</a>
+    </section>
 {% endblock content%}
