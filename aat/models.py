@@ -436,6 +436,8 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
     title = db.Column(db.String, nullable=False, unique=True)
     question_type = db.Column(db.String)
     active = db.Column(db.Boolean, default=False)
+    archived = db.Column(db.Boolean, default=False)
+
 
     question_assignment = db.relationship(
         "AssignQuestion",

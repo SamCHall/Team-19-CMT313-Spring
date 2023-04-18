@@ -24,7 +24,7 @@ def create_formative_assessment():
     if Staff.query.get(current_user.get_id()) == None:
         abort(403, description="This page can only be accessed by staff.")
     form = CreateFormAss()
-    form.add_question.query = Question.query
+    form.add_question.query = Question.query.filter_by(archived=False)
     form.module_id.query = Module.query
 
     if form.validate_on_submit():
@@ -80,7 +80,7 @@ def create_question_type1():
         db.session.commit()
 
         flash("You've created a new Fill in the Blank question!")
-        return redirect('/')
+        return redirect(url_for('questions'))
 
     return render_template('create-question-type1.html', qt1_form=qt1_form)
 
@@ -112,7 +112,8 @@ def create_question_type2():
 
         db.session.add(qt2)
         db.session.commit()
-        flash("Question was added")
+        flash("You've created a new Multiple Choice question!")
+        return redirect(url_for('questions'))
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
@@ -120,8 +121,9 @@ def create_question_type2():
 
 @app.route("/display-questions", methods=['GET','POST'])
 def questions():
-    questions = Question.query.all()
-    return render_template('display-questions.html', title='Questions',questions=questions)
+    active_questions = Question.query.filter_by(archived=False).all()
+    archived_questions = Question.query.filter_by(archived=True).all()
+    return render_template('display-questions.html', title='Questions', questions=active_questions, archived=archived_questions)
 
 
 
@@ -507,3 +509,22 @@ def unarchive_assessment(assessment_id):
     db.session.commit()
     flash('The assessment has been activated successfully.')
     return redirect(request.referrer)
+
+
+
+@app.route('/archive-question/<int:id>')
+@login_required
+def archive_question(id):
+    question = Question.query.get_or_404(id)
+
+    if bool(question.active):
+        flash("Question is active so it can't by archived.")
+        return redirect(request.referrer)
+    else:
+        question.archived = not question.archived
+        db.session.commit()
+        if question.archived:
+            flash(f'{question.title} has been archived.')
+        else:
+            flash(f'{question.title} has been re-activated.')
+        return redirect(request.referrer)

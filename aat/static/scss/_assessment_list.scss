@@ -1,6 +1,10 @@
 td.edit-buttons{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: end;
+
+    a {
+        padding-left: 15px;
+    }
 }
 
 td.difficulty{
