@@ -357,7 +357,13 @@ def edit_question(id):
 def view_question(id):
     question = Question.query.get_or_404(id)
     if question.question_type == 'question_type1':
-        return render_template('view-question-type1.html', question=question)
+        correct_answers = ast.literal_eval(question.correct_answers)
+        incorrect_answers = ast.literal_eval(question.incorrect_answers)
+        all_answers = correct_answers + incorrect_answers
+        random.shuffle(all_answers)
+
+        question.complete = question.question_template.format(*correct_answers)
+        return render_template('view-question-type1.html', question=question, all_answers=all_answers)
     else:
         return render_template('view-question-type2.html', question=question)
 

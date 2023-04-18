@@ -11,3 +11,12 @@ td.difficulty{
 div#myTabContent{
     padding-top: 10px;
 }
+
+thead {
+    color: $light;
+    background-color: $dark;
+}
+
+tr > td > a:last-child:hover {
+    color: $danger;
+}
