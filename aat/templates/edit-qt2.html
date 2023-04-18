@@ -89,7 +89,10 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-
+                <p>
+                    {{ form.difficulty.label }}
+                    {{ form.difficulty(class='form-select') }}
+                </p>
                 {{ form.Submit(class="btn btn-primary") }}
             </form>
     </section>

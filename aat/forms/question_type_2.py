@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import InputRequired, Length, EqualTo, ValidationError
 from ..models import Question
 
@@ -10,7 +10,7 @@ class QuestionType2FormEdit(FlaskForm):
     option3 = StringField('Option 3',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     option4 = StringField('Option 4',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     correctOption = StringField('Correct Option',validators=[InputRequired()])
-
+    difficulty = SelectField('Difficulty', choices=['', 'Very Easy', 'Easy', 'Medium', 'Hard', 'Very Hard'])
     Submit = SubmitField('Submit')
         
 
@@ -31,7 +31,7 @@ class QuestionType2FormCreate(FlaskForm):
     option3 = StringField('Option 3',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     option4 = StringField('Option 4',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     correctOption = StringField('Correct Option',validators=[InputRequired()])
-
+    difficulty = SelectField('Difficulty', choices=['', 'Very Easy', 'Easy', 'Medium', 'Hard', 'Very Hard'])
     Submit = SubmitField('Submit')
 
     def validate_title(self, title):

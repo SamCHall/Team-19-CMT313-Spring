@@ -104,6 +104,7 @@ def create_question_type2():
         op3=form.option3.data
         op4=form.option4.data
         correctOption=form.correctOption.data
+        difficulty=form.difficulty.data
 
         qt2 = QuestionType2(
             question_text=question_text,
@@ -113,7 +114,8 @@ def create_question_type2():
             option3=op3,
             option4=op4,
             question_type="question_type2",
-            correctOption=correctOption
+            correctOption=correctOption,
+            difficulty=difficulty
         )
 
         db.session.add(qt2)
