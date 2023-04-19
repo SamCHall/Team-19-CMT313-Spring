@@ -64,4 +64,24 @@ $(document).ready(function() {
       }
     ]
   });
+
+  $('#data-student-marks').DataTable( {
+    "aoColumns": [
+      { "bSortable" : true},
+      { "bSortable" : true},
+      { "bSortable" : true},
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      },
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      },
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      }
+    ]
+  });
 } );

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block head %}
+{% assets "table" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
 {% assets "icons" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}">
 {% endassets %}
@@ -20,7 +23,7 @@
         </div>
 
         <div class="card-body">
-            <table class="table table-striped">
+            <table id="data-student-marks" class="table table-striped table-hover">
                 <thead>
                     <th scope="col">Student ID</th>
                     <th scope="col">Student Name</th>
