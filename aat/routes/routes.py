@@ -524,7 +524,7 @@ def archive_question(id):
     question = Question.query.get_or_404(id)
 
     if bool(question.active):
-        flash("Question is active so it can't by archived.")
+        flash("Question is active so it can't be archived.")
         return redirect(request.referrer)
     else:
         question.archived = not question.archived
