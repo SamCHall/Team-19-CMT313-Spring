@@ -84,4 +84,44 @@ $(document).ready(function() {
       }
     ]
   });
+
+  $('#data-student-module-overview').DataTable( {
+    "aoColumns": [
+      { "bSortable" : true},
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      },
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      },
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      }
+    ]
+  });
+
+  $('.data-student-module-assessments').DataTable({
+    "aoColumns": [
+      { "bSortable" : true},
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      },
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      },
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      },
+      {
+        "bSortable" : true,
+        "bSearchable": false
+      }
+    ]
+  });
 } );
