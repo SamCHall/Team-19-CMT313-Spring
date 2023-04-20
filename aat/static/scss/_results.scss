@@ -1,0 +1,11 @@
+label#question_template{
+    span.answer{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+p#assessment-total-mark{
+    display: flex;
+    justify-content: flex-end;
+}
