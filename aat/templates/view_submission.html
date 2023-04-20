@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{assignment.title}}</h1>
+        </div>
+        <div class="card-body">
+            <form action="{{url_for('submit_assessment', assessment_id = assignment.id)}}" id = "form" method="POST">
+                {% for question in questions %}
+                <div class="question">
+                        {% if question.question_type == "question_type1" %}
+                        <div class="question_type1">
+                            <label class ="form-label" for="{{ loop.index }}_answer" id="question_template">
+                                {{ loop.index }}. {{ question.question_template|safe }} 
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="question_type2">
+                            <label class="form-label" id="question_text">
+                                {{ loop.index }}. {{ question.question_text}}
+                            </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+{% endblock content %}

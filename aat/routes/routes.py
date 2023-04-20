@@ -274,9 +274,38 @@ def submit_assessment(assessment_id):
 
 
     # This will need to redirect to a page that shows the results of the assessment eventually.
-    return redirect(request.referrer)
+    return redirect(url_for('view_submission', assessment_id = assignment.id, submission_id = submission.id))
+
+@app.route('/view-assessment/<int:assessment_id>/submission/<int:submission_id>')
+@login_required
+def view_submission(assessment_id, submission_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+    submission = Submission.query.get_or_404(submission_id)
+    questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+    questions_dict = AssignQuestion.get_assignment_questions(assessment_id)
 
 
+    if submission.student_id != current_user.id:
+        abort(403, description="You are not the owner of this submission.")
+
+    for question in questions:
+        print(question)
+        if question.question_type == 'question_type1':
+            question_num = list(questions_dict.keys())[list(questions_dict.values()).index(question)]
+            correct_answers = ast.literal_eval(question.correct_answers)
+            question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
+            question_answer = ast.literal_eval(question_answer)
+
+            blanks = QuestionType1.num_of_blanks(question)
+
+            for i in range(blanks):
+                if question_answer[i] == correct_answers[i]:
+                    question.question_template = str(question.question_template).replace('{}', f'<span style="color:green">{question_answer[i]}</span>', 1)
+                elif question_answer[i] == "":
+                    question.question_template = str(question.question_template).replace('{}', f'<span style="color:red">No answer</span>', 1)
+                else:
+                    question.question_template = str(question.question_template).replace('{}', f'<span style="color:red">{question_answer[i]}</span>', 1)
+    return render_template('view_submission.html', assignment = assignment, submission = submission, title = assignment.title, questions = questions)
 
 @app.route('/questions/delete/<int:id>')
 def delete_question(id):

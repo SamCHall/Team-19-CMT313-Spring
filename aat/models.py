@@ -186,6 +186,12 @@ class Assignment(db.Model):
                     question_submissions.append(submission_answer)
         return question_submissions
 
+    def get_student_question_submission(self, question_num, submission):
+        question = self.get_questions()[question_num]
+        for submission_answer in submission.submission_answers:
+            if submission_answer.question == question:
+                return submission_answer
+        return None
     def get_student_highest_mark(self, student):
         marks = [submission.mark for submission in self.submissions if submission.student == student]
         if marks:
