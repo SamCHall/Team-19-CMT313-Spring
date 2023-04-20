@@ -273,8 +273,8 @@ def submit_assessment(assessment_id):
             else:
                 submission.add_question_answer(question, submitted_answer, 0)
 
-    # This will need to redirect to a page that shows the results of the assessment eventually.
-
+    # Sending the redirect url to the front end so that the user can be redirected to the submission page.
+    
     response_data = {
         'redirect_url': url_for('view_submission', assessment_id=assignment.id, submission_id=submission.id),
     }
