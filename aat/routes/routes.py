@@ -284,7 +284,7 @@ def view_submission(assessment_id, submission_id):
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
     questions_dict = AssignQuestion.get_assignment_questions(assessment_id)
 
-    total_available_mark = 0
+    total_available_mark = assignment.total_available_mark()
     if submission.student_id != current_user.id:
         abort(403, description="You are not the owner of this submission.")
 
@@ -300,7 +300,6 @@ def view_submission(assessment_id, submission_id):
             question.score = assignment.get_student_question_submission(question_num, submission).question_mark
             
             for i in range(len(question_answer)):
-                total_available_mark += 1
                 if question_answer[i] == question.correct_answers[i]:
                     question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:green">{question_answer[i]}</span> ', 1)
                 elif question_answer[i] == "":
@@ -309,7 +308,6 @@ def view_submission(assessment_id, submission_id):
                     question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:red">{question_answer[i]}</span> ', 1)
 
         elif question.question_type == 'question_type2':
-            total_available_mark += 1
             question_answer = assignment.get_student_question_submission(question_num, submission)
             if question_answer != None:
                 question.question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
@@ -319,9 +317,9 @@ def view_submission(assessment_id, submission_id):
                 question.question_answer = "No answer"
                 question.score = 0
         
-        
-                
     return render_template('view_submission.html', assignment = assignment, submission = submission, title = assignment.title, total_available_mark = total_available_mark, questions = questions)
+
+
 
 @app.route('/questions/delete/<int:id>')
 def delete_question(id):
