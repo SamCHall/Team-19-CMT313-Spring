@@ -37,6 +37,16 @@ submitFormative.addEventListener("click", function(event) {
     console.log('Error occurred during the request.');
   };
 
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      const responseData = JSON.parse(xhr.responseText);
+      const redirectUrl = responseData.redirect_url;
+  
+      // Redirect to the submission results page
+      window.location.href = redirectUrl;
+    }
+  };
+  
   const requestData = {
     type2Values: type2Values,
     optionValues: optionValues

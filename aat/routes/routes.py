@@ -1,5 +1,6 @@
 import random
 import ast
+import json
 from flask import render_template, abort, flash, request, redirect, url_for
 from flask_login import current_user, login_required
 
@@ -272,9 +273,13 @@ def submit_assessment(assessment_id):
             else:
                 submission.add_question_answer(question, submitted_answer, 0)
 
-
     # This will need to redirect to a page that shows the results of the assessment eventually.
-    return redirect(url_for('view_submission', assessment_id = assignment.id, submission_id = submission.id))
+
+    response_data = {
+        'redirect_url': url_for('view_submission', assessment_id=assignment.id, submission_id=submission.id),
+    }
+
+    return json.dumps(response_data)
 
 @app.route('/view-assessment/<int:assessment_id>/submission/<int:submission_id>', methods=['GET'])
 @login_required
@@ -312,7 +317,6 @@ def view_submission(assessment_id, submission_id):
             if question_answer != None:
                 question.question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
                 question.score = assignment.get_student_question_submission(question_num, submission).question_mark
-                print(question.score)
             else:
                 question.question_answer = "No answer"
                 question.score = 0
