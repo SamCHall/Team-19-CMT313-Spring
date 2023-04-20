@@ -274,12 +274,14 @@ def submit_assessment(assessment_id):
                 submission.add_question_answer(question, submitted_answer, 0)
 
     # Sending the redirect url to the front end so that the user can be redirected to the submission page.
-    
+
     response_data = {
         'redirect_url': url_for('view_submission', assessment_id=assignment.id, submission_id=submission.id),
     }
 
     return json.dumps(response_data)
+
+
 
 @app.route('/view-assessment/<int:assessment_id>/submission/<int:submission_id>', methods=['GET'])
 @login_required
@@ -288,7 +290,7 @@ def view_submission(assessment_id, submission_id):
     submission = Submission.query.get_or_404(submission_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
     questions_dict = AssignQuestion.get_assignment_questions(assessment_id)
-
+    
     total_available_mark = assignment.total_available_mark()
     if submission.student_id != current_user.id:
         abort(403, description="You are not the owner of this submission.")
@@ -299,12 +301,15 @@ def view_submission(assessment_id, submission_id):
         
 
         if question.question_type == 'question_type1':
-            question.correct_answers = str(question.correct_answers).replace('[', '').replace(']', '').replace("'", '')
+            
             question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
             question_answer = ast.literal_eval(question_answer)
             question.score = assignment.get_student_question_submission(question_num, submission).question_mark
+            question.correct_answers = ast.literal_eval(question.correct_answers)
             
             for i in range(len(question_answer)):
+                print(question_answer[i])
+                print(question.correct_answers[i])
                 if question_answer[i] == question.correct_answers[i]:
                     question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:green">{question_answer[i]}</span> ', 1)
                 elif question_answer[i] == "":
@@ -312,6 +317,8 @@ def view_submission(assessment_id, submission_id):
                 else:
                     question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:red">{question_answer[i]}</span> ', 1)
 
+            question.correct_answers = str(question.correct_answers).replace('[', '').replace(']', '').replace("'", '')
+            
         elif question.question_type == 'question_type2':
             question_answer = assignment.get_student_question_submission(question_num, submission)
             if question_answer != None:
