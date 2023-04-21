@@ -346,6 +346,7 @@ def edit_question(id):
             question.option3 = form.option3.data
             question.option4 = form.option4.data
             question.correctOption = form.correctOption.data
+            question.difficulty = form.difficulty.data
 
             # db.session.add(question)
             db.session.commit()
@@ -358,6 +359,7 @@ def edit_question(id):
         form.option3.data = question.option3
         form.option4.data = question.option4
         form.correctOption.data = question.correctOption
+        form.difficulty.data = question.difficulty
 
         return render_template('edit-qt2.html', form = form)
 
