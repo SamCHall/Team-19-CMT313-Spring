@@ -80,7 +80,8 @@
                                         {% endif %}
                                         <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
                                         <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
-                                        <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
+                                        <!-- <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a> -->
+                                        <a role="button" data-bs-toggle="modal" data-bs-target="#question_{{ question.id }}" data-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -138,12 +139,30 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    
                 </div>
             </div>
         </div>
     </div>
-
+    <!-- Confirm delete modals -->
+    {% for question in questions %}
+    <div class="modal fade" id="question_{{ question.id }}" tabindex="-1" aria-labelledby="question_{{ question.id }}Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h1 class="modal-title fs-5" id="question_{{ question.id }}Label">Modal title</h1> -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="fs-4 fw-normal">Are you sure you want to delete {{ question.title }}?</h2>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger text-light" href="{{ url_for('delete_question', id=question.id) }}">Delete</a>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </section>
 
 {% endblock content%}
