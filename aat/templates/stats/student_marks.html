@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% assets "table" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+{% assets "icons" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+{% endblock %}
+
+{% block content %}
+
+<section class="container">
+    <a class="btn btn-primary" href="{{ url_for('assessment_stats', id=assignment.id) }}">Back to assessment statistics</a>
+</section>
+
+<section class="container">
+    <div class="card">
+        <div class="card-header header-button">
+            <h1 class="card-title">Student Marks for {{ assignment.title }}</h1>
+            <a class="btn btn-primary" href="{{ url_for('assessment_marks_export', id=assignment.id) }}"><i class="fa-solid fa-download"></i> Download Marks</a>
+        </div>
+
+        <div class="card-body">
+            <table id="data-student-marks" class="table table-striped table-hover">
+                <thead>
+                    <th scope="col">Student ID</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Cohort</th>
+                    <th scope="col">Attempts</th>
+                    <th scope="col">Best Mark</th>
+                    <th scope="col">Percentage</th>
+                </thead>
+                <tbody>
+                {% for student, marks in assignment.get_student_marks().items() %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.first_name }} {{ student.surname }}</td>
+                        <td>{{ student.cohort }}</td>
+                        <td>{{ marks.attempts }}</td>
+                        <td>{{ marks.mark }}</td>
+                        <td>{{ '%0.1f' | format(marks.percentage) }}%</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}

@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block head %}
+{% assets "table" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+{% endblock %}
+
 {% block content %}
 
 {% include 'stats/student_stats_content.html' %}

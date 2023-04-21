@@ -41,7 +41,7 @@
               {% if current_user.id == item.id %}
               <tr>
                 <td>
-                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }}</a>
+                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }} <i class="fa-solid fa-eye fa-sm fa-fw"></i></a>
                 </td>
                 <td class="text-center">
                   {% if assignment.difficulty == "Very Easy" %}
@@ -59,14 +59,14 @@
                 <td>{{ assignment.module }}</td>
 
                 <td class="edit-buttons">
-                  <a href="{{ url_for('assessment_stats', id=assignment.id) }}" data-toggle="tooltip" title="Statistics"><i class="fa-solid fa-chart-simple fa-large fa-fw"></i></a>
+                  <a href="{{ url_for('assessment_stats', id=assignment.id) }}" data-toggle="tooltip" title="Statistics"><i class="fa-solid fa-chart-simple fa-fw"></i></a>
                   {% if assignment.assignment_type == "formative_assignment" %}
-                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
+                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
                   {% elif assignment.assignment_type == "summative_assignment" %}
                   <a data-toggle="tooltip" title="Edit (to be implemented)"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
                   {% endif %}
-                  <a href="{{ url_for('archive_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Archive"><i class="fa-solid fa-box-archive fa-large fa-fw"></i></a>
-                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Delete" onclick="return confirmDelete(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
+                  <a href="{{ url_for('archive_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Archive"><i class="fa-solid fa-box-archive fa-fw"></i></a>
+                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Delete" onclick="return confirmDelete(this)"><i class="fa-solid fa-trash fa-fw"></i></a>
                 </td>
               </tr>
               {% endif %}
@@ -111,14 +111,14 @@
                 <td>{{ assignment.module }}</td>
 
                 <td class="edit-buttons">
-                  <a href="{{ url_for('assessment_stats', id=assignment.id) }}" data-toggle="tooltip" title="Statistics"><i class="fa-solid fa-chart-simple fa-large fa-fw"></i></a>
+                  <a href="{{ url_for('assessment_stats', id=assignment.id) }}" data-toggle="tooltip" title="Statistics"><i class="fa-solid fa-chart-simple fa-fw"></i></a>
                   {% if assignment.assignment_type == "formative_assignment" %}
-                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
+                  <a href="{{ url_for('edit_formative_assessment', assessment_id=assignment.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
                   {% elif assignment.assignment_type == "summative_assignment" %}
-                  <a data-toggle="tooltip" title="Edit (to be implemented)"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
+                  <a data-toggle="tooltip" title="Edit (to be implemented)"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
                   {% endif %}
-                  <a href="{{ url_for('unarchive_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Activate"><i class="fa-solid fa-plus fa-large fa-fw"></i></a>
-                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Delete" onclick="return confirmDelete(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
+                  <a href="{{ url_for('unarchive_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Unarchive"><i class="fa-solid fa-boxes-packing fa-fw"></i></a>
+                  <a href="{{ url_for('delete_assessment', assessment_id=assignment.id )}}" data-toggle="tooltip" title="Delete" onclick="return confirmDelete(this)"><i class="fa-solid fa-trash fa-fw"></i></a>
                 </td>
               </tr>
               {% endif %}

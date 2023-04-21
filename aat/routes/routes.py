@@ -14,7 +14,12 @@ from ..forms.question_type_2 import QuestionType2FormCreate, QuestionType2FormEd
 # Home
 @app.route("/")
 def home():
-    return render_template('home.html', title='Home')
+    if current_user.is_authenticated:
+        if Staff.query.get(current_user.get_id()):
+            return redirect(url_for('view_staff_assessments'))
+        else:
+            return redirect(url_for('view_assessments'))
+    return redirect(url_for('login'))
 
 
 
@@ -104,6 +109,7 @@ def create_question_type2():
         op3=form.option3.data
         op4=form.option4.data
         correctOption=form.correctOption.data
+        difficulty=form.difficulty.data
 
         qt2 = QuestionType2(
             question_text=question_text,
@@ -113,13 +119,14 @@ def create_question_type2():
             option3=op3,
             option4=op4,
             question_type="question_type2",
-            correctOption=correctOption
+            correctOption=correctOption,
+            difficulty=difficulty
         )
 
         db.session.add(qt2)
         db.session.commit()
         flash("You've created a new Multiple Choice question!")
-        return redirect(url_for('questions'))
+        return redirect('/staff/question/create/type2')
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
@@ -137,7 +144,7 @@ def questions():
 def view_assessments():
     assignments = Assignment.query.all()
     for assignment in assignments:
-        assignment.mark = assignment.get_student_highest_mark(current_user.id)
+        assignment.mark = assignment.student_highest_mark(current_user)
         assignment.total_mark = assignment.total_available_mark()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
 
@@ -345,6 +352,7 @@ def edit_question(id):
             question.option3 = form.option3.data
             question.option4 = form.option4.data
             question.correctOption = form.correctOption.data
+            question.difficulty = form.difficulty.data
 
             # db.session.add(question)
             db.session.commit()
@@ -357,6 +365,7 @@ def edit_question(id):
         form.option3.data = question.option3
         form.option4.data = question.option4
         form.correctOption.data = question.correctOption
+        form.difficulty.data = question.difficulty
 
         return render_template('edit-qt2.html', form = form)
 

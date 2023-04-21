@@ -5,7 +5,7 @@
         </div>
 
         <div class="card-body">
-            <table class="table">
+            <table id="data-student-module-overview" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">Module</th>
@@ -44,7 +44,7 @@
 
         <div class="card-body">
             <h3>Module Stats</h3>
-            <table class="table">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -93,7 +93,7 @@
                 </tbody>
             </table>
             <h3>Assessments</h3>
-            <table class="table">
+            <table class="table table-striped table-hover data-student-module-assessments">
                 <thead>
                     <tr>
                         <th scope="col">Assessment</th>
@@ -116,8 +116,8 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% set mark = asssignment.get_student_highest_mark(student) %}
-                            {% if mark %}
+                            {% set mark = asssignment.student_highest_mark(student) %}
+                            {% if mark != None %}
                             {{ mark }} / {{ asssignment.max_mark() }}
                             {% else %}
                             No submission
