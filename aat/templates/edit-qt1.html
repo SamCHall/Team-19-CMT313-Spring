@@ -65,6 +65,10 @@
                 <label for="preview">Preview:</label>
                 <textarea id="preview" placeholder="Your question will appear here once a template is provided."></textarea>
 
+                <!-- Difficulty -->
+                {{ qt1_form.difficulty.label }}
+                {{ qt1_form.difficulty(class='form-select') }}
+                
                 <!-- Submit -->
                 {{ qt1_form.submit(class='btn btn-primary mt-2') }}
             </form>

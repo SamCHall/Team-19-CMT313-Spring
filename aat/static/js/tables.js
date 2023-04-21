@@ -33,24 +33,32 @@ $(document).ready(function() {
     "columnDefs": [
       { type: 'difficulty', "targets": 1 }
     ],
+<<<<<<< HEAD
       "aoColumns": [
           { "bSortable": true },  // 0
           { "bSortable": true },  // 1
           { "bSortable": true },  // 2
           { "bSortable": false,
+=======
+    "aoColumns": [
+      { "bSortable": true },  // 0
+      { "bSortable": true },  // 1
+      { "bSortable": true },  // 2
+      { "bSortable": false,
+>>>>>>> main
             "bSearchable": false }  // 3
-      ]
-  } );
+          ]
+        } );
 
-  $('#data').DataTable( {
-    "columnDefs": [
+        $('#data').DataTable( {
+          "columnDefs": [
       { type: 'difficulty', "targets": 1 }
     ],
       "aoColumns": [
-          { "bSortable": true }, // 0
-          { "bSortable": true }, // 1
-          { "bSortable": true }, // 2
-          { "bSortable": true } // 3
+        { "bSortable": true }, // 0
+        { "bSortable": true }, // 1
+        { "bSortable": true }, // 2
+        { "bSortable": true } // 3
       ]
   } );
 
@@ -124,4 +132,33 @@ $(document).ready(function() {
       }
     ]
   });
+
+  $('#display-questions').DataTable( {
+    "columnDefs": [
+      { type: 'difficulty', "targets": 1 }
+    ],
+      "aoColumns": [
+          { "bSortable": true },  // 0
+          { "bSortable": true },  // 1
+          { "bSortable": true },  // 2
+          { "bSortable": false,
+            "bSearchable": false },  // 3
+          { "bSortable": false,
+            "bSearchable": false }  // 4
+      ]
+  } );
+
+  $('#display-questions-archive').DataTable( {
+    "columnDefs": [
+      { type: 'difficulty', "targets": 1 }
+    ],
+      "aoColumns": [
+          { "bSortable": true },  // 0
+          { "bSortable": true },  // 1
+          { "bSortable": true },  // 2
+          { "bSortable": false,
+            "bSearchable": false }  // 3
+      ]
+  } );
+
 } );
