@@ -6,4 +6,13 @@ function confirmDelete(link) {
       return false;
     }
   }
+
+function confirmDeleteQ(link) {
+  if (confirm("Are you sure you would like to delete this question?")) {
+    window.location.href = link.href;
+    return true;
+  } else {
+    return false;
+  }
+}
   

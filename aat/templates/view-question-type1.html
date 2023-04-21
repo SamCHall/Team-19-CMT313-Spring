@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="view-qt1" class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>{{ question.title }}</h1>
+        </div>
+        <div class="card-body text-center my-2">
+            <h2 class="h3 fw-normal my-2">{{ question.question_template | replace('{}', '_____') }}</h2>
+            {% for answer in all_answers %}
+                <span class="btn btn-secondary my-2">{{ answer }}</span>
+            {% endfor %}
+            <h2 id="correct-answer" class="h3 fw-normal my-2">{{ question.complete }}</h2>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-primary float-end" href="{{ url_for('questions') }}">Back</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
