@@ -293,7 +293,7 @@ def delete_question(id):
     question_to_delete = Question.query.get_or_404(id)
     if bool(question_to_delete.active):
         flash("Question is active so it can't be deleted.")
-        return render_template('display-questions.html', title='Questions',questions=questions)
+        return redirect(request.referrer)
     else:
         try:
             db.session.delete(question_to_delete)
@@ -302,7 +302,7 @@ def delete_question(id):
             flash("Question was deleted")
 
             questions = Question.query.all()
-            return render_template('display-questions.html', title='Questions',questions=questions)
+            return redirect(request.referrer)
 
         except Exception as e:
             print(e)
@@ -340,6 +340,7 @@ def edit_question(id):
         qt1_form.question_template.data = question.question_template.replace('{}', 'BLANK')
         qt1_form.correct_answers.data = ', '.join(ast.literal_eval(question.correct_answers))
         qt1_form.incorrect_answers.data = ', '.join(ast.literal_eval(question.incorrect_answers))
+        qt1_form.difficulty.data = question.difficulty
         return render_template('edit-qt1.html', qt1_form=qt1_form)
 
     else:
@@ -533,7 +534,7 @@ def archive_question(id):
     question = Question.query.get_or_404(id)
 
     if bool(question.active):
-        flash("Question is active so it can't by archived.")
+        flash("Question is active so it can't be archived.")
         return redirect(request.referrer)
     else:
         question.archived = not question.archived

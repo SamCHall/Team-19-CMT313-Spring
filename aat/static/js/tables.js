@@ -54,7 +54,35 @@ $(document).ready(function() {
       ]
   } );
 
-  $('#data-student-list').DataTable( {
+    $('#display-questions').DataTable( {
+      "columnDefs": [
+        { type: 'difficulty', "targets": 2 }
+      ],
+        "aoColumns": [
+            { "bSortable": true },  // 0
+            { "bSortable": true },  // 1
+            { "bSortable": true },  // 2
+            { "bSortable": false,
+              "bSearchable": false },  // 3
+            { "bSortable": false,
+              "bSearchable": false }  // 4
+        ]
+    } );
+
+    $('#display-questions-archive').DataTable( {
+      "columnDefs": [
+        { type: 'difficulty', "targets": 2 }
+      ],
+        "aoColumns": [
+            { "bSortable": true },  // 0
+            { "bSortable": true },  // 1
+            { "bSortable": true },  // 2
+            { "bSortable": false,
+              "bSearchable": false }  // 3
+        ]
+    } );
+
+    $('#data-student-list').DataTable( {
     "aoColumns": [
       { "bSortable" : true},
       { "bSortable" : true},
