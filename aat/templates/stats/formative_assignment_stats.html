@@ -4,6 +4,9 @@
     {% assets "graph" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    {% assets "icons" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
 {% endblock head %}
 
 {% block content %}
@@ -30,6 +33,8 @@
                             <li>Average Mark: {{ '%0.1f' | format( assignment.average_mark()) }}</li>
                         </ul>
 
+                        <a class="btn btn-primary" href="{{ url_for('assessment_marks_export', id=assignment.id) }}"><i class="fa-solid fa-download"></i> Download Marks</a>
+                        <a class="btn btn-primary" href="{{ url_for('assessment_marks_list', id=assignment.id) }}">View Marks</a>
                     </div>
                 </div>
 

@@ -21,6 +21,6 @@ thead {
     background-color: $dark;
 }
 
-tr > td > a:last-child:hover {
+tr > .edit-buttons > a:last-child:hover {
     color: $danger;
 }
