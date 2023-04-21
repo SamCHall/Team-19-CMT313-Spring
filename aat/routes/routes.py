@@ -323,7 +323,6 @@ def view_submission(assessment_id, submission_id):
                 question.question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
                 question.score = assignment.get_student_question_submission(question_num, submission).question_mark
             else:
-                question.question_answer = "No answer"
                 question.score = 0
         
     return render_template('view_submission.html', assignment = assignment, submission = submission, title = assignment.title, total_available_mark = total_available_mark, questions = questions)

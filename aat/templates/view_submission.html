@@ -9,10 +9,7 @@
             <h1 class="card-title">{{assignment.title}} - Results</h1>
         </div>
         <div class="card-body">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Fill in the blank</h2>
-                </div>
+            <h2 class="card-title">Fill in the blank</h2>
             <table class="table">
                 <thead>
                     <tr>
@@ -34,11 +31,7 @@
                             {% endif %}
                     {% endfor %}
             </table>
-        </div>
-            <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Multiple Choice</h2>
-            </div>
+            <h2 class="card-title">Multiple Choice</h2>
             <table class="table">
                 <thead>
                     <tr>
@@ -66,9 +59,10 @@
                             {% endif %}
                     {% endfor %}
             </table>
-        </div>
     </div>
         <div class = "card-footer">
             <p id = "assessment-total-mark"> Total mark: {{ submission.mark }}/{{ total_available_mark }}</p>
         </div>
+    </div>
+</section>
 {% endblock content %}
