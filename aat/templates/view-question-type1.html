@@ -1,12 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section id="view-qt1" class="container">
+<section id="view-qt1" class="container" style="max-width: 800px;">
     <div class="card">
         <div class="card-header">
             <h1>{{ question.title }}</h1>
         </div>
         <div class="card-body text-center my-2">
+            {% if question.difficulty %}
+                {% if question.difficulty == "Very Easy" %}
+                    <span class="badge bg-very-easy float-end fs-5 fw-normal">Very Easy</span>
+                {% elif question.difficulty == "Easy" %}
+                    <span class="badge bg-easy float-end fs-5 fw-normal">Easy</span>
+                {% elif question.difficulty == "Medium" %}
+                    <span class="badge bg-medium float-end fs-5 fw-normal">Medium</span>
+                {% elif question.difficulty == "Hard" %}
+                    <span class="badge bg-hard float-end fs-5 fw-normal">Hard</span>
+                {% elif question.difficulty == "Very Hard" %}
+                    <span class="badge bg-very-hard float-end fs-5 fw-normal">Very Hard</span>
+                {% endif %}
+            {% endif %}
             <h2 class="h3 fw-normal my-2">{{ question.question_template | replace('{}', '_____') }}</h2>
             {% for answer in all_answers %}
                 <span class="btn btn-secondary my-2">{{ answer }}</span>
