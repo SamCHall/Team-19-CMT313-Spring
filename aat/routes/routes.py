@@ -308,8 +308,6 @@ def view_submission(assessment_id, submission_id):
             question.correct_answers = ast.literal_eval(question.correct_answers)
             
             for i in range(len(question_answer)):
-                print(question_answer[i])
-                print(question.correct_answers[i])
                 if question_answer[i] == question.correct_answers[i]:
                     question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:green">{question_answer[i]}</span> ', 1)
                 elif question_answer[i] == "":
