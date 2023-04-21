@@ -6,4 +6,9 @@ div#card-group{
             }
     }
 }
+div#full-screen-div{
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 76px);
+}
  
