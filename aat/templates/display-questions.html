@@ -1,38 +1,168 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% assets "table" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+{% assets "icons" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+
 <section id="list-question" class="container">
-    <h1 class="fw-light mb-4">Questions</h1>
-    
-    <div class="content">
-        <div id="categories" class="row py-2">
-            <div class="col">
-                <h2 class="fs-4">Title</h2>
-            </div>
-            <div class="col-7">
-                <h2 class="fs-4">Type</h2>
+    <div class="card">
+        <div class="card-header">
+            <h1>Questions</h1>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs mb-2" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="active-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
+                        Active
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="archive-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#archive" type="button" role="tab" aria-controls="archive" aria-selected="false">
+                        Archived
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                    <!-- ACTIVE TAB -->
+                    <table id="display-questions" class="table table-striped">
+                        <!-- Table head -->
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Question Type</th>
+                                <th scope="col">Difficulty</th>
+                                <th scope="col">Active</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <!-- Table body -->
+                        <tbody>
+                            {% for question in questions %}
+                                <tr>
+                                    <td>{{ question.title }}</td>
+                                    <td>
+                                        {% if question.question_type == 'question_type1' %}
+                                            Fill in the Blank
+                                        {% else %}
+                                            Multiple Choice
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if question.difficulty %}
+                                            {% if question.difficulty == "Very Easy" %}
+                                                <span class="badge bg-very-easy">Very Easy</span>
+                                            {% elif question.difficulty == "Easy" %}
+                                                <span class="badge bg-easy">Easy</span>
+                                            {% elif question.difficulty == "Medium" %}
+                                                <span class="badge bg-medium">Medium</span>
+                                            {% elif question.difficulty == "Hard" %}
+                                                <span class="badge bg-hard">Hard</span>
+                                            {% elif question.difficulty == "Very Hard" %}
+                                                <span class="badge bg-very-hard">Very Hard</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if question.active %}
+                                            <i class="fa-solid fa-check" style="color:rgb(0, 128, 0);"></i>
+                                        {% else %}
+                                            <i class="fa-solid fa-xmark" style="color:rgb(150, 0, 0);"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td class="edit-buttons">
+                                        {% if not question.active %}
+                                            <a href="{{ url_for('archive_question', id=question.id) }}" data-toggle="tooltip" title="Archive"><i class="fa-solid fa-box-archive fa-large fa-fw"></i></a>
+                                        {% endif %}
+                                        <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
+                                        <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
+                                        <!-- <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a> -->
+                                        <a role="button" data-bs-toggle="modal" data-bs-target="#question_{{ question.id }}" data-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ARCHIVED TAB -->
+                <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="archive-tab">
+                    <table id="display-questions-archive" class="table table-striped">
+                        <!-- Table head -->
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Question Type</th>
+                                <th scope="col">Difficulty</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <!-- Table body -->
+                        <tbody>
+                            {% for question in archived %}
+                                <tr>
+                                    <td>{{ question.title }}</td>
+                                    <td>
+                                        {% if question.question_type == 'question_type1' %}
+                                            Fill in the Blank
+                                        {% else %}
+                                            Multiple Choice
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if question.difficulty %}
+                                            {% if question.difficulty == "Very Easy" %}
+                                                <span class="badge bg-very-easy">Very Easy</span>
+                                            {% elif question.difficulty == "Easy" %}
+                                                <span class="badge bg-easy">Easy</span>
+                                            {% elif question.difficulty == "Medium" %}
+                                                <span class="badge bg-medium">Medium</span>
+                                            {% elif question.difficulty == "Hard" %}
+                                                <span class="badge bg-hard">Hard</span>
+                                            {% elif question.difficulty == "Very Hard" %}
+                                                <span class="badge bg-very-hard">Very Hard</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td class="edit-buttons">
+                                        {% if not question.active %}
+                                            <a href="{{ url_for('archive_question', id=question.id) }}" data-toggle="tooltip" title="Re-activate"><i class="fa-solid fa-box-archive fa-large fa-fw"></i></a>
+                                        {% endif %}
+                                        <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
+                                        <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
+                                        <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        {% for question in questions %}
-            <div class="row question">
-                <div class="col">
-                    <h2 class="fw-normal fs-4">{{ question.title }}</h2>
-                </div>
-                <div class="col-1">
-                    <h2 class="fw-normal fs-4">{{ question.question_type[-1] }}</h2>
-                </div>
-                <div class="col-2">
-                    <a href="{{ url_for('view_question', id=question.id)}}" class="btn btn-success view-question-button">View Question</a>
-                </div>
-                <div class="col-2">
-                    <a href="{{ url_for('edit_question', id=question.id)}}" class="btn btn-warning edit-question-button">Edit Question</a>
-                </div>
-                <div class="col-2">
-                    <a href="{{ url_for('delete_question', id=question.id)}}" class="btn btn-danger delete-question-button">Delete Question</a>
-                </div>
-            </div>
-        {% endfor %}
     </div>
+    <!-- Confirm delete modals -->
+    {% for question in questions %}
+    <div class="modal fade" id="question_{{ question.id }}" tabindex="-1" aria-labelledby="question_{{ question.id }}Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h1 class="modal-title fs-5" id="question_{{ question.id }}Label">Modal title</h1> -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="fs-4 fw-normal">Are you sure you want to delete {{ question.title }}?</h2>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger text-light" href="{{ url_for('delete_question', id=question.id) }}">Delete</a>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </section>
 
 {% endblock content%}

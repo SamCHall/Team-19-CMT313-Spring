@@ -30,7 +30,7 @@ def create_formative_assessment():
     if Staff.query.get(current_user.get_id()) == None:
         abort(403, description="This page can only be accessed by staff.")
     form = CreateFormAss()
-    form.add_question.query = Question.query
+    form.add_question.query = Question.query.filter_by(archived=False)
     form.module_id.query = Module.query
 
     if form.validate_on_submit():
@@ -70,7 +70,6 @@ def create_summative_assessment():
 @app.route('/staff/question/create/type1', methods=['GET', 'POST'])
 @login_required
 def create_question_type1():
-    # if current_user
     qt1_form = QuestionType1FormCreate()
     if qt1_form.validate_on_submit():
         correct_answers = []
@@ -81,12 +80,19 @@ def create_question_type1():
         for answer in qt1_form.incorrect_answers.data.split(','):
             incorrect_answers.append(answer.strip())
 
-        qt1 = QuestionType1(title=qt1_form.title.data, question_template=qt1_form.question_template.data.replace('BLANK', '{}'), correct_answers=str(correct_answers), incorrect_answers=str(incorrect_answers))
+        qt1 = QuestionType1(
+            title=qt1_form.title.data,
+            question_template=qt1_form.question_template.data.replace('BLANK', '{}'),
+            correct_answers=str(correct_answers),
+            incorrect_answers=str(incorrect_answers),
+            difficulty=qt1_form.difficulty.data
+        )
+
         db.session.add(qt1)
         db.session.commit()
 
         flash("You've created a new Fill in the Blank question!")
-        return redirect('/')
+        return redirect(url_for('questions'))
 
     return render_template('create-question-type1.html', qt1_form=qt1_form)
 
@@ -104,6 +110,7 @@ def create_question_type2():
         op3=form.option3.data
         op4=form.option4.data
         correctOption=form.correctOption.data
+        difficulty=form.difficulty.data
 
         qt2 = QuestionType2(
             question_text=question_text,
@@ -113,12 +120,14 @@ def create_question_type2():
             option3=op3,
             option4=op4,
             question_type="question_type2",
-            correctOption=correctOption
+            correctOption=correctOption,
+            difficulty=difficulty
         )
 
         db.session.add(qt2)
         db.session.commit()
-        flash("Question was added")
+        flash("You've created a new Multiple Choice question!")
+        return redirect('/staff/question/create/type2')
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
@@ -126,8 +135,9 @@ def create_question_type2():
 
 @app.route("/display-questions", methods=['GET','POST'])
 def questions():
-    questions = Question.query.all()
-    return render_template('display-questions.html', title='Questions',questions=questions)
+    active_questions = Question.query.filter_by(archived=False).all()
+    archived_questions = Question.query.filter_by(archived=True).all()
+    return render_template('display-questions.html', title='Questions', questions=active_questions, archived=archived_questions)
 
 
 
@@ -135,7 +145,7 @@ def questions():
 def view_assessments():
     assignments = Assignment.query.all()
     for assignment in assignments:
-        assignment.mark = assignment.get_student_highest_mark(current_user.id)
+        assignment.mark = assignment.student_highest_mark(current_user)
         assignment.total_mark = assignment.total_available_mark()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
 
@@ -338,7 +348,7 @@ def delete_question(id):
     question_to_delete = Question.query.get_or_404(id)
     if bool(question_to_delete.active):
         flash("Question is active so it can't be deleted.")
-        return render_template('display-questions.html', title='Questions',questions=questions)
+        return redirect(request.referrer)
     else:
         try:
             db.session.delete(question_to_delete)
@@ -347,7 +357,7 @@ def delete_question(id):
             flash("Question was deleted")
 
             questions = Question.query.all()
-            return render_template('display-questions.html', title='Questions',questions=questions)
+            return redirect(request.referrer)
 
         except Exception as e:
             print(e)
@@ -372,11 +382,11 @@ def edit_question(id):
             for answer in qt1_form.incorrect_answers.data.split(','):
                 incorrect_answers.append(answer.strip())
 
-            print(qt1_form.title.data)
             question.title = qt1_form.title.data
             question.question_template = qt1_form.question_template.data.replace('BLANK', '{}')
             question.correct_answers = str(correct_answers)
             question.incorrect_answers = str(incorrect_answers)
+            question.difficulty = qt1_form.difficulty.data
             flash("Question successfully updated")
             db.session.commit()
             return redirect(url_for('questions', id=question.id))
@@ -385,6 +395,7 @@ def edit_question(id):
         qt1_form.question_template.data = question.question_template.replace('{}', 'BLANK')
         qt1_form.correct_answers.data = ', '.join(ast.literal_eval(question.correct_answers))
         qt1_form.incorrect_answers.data = ', '.join(ast.literal_eval(question.incorrect_answers))
+        qt1_form.difficulty.data = question.difficulty
         return render_template('edit-qt1.html', qt1_form=qt1_form)
 
     else:
@@ -396,6 +407,7 @@ def edit_question(id):
             question.option3 = form.option3.data
             question.option4 = form.option4.data
             question.correctOption = form.correctOption.data
+            question.difficulty = form.difficulty.data
 
             # db.session.add(question)
             db.session.commit()
@@ -408,6 +420,7 @@ def edit_question(id):
         form.option3.data = question.option3
         form.option4.data = question.option4
         form.correctOption.data = question.correctOption
+        form.difficulty.data = question.difficulty
 
         return render_template('edit-qt2.html', form = form)
 
@@ -416,7 +429,16 @@ def edit_question(id):
 @app.route('/display-questions/<int:id>')
 def view_question(id):
     question = Question.query.get_or_404(id)
-    return render_template('view-questions-detailed.html', question=question)
+    if question.question_type == 'question_type1':
+        correct_answers = ast.literal_eval(question.correct_answers)
+        incorrect_answers = ast.literal_eval(question.incorrect_answers)
+        all_answers = correct_answers + incorrect_answers
+        random.shuffle(all_answers)
+
+        question.complete = question.question_template.format(*correct_answers)
+        return render_template('view-question-type1.html', question=question, all_answers=all_answers)
+    else:
+        return render_template('view-question-type2.html', question=question)
 
 
 
@@ -558,3 +580,22 @@ def unarchive_assessment(assessment_id):
     db.session.commit()
     flash('The assessment has been activated successfully.')
     return redirect(request.referrer)
+
+
+
+@app.route('/archive-question/<int:id>')
+@login_required
+def archive_question(id):
+    question = Question.query.get_or_404(id)
+
+    if bool(question.active):
+        flash("Question is active so it can't be archived.")
+        return redirect(request.referrer)
+    else:
+        question.archived = not question.archived
+        db.session.commit()
+        if question.archived:
+            flash(f'{question.title} has been archived.')
+        else:
+            flash(f'{question.title} has been re-activated.')
+        return redirect(request.referrer)

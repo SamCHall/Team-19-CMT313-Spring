@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="view-qt1" class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>{{ question.title }}</h1>
+        </div>
+        <div class="card-body text-center my-2">
+            <p class="h3 fw-normal my-2">{{ question.title }}</p>
+            <br>
+            <p class="h3 fw-normal my-2">Option 1: {{ question.option1 }}</p>
+            <br>
+            <p class="h3 fw-normal my-2">Option 2: {{ question.option2 }}</p>
+            <br>
+            <p class="h3 fw-normal my-2">Option 3: {{ question.option3 }}</p>
+            <br>
+            <p class="h3 fw-normal my-2">Option 4: {{ question.option4 }}</p>
+            <br>
+            <p class="h3 fw-normal my-2">Correct Option: {{ question.correctOption }}</p>
+            <br>
+            <p class="h3 fw-normal my-2">Difficulty: {{ question.difficulty }}</p>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-primary float-end" href="{{ url_for('questions') }}">Back</a>
+        </div>
+    </div>
+</section>
+
+{% endblock content%}

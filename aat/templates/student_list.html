@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block head %}
+{% assets "table" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+{% assets "icons" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+{% endblock %}
+
 {% block content %}
 
 <section class="container">
@@ -9,7 +18,7 @@
         </div>
 
         <div class="card-body">
-            <table class="table table-striped">
+            <table id="data-student-list" class="table table-striped table-hover">
                 <thead>
                     <th scope="col">Student Number</th>
                     <th scope="col">Student Name</th>
@@ -17,10 +26,10 @@
                 </thead>
                 <tbody>
                     {% for student in students %}
-                    <tr>
+                    <tr class="clickable-row" data-href="{{ url_for('student_stats_page', id=student.id) }}">
                         <td>{{ student.id }}</td>
                         <td>{{ student.first_name }} {{ student.surname }}</td>
-                        <td><a href="{{ url_for('student_stats_page', id=student.id) }}" class="btn btn-primary">Performance</a></td>
+                        <td><a href="{{ url_for('student_stats_page', id=student.id) }}" data-toggle="tooltip" title="Statistics"><i class="fa-solid fa-chart-simple fa-large fa-fw"></i></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

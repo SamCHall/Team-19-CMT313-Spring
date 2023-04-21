@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import InputRequired, ValidationError
 from ..models import Question
 
@@ -10,6 +10,7 @@ class QuestionType1FormCreate(FlaskForm):
     question_template = StringField('Provide a question template including "BLANK" where appropriate.', validators=[InputRequired(message='Please provide a sentence with blanks {} to be filled in.')])
     correct_answers = StringField('Comma separated list of correct answers.', validators=[InputRequired('Please provide the correct answers.')])
     incorrect_answers = StringField('Comma separated list of incorrect answers (optional).')
+    difficulty = SelectField('Difficulty', choices=['', 'Very Easy', 'Easy', 'Medium', 'Hard', 'Very Hard'])
     submit = SubmitField('Confirm')
 
     def validate_title(self, title):
@@ -33,6 +34,7 @@ class QuestionType1FormEdit(FlaskForm):
     question_template = StringField('Provide a question template including "BLANK" where appropriate.', validators=[InputRequired(message='Please provide a sentence with blanks {} to be filled in.')])
     correct_answers = StringField('Comma separated list of correct answers.', validators=[InputRequired('Please provide the correct answers.')])
     incorrect_answers = StringField('Comma separated list of incorrect answers (optional).')
+    difficulty = SelectField('Difficulty', choices=['', 'Very Easy', 'Easy', 'Medium', 'Hard', 'Very Hard'])
     submit = SubmitField('Confirm')
 
     def validate_question_template(self, question_template):
