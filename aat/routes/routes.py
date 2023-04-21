@@ -14,7 +14,12 @@ from ..forms.question_type_2 import QuestionType2FormCreate, QuestionType2FormEd
 # Home
 @app.route("/")
 def home():
-    return render_template('home.html', title='Home')
+    if current_user.is_authenticated:
+        if Staff.query.get(current_user.get_id()):
+            return redirect(url_for('view_staff_assessments'))
+        else:
+            return redirect(url_for('view_assessments'))
+    return redirect(url_for('login'))
 
 
 
@@ -498,4 +503,3 @@ def unarchive_assessment(assessment_id):
     db.session.commit()
     flash('The assessment has been activated successfully.')
     return redirect(request.referrer)
-
