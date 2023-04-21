@@ -286,17 +286,17 @@ def delete_question(id):
     question_to_delete = Question.query.get_or_404(id)
     if bool(question_to_delete.active):
         flash("Question is active so it can't be deleted.")
-        return render_template('display-questions.html', title='Questions',questions=questions)
+        return redirect(request.referrer)
     else:
         try:
             db.session.delete(question_to_delete)
             db.session.commit()
 
             flash("Question was deleted")
-        
+
             questions = Question.query.all()
-            return render_template('display-questions.html', title='Questions',questions=questions)
-        
+            return redirect(request.referrer)
+
         except Exception as e:
             print(e)
             flash("There was a problem deleting the question")
@@ -319,7 +319,7 @@ def edit_question(id):
             incorrect_answers = []
             for answer in qt1_form.incorrect_answers.data.split(','):
                 incorrect_answers.append(answer.strip())
-            
+
             question.title = qt1_form.title.data
             question.question_template = qt1_form.question_template.data.replace('BLANK', '{}')
             question.correct_answers = str(correct_answers)
@@ -335,7 +335,7 @@ def edit_question(id):
         qt1_form.incorrect_answers.data = ', '.join(ast.literal_eval(question.incorrect_answers))
         qt1_form.difficulty.data = question.difficulty
         return render_template('edit-qt1.html', qt1_form=qt1_form)
-    
+
     else:
         form = QuestionType2FormEdit()
         if form.validate_on_submit():
@@ -350,7 +350,7 @@ def edit_question(id):
             db.session.commit()
             flash("Question successfully updated")
             return redirect(url_for('questions',id=question.id))
-        
+
         form.title.data = question.title
         form.option1.data = question.option1
         form.option2.data = question.option2
