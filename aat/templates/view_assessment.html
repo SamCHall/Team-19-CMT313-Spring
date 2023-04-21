@@ -14,14 +14,14 @@
                 {% for question in questions %}
                 <div class="question">
                         {% if question.question_type == "question_type1" %}
-                        <div class="question_type1">
+                        <div class="question_type1" id="{{ loop.index }}">
                             <label class ="form-label" for="{{ loop.index }}_answer" id="question_template">
                                 {{ loop.index }}. {{ question.question_template|safe }} 
                             </label>
 
                             <div id="type_1_options">
                                 {% for option in question.options %}
-                                    <option class="border" draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
+                                    <option class="border btn btn-light" draggable="true" ondragstart="onDragStart(event)" value = "{{ option }}">{{ option }}</option>
                                 {% endfor %}
                             </div>
                         </div>
