@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+    <a class="btn btn-primary" href="{{ url_for('view_assessments') }}">Back to assessments</a>
+</section>
+<section class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{assignment.title}} - Results</h1>
+        </div>
+        <div class="card-body">
+            {% if type1_count != 0 %}
+            <h2 class="card-title">Fill in the blank</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Question Number</th>
+                        <th>Your Answer</th>
+                        <th>Correct Answer(s)</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for number, question in assignment.get_questions().items() %}
+                        {% if question.question_type == "question_type1" %}
+                            <tr>
+                                <td>{{ number }}.</td>
+                                <td>{{ question.question_template|safe }}</td>
+                                <td><p style="color: green">{{ question.correct_answers }}</p></td>
+                                <td>{{ question.score }}</td>
+                            </tr>
+                            {% endif %}
+                    {% endfor %}
+            </table>
+            {% endif %}
+            {% if type2_count != 0 %}
+            <h2 class="card-title">Multiple Choice</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Question Number</th>
+                        <th>Question</th>
+                        <th>Your Answer</th>
+                        <th>Correct Answer</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for number, question in assignment.get_questions().items() %}
+                        {% if question.question_type == "question_type2" %}
+                            <tr>
+                                <td>{{ number }}.</td>
+                                <td>{{ question.question_text }}</td>
+                                {% if question.question_answer == question.correctOption %}
+                                    <td><p style="color: green">{{ question.question_answer }}</p></td>
+                                {% else %}
+                                    <td><p style="color: red">{{ question.question_answer }}</p></td>
+                                {% endif %}
+                                <td><p style="color: green">{{ question.correctOption }}</p></td>
+                                <td>{{ question.score }}</td>
+                            </tr>
+                            {% endif %}
+                    {% endfor %}
+            </table>
+            {% endif %}
+    </div>
+        <div class = "card-footer">
+            <p id = "assessment-total-mark"> Total mark: {{ submission.mark }}/{{ total_available_mark }}</p>
+        </div>
+    </div>
+</section>
+{% endblock content %}

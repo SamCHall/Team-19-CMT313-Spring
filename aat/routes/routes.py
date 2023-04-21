@@ -1,5 +1,6 @@
 import random
 import ast
+import json
 from flask import render_template, abort, flash, request, redirect, url_for
 from flask_login import current_user, login_required
 
@@ -282,9 +283,63 @@ def submit_assessment(assessment_id):
             else:
                 submission.add_question_answer(question, submitted_answer, 0)
 
+    # Sending the redirect url to the front end so that the user can be redirected to the submission page.
 
-    # This will need to redirect to a page that shows the results of the assessment eventually.
-    return redirect(request.referrer)
+    response_data = {
+        'redirect_url': url_for('view_submission', assessment_id=assignment.id, submission_id=submission.id),
+    }
+
+    return json.dumps(response_data)
+
+
+
+@app.route('/view-assessment/<int:assessment_id>/submission/<int:submission_id>', methods=['GET'])
+@login_required
+def view_submission(assessment_id, submission_id):
+    assignment = Assignment.query.get_or_404(assessment_id)
+    submission = Submission.query.get_or_404(submission_id)
+    questions = AssignQuestion.get_assignment_questions(assessment_id).values()
+    questions_dict = AssignQuestion.get_assignment_questions(assessment_id)
+
+    total_available_mark = assignment.total_available_mark()
+    if submission.student_id != current_user.id:
+        abort(403, description="You are not the owner of this submission.")
+
+    type1_count = 0
+    type2_count = 0
+
+    for question in questions:
+        question_num = list(questions_dict.keys())[list(questions_dict.values()).index(question)]
+
+
+
+        if question.question_type == 'question_type1':
+            type1_count += 1
+            question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
+            question_answer = ast.literal_eval(question_answer)
+            question.score = assignment.get_student_question_submission(question_num, submission).question_mark
+            question.correct_answers = ast.literal_eval(question.correct_answers)
+
+            for i in range(len(question_answer)):
+                if question_answer[i] == question.correct_answers[i]:
+                    question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:green">{question_answer[i]}</span> ', 1)
+                elif question_answer[i] == "":
+                    question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:red">No answer</span> ', 1)
+                else:
+                    question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:red">{question_answer[i]}</span> ', 1)
+
+            question.correct_answers = str(question.correct_answers).replace('[', '').replace(']', '').replace("'", '')
+
+        elif question.question_type == 'question_type2':
+            type2_count += 1
+            question_answer = assignment.get_student_question_submission(question_num, submission)
+            if question_answer != None:
+                question.question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
+                question.score = assignment.get_student_question_submission(question_num, submission).question_mark
+            else:
+                question.score = 0
+
+    return render_template('view_submission.html', assignment = assignment, submission = submission, title = assignment.title, total_available_mark = total_available_mark, questions = questions, type1_count = type1_count, type2_count = type2_count)
 
 
 
