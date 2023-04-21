@@ -333,6 +333,7 @@ def edit_question(id):
         qt1_form.question_template.data = question.question_template.replace('{}', 'BLANK')
         qt1_form.correct_answers.data = ', '.join(ast.literal_eval(question.correct_answers))
         qt1_form.incorrect_answers.data = ', '.join(ast.literal_eval(question.incorrect_answers))
+        qt1_form.difficulty.data = question.difficulty
         return render_template('edit-qt1.html', qt1_form=qt1_form)
     
     else:
