@@ -13,7 +13,7 @@
             <h1 class="card-title">Available Assessments</h1>
         </div>
         <div class="card-body">
-            <table id="data" class="table">
+            <table id="data" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">Assessment</th>
@@ -29,7 +29,7 @@
                                 {% if current_user.id == item.id %}
                                     <tr>
                                         <td><a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">
-                                            {{ assignment.title }} <i class="fa-solid fa-eye fa-sm fa-fw"></i></a>
+                                            <i class="fa-solid fa-eye fa-sm fa-fw"></i> {{ assignment.title }}</a>
                                         </td>
                                         <td class = "text-center">
                                             {% if assignment.difficulty == "Very Easy" %}
