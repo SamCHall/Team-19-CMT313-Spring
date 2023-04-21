@@ -460,6 +460,34 @@ if User.query.count() <= 1:
     submission14.add_question_answer(q5, "Video games", 1)
     submission14.add_question_answer(q6, "Processor", 1)
 
+    submission16a = Submission(
+        assignment = assignment8,
+        student = student3,
+        attempt_number = 1,
+        mark = 9
+    )
+    db.session.add(submission16a)
+    submission16a.add_question_answer(q1, "['low-level', 'source']", 1)
+    submission16a.add_question_answer(q2, "['compiler', 'object']", 2)
+    submission16a.add_question_answer(q3, "['interpreter', 'statement', 'source', 'executes']", 4)
+    submission16a.add_question_answer(q4, "Multi purpose software", 1)
+    submission16a.add_question_answer(q5, "Video games", 1)
+    submission16a.add_question_answer(q6, "Keyboard", 0)
+
+    submission16 = Submission(
+        assignment = assignment8,
+        student = student3,
+        attempt_number = 2,
+        mark = 10
+    )
+    db.session.add(submission16)
+    submission16.add_question_answer(q1, "['high-level', 'source']", 2)
+    submission16.add_question_answer(q2, "['compiler', 'object']", 2)
+    submission16.add_question_answer(q3, "['interpreter', 'statement', 'source', 'executes']", 4)
+    submission16.add_question_answer(q4, "Multi purpose software", 1)
+    submission16.add_question_answer(q5, "Video games", 1)
+    submission16.add_question_answer(q6, "Keyboard", 0)
+
     submission15 = Submission(
         assignment = assignment8,
         student = student2,
@@ -473,20 +501,6 @@ if User.query.count() <= 1:
     submission15.add_question_answer(q4, "Multi purpose software", 1)
     submission15.add_question_answer(q5, "Video games", 1)
     submission15.add_question_answer(q6, "Processor", 1)
-
-    submission16 = Submission(
-        assignment = assignment8,
-        student = student3,
-        attempt_number = 1,
-        mark = 9
-    )
-    db.session.add(submission16)
-    submission16.add_question_answer(q1, "['low-level', 'source']", 1)
-    submission16.add_question_answer(q2, "['compiler', 'object']", 2)
-    submission16.add_question_answer(q3, "['interpreter', 'statement', 'source', 'executes']", 4)
-    submission16.add_question_answer(q4, "Multi purpose software", 1)
-    submission16.add_question_answer(q5, "Video games", 1)
-    submission16.add_question_answer(q6, "Keyboard", 0)
 
     submission17 = Submission(
         assignment = assignment8,

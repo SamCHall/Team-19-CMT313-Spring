@@ -144,7 +144,7 @@ def questions():
 def view_assessments():
     assignments = Assignment.query.all()
     for assignment in assignments:
-        assignment.mark = assignment.get_student_highest_mark(current_user.id)
+        assignment.mark = assignment.student_highest_mark(current_user)
         assignment.total_mark = assignment.total_available_mark()
     return render_template('view_assessments_list.html', title = 'Available Assessments', assignments = assignments)
 
