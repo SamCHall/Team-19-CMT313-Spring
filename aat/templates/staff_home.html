@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+    <div id="card-group">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card text-center" style="max-width: 35rem;">
+                    <div class="card-header">
+                        <h1>Assessments</h1>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('view_staff_assessments') }}" class="btn btn-primary btn-lg" id="top-button">View Assessments</a>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a href="{{ url_for('create_formative_assessment') }}" class="btn btn-dark btn-sm">Create Formative Assessment</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="{{ url_for('create_summative_assessment') }}" class="btn btn-dark btn-sm">Create Summative Assessment</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card text-center" style="max-width: 35rem;">
+                    <div class="card-header">
+                        <h1>Questions</h1>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('questions') }}" class="btn btn-primary btn-lg" id="top-button">View Questions</a>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a href="{{ url_for('create_question_type1') }}" class="btn btn-dark btn-sm">Create Fill in the Blank</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="{{ url_for('create_question_type2') }}" class="btn btn-dark btn-sm">Create Multiple Choice</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mx-auto text-center" style="max-width: 35rem;">
+            <div class="card-header">
+                <h1>Students</h1>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('student_list') }}" class="btn btn-primary btn-lg" id="top-button">View Students</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

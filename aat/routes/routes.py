@@ -17,10 +17,19 @@ from ..forms.question_type_2 import QuestionType2FormCreate, QuestionType2FormEd
 def home():
     if current_user.is_authenticated:
         if Staff.query.get(current_user.get_id()):
-            return redirect(url_for('view_staff_assessments'))
+            return redirect(url_for('staff_home'))
         else:
             return redirect(url_for('view_assessments'))
     return redirect(url_for('login'))
+
+
+
+@app.route("/staff/home")
+@login_required
+def staff_home():
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    return render_template('staff_home.html', title='Staff Home')
 
 
 
