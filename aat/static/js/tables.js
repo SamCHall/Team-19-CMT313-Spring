@@ -33,19 +33,11 @@ $(document).ready(function() {
     "columnDefs": [
       { type: 'difficulty', "targets": 1 }
     ],
-<<<<<<< HEAD
-      "aoColumns": [
-          { "bSortable": true },  // 0
-          { "bSortable": true },  // 1
-          { "bSortable": true },  // 2
-          { "bSortable": false,
-=======
     "aoColumns": [
       { "bSortable": true },  // 0
       { "bSortable": true },  // 1
       { "bSortable": true },  // 2
       { "bSortable": false,
->>>>>>> main
             "bSearchable": false }  // 3
           ]
         } );
