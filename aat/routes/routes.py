@@ -290,23 +290,26 @@ def view_submission(assessment_id, submission_id):
     submission = Submission.query.get_or_404(submission_id)
     questions = AssignQuestion.get_assignment_questions(assessment_id).values()
     questions_dict = AssignQuestion.get_assignment_questions(assessment_id)
-    
+
     total_available_mark = assignment.total_available_mark()
     if submission.student_id != current_user.id:
         abort(403, description="You are not the owner of this submission.")
 
+    type1_count = 0
+    type2_count = 0
+
     for question in questions:
         question_num = list(questions_dict.keys())[list(questions_dict.values()).index(question)]
-        
-        
+
+
 
         if question.question_type == 'question_type1':
-            
+            type1_count += 1
             question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
             question_answer = ast.literal_eval(question_answer)
             question.score = assignment.get_student_question_submission(question_num, submission).question_mark
             question.correct_answers = ast.literal_eval(question.correct_answers)
-            
+
             for i in range(len(question_answer)):
                 if question_answer[i] == question.correct_answers[i]:
                     question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:green">{question_answer[i]}</span> ', 1)
@@ -316,16 +319,17 @@ def view_submission(assessment_id, submission_id):
                     question.question_template = str(question.question_template).replace('{}', f' <span class= "answer" style="color:red">{question_answer[i]}</span> ', 1)
 
             question.correct_answers = str(question.correct_answers).replace('[', '').replace(']', '').replace("'", '')
-            
+
         elif question.question_type == 'question_type2':
+            type2_count += 1
             question_answer = assignment.get_student_question_submission(question_num, submission)
             if question_answer != None:
                 question.question_answer = assignment.get_student_question_submission(question_num, submission).submission_answer
                 question.score = assignment.get_student_question_submission(question_num, submission).question_mark
             else:
                 question.score = 0
-        
-    return render_template('view_submission.html', assignment = assignment, submission = submission, title = assignment.title, total_available_mark = total_available_mark, questions = questions)
+
+    return render_template('view_submission.html', assignment = assignment, submission = submission, title = assignment.title, total_available_mark = total_available_mark, questions = questions, type1_count = type1_count, type2_count = type2_count)
 
 
 
@@ -341,10 +345,10 @@ def delete_question(id):
             db.session.commit()
 
             flash("Question was deleted")
-        
+
             questions = Question.query.all()
             return render_template('display-questions.html', title='Questions',questions=questions)
-        
+
         except Exception as e:
             print(e)
             flash("There was a problem deleting the question")
@@ -367,7 +371,7 @@ def edit_question(id):
             incorrect_answers = []
             for answer in qt1_form.incorrect_answers.data.split(','):
                 incorrect_answers.append(answer.strip())
-            
+
             print(qt1_form.title.data)
             question.title = qt1_form.title.data
             question.question_template = qt1_form.question_template.data.replace('BLANK', '{}')
@@ -382,7 +386,7 @@ def edit_question(id):
         qt1_form.correct_answers.data = ', '.join(ast.literal_eval(question.correct_answers))
         qt1_form.incorrect_answers.data = ', '.join(ast.literal_eval(question.incorrect_answers))
         return render_template('edit-qt1.html', qt1_form=qt1_form)
-    
+
     else:
         form = QuestionType2FormEdit()
         if form.validate_on_submit():
@@ -397,7 +401,7 @@ def edit_question(id):
             db.session.commit()
             flash("Question successfully updated")
             return redirect(url_for('questions',id=question.id))
-        
+
         form.title.data = question.title
         form.option1.data = question.option1
         form.option2.data = question.option2

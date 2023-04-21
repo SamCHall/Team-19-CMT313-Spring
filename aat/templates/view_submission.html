@@ -9,6 +9,7 @@
             <h1 class="card-title">{{assignment.title}} - Results</h1>
         </div>
         <div class="card-body">
+            {% if type1_count != 0 %}
             <h2 class="card-title">Fill in the blank</h2>
             <table class="table">
                 <thead>
@@ -31,6 +32,8 @@
                             {% endif %}
                     {% endfor %}
             </table>
+            {% endif %}
+            {% if type2_count != 0 %}
             <h2 class="card-title">Multiple Choice</h2>
             <table class="table">
                 <thead>
@@ -59,6 +62,7 @@
                             {% endif %}
                     {% endfor %}
             </table>
+            {% endif %}
     </div>
         <div class = "card-footer">
             <p id = "assessment-total-mark"> Total mark: {{ submission.mark }}/{{ total_available_mark }}</p>
