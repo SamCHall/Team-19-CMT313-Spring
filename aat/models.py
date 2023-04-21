@@ -258,12 +258,6 @@ class Assignment(db.Model):
                 total += 1
         return total
 
-    def get_student_highest_mark(self, student_id):
-        attempt_marks = [submission.mark for submission in self.submissions if submission.student_id==student_id]
-        if len(attempt_marks) > 0:
-            return max(attempt_marks)
-        return 0
-
     def get_student_marks_export(self):
 
         out_string = "Student ID,Surname,First Name,Cohort,Attempt Number,Mark,Percentage\n"
