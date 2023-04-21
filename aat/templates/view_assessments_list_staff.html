@@ -41,7 +41,7 @@
               {% if current_user.id == item.id %}
               <tr>
                 <td>
-                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}">{{ assignment.title }} <i class="fa-solid fa-eye fa-sm fa-fw"></i></a>
+                  <a href="{{ url_for('view_assessment', assessment_id = assignment.id)}}"><i class="fa-solid fa-eye fa-sm fa-fw"></i> {{ assignment.title }}</a>
                 </td>
                 <td class="text-center">
                   {% if assignment.difficulty == "Very Easy" %}
