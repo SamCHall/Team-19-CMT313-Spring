@@ -301,6 +301,15 @@ class FormativeAssignment(Assignment):
                 })
         return out
 
+    def get_student_marks_export(self):
+
+        out_string = "Student ID,Surname,First Name,Cohort,Number of Attempts,Best Mark,Percentage\n"
+        for student, marks in self.get_student_marks().items():
+            out_string += f"{student.id},{student.surname},{student.first_name},{student.cohort},{marks['attempts']},{marks['mark']},{marks['attempts']/self.max_mark()*100}\n"
+
+        return out_string
+
+
 class SummativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
 
