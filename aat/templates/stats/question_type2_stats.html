@@ -6,20 +6,17 @@
         </div>
 
         <div class="card-body stats-outer">
-            <div class="card-body">
-                <p>Question: {{ question.question_text }}</p>
-                <ul>
-                    <li>{{ question.option1 }}</li>
-                    <li>{{ question.option2 }}</li>
-                    <li>{{ question.option3 }}</li>
-                    <li>{{ question.option4 }}</li>
-                </ul>
-                <p>Correct answer: {{ question.correctOption }}</p>
-            </div>
-
             <div class="card-group">
                 <div class="card stats-inner">
                     <div class="card-body">
+                        <p>Question: {{ question.question_text }}</p>
+                        <ul>
+                            <li>{{ question.option1 }}</li>
+                            <li>{{ question.option2 }}</li>
+                            <li>{{ question.option3 }}</li>
+                            <li>{{ question.option4 }}</li>
+                        </ul>
+                        <p>Correct answer: {{ question.correctOption }}</p>
                         <h2>Performance</h2>
                         <ul>
                             <li>Number of submissions: {{ submissions | length }}</li>
