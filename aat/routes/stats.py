@@ -70,6 +70,9 @@ def assessment_question_stats(id, question_num):
 
     assignment = Assignment.query.filter_by(id=id).first_or_404()
 
+    if question_num not in assignment.get_questions().keys():
+        abort(404)
+
     question = assignment.get_questions()[question_num]
 
     match question.question_type:
