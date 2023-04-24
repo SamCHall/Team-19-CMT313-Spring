@@ -577,6 +577,12 @@ class QuestionType1(Question):
     def max_mark(self):
         return self.num_of_blanks()
 
+    def filled_in(self):
+        out = self.question_template
+        for blank in self.list_correct_answers():
+            out = str(out).replace('{}', f' <b>{blank}</b>', 1)
+        return out
+
     def list_correct_answers(self):
         """ Method to convert the string representation of the list in the db to a list """
         return eval(self.correct_answers)
@@ -584,6 +590,9 @@ class QuestionType1(Question):
     def list_incorrect_answers(self):
         """ Method to convert the string representation of the list in the db to a list """
         return eval(self.incorrect_answers)
+
+    def incorrect_answers_string(self):
+        return ", ".join(self.list_incorrect_answers())
 
     def num_of_blanks(self):
         """ Method to count the number of blanks in the question """
