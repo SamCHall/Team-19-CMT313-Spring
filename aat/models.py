@@ -265,14 +265,6 @@ class Assignment(db.Model):
                 total += 1
         return total
 
-    def get_student_marks_export(self):
-
-        out_string = "Student ID,Surname,First Name,Cohort,Attempt Number,Mark,Percentage\n"
-        for submission in self.submissions:
-            out_string += f"{submission.student.id},{submission.student.surname},{submission.student.first_name},{submission.student.cohort},{submission.attempt_number},{submission.mark},{submission.mark/self.max_mark()*100}\n"
-
-        return out_string
-
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
     difficulty = db.Column(db.String, nullable=False)
@@ -317,6 +309,13 @@ class SummativeAssignment(Assignment):
         "polymorphic_identity": "summative_assignment",
     }
 
+    def get_student_marks_export(self):
+
+        out_string = "Student ID,Surname,First Name,Cohort,Mark,Percentage\n"
+        for submission in self.submissions:
+            out_string += f"{submission.student.id},{submission.student.surname},{submission.student.first_name},{submission.student.cohort},{submission.mark},{submission.mark/self.max_mark()*100}\n"
+
+        return out_string
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
