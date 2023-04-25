@@ -48,8 +48,13 @@
                         <td>{{ student.first_name }} {{ student.surname }}</td>
                         <td>{{ student.cohort }}</td>
                         <td>{{ marks.attempts }}</td>
+                        {% if marks.attempts > 0 %}
                         <td>{{ marks.mark }}</td>
                         <td>{{ '%0.1f' | format(marks.percentage) }}%</td>
+                        {% else %}
+                        <td>No Submission</td>
+                        <td>No Submission</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
