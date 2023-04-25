@@ -625,7 +625,7 @@ class QuestionType1(Question):
     def filled_in(self):
         out = self.question_template
         for blank in self.list_correct_answers():
-            out = str(out).replace('{}', f' <b>{blank}</b>', 1)
+            out = str(out).replace('{}', f' <b><u>{blank}</u></b>', 1)
         return out
 
     def list_correct_answers(self):

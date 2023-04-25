@@ -16,8 +16,8 @@
                 </thead>
                 <tbody>
                     {% for module in student.modules %}
-                    <tr>
-                        <td><a href="#{{ module.code }}">{{ module.code }} - {{ module.name }}</a></td>
+                    <tr class="clickable-row" data-href="#{{ module.code }}">
+                        <td>{{ module.code }} - {{ module.name }}</td>
                         <td>{{ module.completed_assessments(student) }}</td>
                         <td>{{ module.not_completed_assessments(student) }}</td>
                         <td>
