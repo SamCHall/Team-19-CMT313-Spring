@@ -7,6 +7,11 @@
 {% endblock head %}
 
 {% block content %}
+
+<section class="container">
+    <a class="btn btn-primary" href="{{ url_for('view_staff_assessments') }}">Back to assessments</a>
+</section>
+
 {% if assignment.number_of_submissions() > 0 %}
 <section class="container">
     <div class="card">

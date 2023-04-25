@@ -12,9 +12,6 @@
                         <p>Question: {{ question.filled_in() | safe }}</p>
                         <p>Incorrect options: {{ question.incorrect_answers_string() }}</p>
                         <h2>Performance</h2>
-                        <ul>
-                            <li>Number of blanks: {{ question.num_of_blanks() }}</li>
-                        </ul>
                         {# Stats for the question as a whole #}
                         <table class="table table-striped table-hover">
                             <thead>
