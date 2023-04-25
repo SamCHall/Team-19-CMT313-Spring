@@ -198,7 +198,13 @@ class Assignment(db.Model):
         marks = [submission.mark for submission in self.submissions if submission.student == student]
         if marks:
             return max(marks)
-        print(f"{self.title} hi")
+        return None
+
+    def student_highest_mark_id(self, student):
+        if (max_mark := self.student_highest_mark(student)) != None:
+            for submission in self.submissions:
+                if submission.student == student and submission.mark == max_mark:
+                    return submission.id
         return None
 
     def student_percentage(self, student):
@@ -299,6 +305,9 @@ class Assignment(db.Model):
     def cohort_students(self, cohort):
         return [student for student in self.module.get_students() if student.cohort == cohort]
 
+    def num_of_attempts(self, student):
+        return Submission.get_current_attempt_number(student.id, self.id)
+
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
     difficulty = db.Column(db.String, nullable=False)
@@ -306,9 +315,6 @@ class FormativeAssignment(Assignment):
     __mapper_args__ = {
         "polymorphic_identity": "formative_assignment",
     }
-
-    def num_of_attempts(self, student):
-        return Submission.get_current_attempt_number(student.id, self.id)
 
     def get_student_marks(self):
         out = {student : {'mark':-1, 'attempts': 0, 'percentage': 0, 'sub_id': ''} for student in self.module.get_students()}
