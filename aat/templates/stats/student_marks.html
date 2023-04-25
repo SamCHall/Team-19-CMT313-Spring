@@ -43,7 +43,7 @@
                 </tfoot>
                 <tbody>
                 {% for student, marks in assignment.get_student_marks().items() %}
-                    <tr>
+                    <tr {% if marks.attempts > 0 %} class="clickable-row" data-href="{{ url_for('view_submission', assessment_id=assignment.id, submission_id=marks.sub_id) }}"{% endif %}>
                         <td>{{ student.id }}</td>
                         <td>{{ student.first_name }} {{ student.surname }}</td>
                         <td>{{ student.cohort }}</td>

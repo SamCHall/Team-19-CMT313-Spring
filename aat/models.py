@@ -311,14 +311,14 @@ class FormativeAssignment(Assignment):
         return Submission.get_current_attempt_number(student.id, self.id)
 
     def get_student_marks(self):
-        out = {student : {'mark':-1, 'attempts': 0, 'percentage': 0} for student in self.module.get_students()}
+        out = {student : {'mark':-1, 'attempts': 0, 'percentage': 0, 'sub_id': ''} for student in self.module.get_students()}
 
         for submission in self.submissions:
             out[submission.student]["attempts"] += 1
             if submission.mark > out[submission.student]["mark"]:
                 out[submission.student]["mark"] = submission.mark
                 out[submission.student]["percentage"] = submission.mark / self.max_mark() * 100
-
+                out[submission.student]["sub_id"] = submission.id
         return out
 
     def get_student_marks_export(self):
