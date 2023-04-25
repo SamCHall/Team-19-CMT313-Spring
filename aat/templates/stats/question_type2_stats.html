@@ -18,11 +18,34 @@
                         </ul>
                         <p>Correct answer: {{ question.correctOption }}</p>
                         <h2>Performance</h2>
-                        <ul>
-                            <li>Number of submissions: {{ submissions | length }}</li>
-                            <li>Number of correct submissions: {{ question.correct_submissions_number(submissions) }}</li>
-                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_submissions_percent(submissions)) }}%</li>
-                        </ul>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Cohort</th>
+                                    <th>Submissions</th>
+                                    <th>Correct Submissions</th>
+                                    <th>Percentage Correct</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cohort in question.cohorts() %}
+                                <tr>
+                                    <td>{{ cohort }}</td>
+                                    <td>{{ question.cohort_submissions(cohort, submissions) | length }}</td>
+                                    <td>{{ question.correct_submissions_number(question.cohort_submissions(cohort, submissions)) }}</td>
+                                    <td>{{ '%0.1f' | format(question.correct_submissions_percent(question.cohort_submissions(cohort, submissions))) }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>All</th>
+                                    <th>{{ submissions | length }}</th>
+                                    <th>{{ question.correct_submissions_number(submissions) }}</th>
+                                    <th>{{ '%0.1f' | format(question.correct_submissions_percent(submissions)) }}%</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
 
