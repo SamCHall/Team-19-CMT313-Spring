@@ -210,15 +210,25 @@ class Assignment(db.Model):
     def max_mark(self):
         return sum([question.max_mark() for question in self.get_questions().values()])
 
-    def number_of_submissions(self):
-        return len(self.submissions)
+    def number_of_submissions(self, cohort = None):
+        if not cohort:
+            return len(self.submissions)
+        return len(self.cohort_submissions(cohort))
 
-    def number_of_students_submitted(self):
-        students = set([submission.student for submission in self.submissions])
+    def number_of_students_submitted(self, cohort = None):
+        if not cohort:
+            submissions = self.submissions
+        else:
+            submissions = self.cohort_submissions(cohort)
+
+        students = set([submission.student for submission in submissions])
         return len(students)
 
-    def number_of_students_not_submitted(self):
-        return len(self.module.get_students()) - self.number_of_students_submitted()
+    def number_of_students_not_submitted(self, cohort = None):
+        if not cohort:
+            return len(self.module.get_students()) - self.number_of_students_submitted()
+
+        return len(self.cohort_students(cohort)) - self.number_of_students_submitted(cohort)
 
     def mark_dist(self):
         """
@@ -246,14 +256,29 @@ class Assignment(db.Model):
 
         return results
 
-    def lowest_mark(self):
-        return min([submission.mark for submission in self.submissions])
+    def lowest_mark(self, cohort = None):
+        if not cohort:
+            submissions = self.submissions
+        else:
+            submissions = self.cohort_submissions(cohort)
 
-    def highest_mark(self):
-        return max([submission.mark for submission in self.submissions])
+        return min([submission.mark for submission in submissions])
 
-    def average_mark(self):
-        return statistics.mean([submission.mark for submission in self.submissions])
+    def highest_mark(self, cohort = None):
+        if not cohort:
+            submissions = self.submissions
+        else:
+            submissions = self.cohort_submissions(cohort)
+
+        return max([submission.mark for submission in submissions])
+
+    def average_mark(self, cohort = None):
+        if not cohort:
+            submissions = self.submissions
+        else:
+            submissions = self.cohort_submissions(cohort)
+
+        return statistics.mean([submission.mark for submission in submissions])
 
     def total_available_mark(self):
         questions = self.get_questions().values()
@@ -264,6 +289,15 @@ class Assignment(db.Model):
             else:
                 total += 1
         return total
+
+    def cohorts(self):
+        return set([student.cohort for student in self.module.get_students()])
+
+    def cohort_submissions(self, cohort):
+        return [submission for submission in self.submissions if submission.student.cohort == cohort]
+
+    def cohort_students(self, cohort):
+        return [student for student in self.module.get_students() if student.cohort == cohort]
 
 class FormativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
@@ -300,9 +334,6 @@ class FormativeAssignment(Assignment):
             out_string += f"{student.id},{student.surname},{student.first_name},{student.cohort},{marks['attempts']},{marks['mark']},{marks['attempts']/self.max_mark()*100}\n"
 
         return out_string
-
-    def cohorts(self):
-        return set([submission.student.cohort for submission in self.submissions])
 
 
 class SummativeAssignment(Assignment):

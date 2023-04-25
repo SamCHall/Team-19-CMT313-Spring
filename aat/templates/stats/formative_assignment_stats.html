@@ -15,20 +15,54 @@
         </div>
 
         <div class="card-body stats-outer">
-            <div class="card-group">
-                <div class="card stats-inner">
+            <!-- <div class="card-group"> -->
+                <!-- <div class="card stats-inner"> -->
                     <div class="card-body">
                         <h2>Overall Performance</h2>
 
-                        <ul>
-                            <li>Number of submissions: {{ assignment.number_of_submissions() }}</li>
-                            <li>Number of students who have submitted: {{ assignment.number_of_students_submitted()}}</li>
-                            <li>Number of students who have not submitted: {{ assignment.number_of_students_not_submitted()}}</li>
-
-                            <li>Highest Mark: {{ assignment.highest_mark() }}</li>
-                            <li>Lowest Mark: {{ assignment.lowest_mark() }}</li>
-                            <li>Average Mark: {{ '%0.1f' | format( assignment.average_mark()) }}</li>
-                        </ul>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Cohort</th>
+                                    <th>Submissions</th>
+                                    <th>Students submitted</th>
+                                    <th>Students not submitted</th>
+                                    <th>Average Mark</th>
+                                    <th>Highest Mark</th>
+                                    <th>Lowest Mark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cohort in assignment.cohorts() %}
+                                <tr>
+                                    <td>{{ cohort }}</td>
+                                    <td>{{ assignment.number_of_submissions(cohort) }}</td>
+                                    <td>{{ assignment.number_of_students_submitted(cohort) }}</td>
+                                    <td>{{ assignment.number_of_students_not_submitted(cohort) }}</td>
+                                    {% if assignment.number_of_submissions(cohort) > 0 %}
+                                    <td>{{ '%0.1f' | format( assignment.average_mark(cohort)) }}</td>
+                                    <td>{{ assignment.highest_mark(cohort) }}</td>
+                                    <td>{{ assignment.lowest_mark(cohort) }}</td>
+                                    {% else %}
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>All</th>
+                                    <th>{{ assignment.number_of_submissions() }}</th>
+                                    <th>{{ assignment.number_of_students_submitted() }}</th>
+                                    <th>{{ assignment.number_of_students_not_submitted() }}</th>
+                                    <th>{{ '%0.1f' | format( assignment.average_mark()) }}</th>
+                                    <th>{{ assignment.highest_mark() }}</th>
+                                    <th>{{ assignment.lowest_mark() }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
 
                         <a class="btn btn-primary" href="{{ url_for('assessment_marks_export', id=assignment.id) }}"><i class="fa-solid fa-download"></i> Download Marks</a>
                         <a class="btn btn-primary" href="{{ url_for('assessment_marks_list', id=assignment.id) }}">View Marks</a>
@@ -69,8 +103,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                <!-- </div> -->
+            <!-- </div> -->
         </div>
     </div>
 </section>
