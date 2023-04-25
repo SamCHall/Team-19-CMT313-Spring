@@ -29,11 +29,12 @@
                             </thead>
                             <tbody>
                                 {% for cohort in question.cohorts() %}
+                                {% set cohort_sumbmissions = question.cohort_submissions(cohort, submissions) %}
                                 <tr>
                                     <td>{{ cohort }}</td>
-                                    <td>{{ question.cohort_submissions(cohort, submissions) | length }}</td>
-                                    <td>{{ question.correct_submissions_number(question.cohort_submissions(cohort, submissions)) }}</td>
-                                    <td>{{ '%0.1f' | format(question.correct_submissions_percent(question.cohort_submissions(cohort, submissions))) }}%</td>
+                                    <td>{{ cohort_sumbmissions | length }}</td>
+                                    <td>{{ question.correct_submissions_number(cohort_sumbmissions) }}</td>
+                                    <td>{{ '%0.1f' | format(question.correct_submissions_percent(cohort_sumbmissions)) }}%</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -67,7 +68,7 @@
                                 <script type="text/javascript">
                                 {
                                     let data = barGraphData({{ question.option_choice_quantity(submissions) | safe }});
-                                    displayGraph('optionsGraph', 'Options', data);
+                                    displayGraph('optionsGraph', 'All Submissions', data);
                                 }
                                 </script>
 
@@ -79,7 +80,7 @@
                                 <script type="text/javascript">
                                 {
                                     let data = cohortBarGraphData({{ question.option_choice_quantity_cohort(submissions) | safe }});
-                                    displayGraph('optionsGraphCohort', 'Options by cohort', data);
+                                    displayGraph('optionsGraphCohort', 'Submissions by cohort', data);
                                 }
                                 </script>
                             </div>

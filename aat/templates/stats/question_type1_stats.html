@@ -28,12 +28,13 @@
                             </thead>
                             <tbody>
                                 {% for cohort in question.cohorts() %}
+                                {% set cohort_sumbmissions = question.cohort_submissions(cohort, submissions) %}
                                 <tr>
                                     <td>{{ cohort }}</td>
-                                    <td>{{ question.cohort_submissions(cohort, submissions) | length }}</td>
-                                    <td>{{ '%0.1f' | format(question.average_mark(question.cohort_submissions(cohort, submissions))) }}</td>
-                                    <td>{{ question.lowest_mark(question.cohort_submissions(cohort, submissions)) }}</td>
-                                    <td>{{ question.highest_mark(question.cohort_submissions(cohort, submissions)) }}</td>
+                                    <td>{{ question.cohort_sumbmissions | length }}</td>
+                                    <td>{{ '%0.1f' | format(question.average_mark(cohort_sumbmissions)) }}</td>
+                                    <td>{{ question.lowest_mark(cohort_sumbmissions) }}</td>
+                                    <td>{{ question.highest_mark(cohort_sumbmissions) }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
