@@ -17,10 +17,19 @@ from ..forms.question_type_2 import QuestionType2FormCreate, QuestionType2FormEd
 def home():
     if current_user.is_authenticated:
         if Staff.query.get(current_user.get_id()):
-            return redirect(url_for('view_staff_assessments'))
+            return redirect(url_for('staff_home'))
         else:
             return redirect(url_for('view_assessments'))
     return redirect(url_for('login'))
+
+
+
+@app.route("/staff/home")
+@login_required
+def staff_home():
+    if Staff.query.get(current_user.get_id()) == None:
+        abort(403, description="This page can only be accessed by staff.")
+    return render_template('staff_home.html', title='Staff Home')
 
 
 
@@ -53,6 +62,7 @@ def create_formative_assessment():
 
         for question in question_list:
             FormativeAssignment.add_question(assignment, question, question_order.pop(0))
+        return redirect(url_for('staff_home'))
 
     return render_template('create_formative.html', title='Create Assessment', form = form, error=form.errors.get('question_order'))
 
@@ -263,21 +273,22 @@ def submit_assessment(assessment_id):
     db.session.add(simplified_submission)
 
     # The below code is used to add the answers to the database with their individual marks.
+    last_index = 0  # initialize the index of the last answer that was processed
     for question in questions:
         if question.question_type == 'question_type1':
             num_blanks = QuestionType1.num_of_blanks(question)
             submitted_answer = []
             mark = 0
             for i in range(num_blanks):
-                submitted_answer.append(type1_answer_values[i])
-                if submitted_answer[i] == type1_correct_answers_list[i]:
+                submitted_answer.append(type1_answer_values[last_index + i])
+                print(submitted_answer[i])
+                print(type1_correct_answers_list[last_index + i])
+                if submitted_answer[i] == type1_correct_answers_list[last_index + i]:
                     mark += 1
             submission.add_question_answer(question, str(submitted_answer), mark)
-            type1_answer_values = type1_answer_values[num_blanks:] # Trims off the start of the list so the for loop begins again at the next question.
+            last_index += num_blanks  # update the index of the last answer that was processed
         else:
-
-            submitted_answer = type2_answer_values[type2_questions.index(question)] # Gets the index of the question in the list of questions and uses that to get the answer from the list of answers.
-
+            submitted_answer = type2_answer_values[type2_questions.index(question)]
             if question.correctOption == submitted_answer:
                 submission.add_question_answer(question, submitted_answer, 1)
             else:

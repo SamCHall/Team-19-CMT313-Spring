@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-center" id="full-screen-div">
+<section class="container my-auto" style = "margin-top: auto; margin-bottom: auto">
+    <div id="card-group">
+        <div class="row align-content-center">
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h1>Assessments</h1>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('view_staff_assessments') }}" class="btn btn-primary btn-lg" id="top-button">View Assessments</a>
+                        <div class="row justify-content-center">
+                            <div class="col">
+                                <a href="{{ url_for('create_formative_assessment') }}" class="btn btn-dark">Create Formative Assessment</a>
+                            </div>
+                            <div class="col">
+                                <a href="{{ url_for('create_summative_assessment') }}" class="btn btn-dark">Create Summative Assessment</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" id="right-col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h1>Questions</h1>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('questions') }}" class="btn btn-primary btn-lg" id="top-button">View Questions</a>
+                        <div class="row justify-content-center">
+                            <div class="col">
+                                <a href="{{ url_for('create_question_type1') }}" class="btn btn-dark">Create Fill in the Blank</a>
+                            </div>
+                            <div class="col">
+                                <a href="{{ url_for('create_question_type2') }}" class="btn btn-dark">Create Multiple Choice</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mx-auto text-center" id="bottom-card">
+            <div class="card-header">
+                <h1>Students</h1>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('student_list') }}" class="btn btn-primary btn-lg" id="top-button">View Students</a>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+{% endblock content %}
