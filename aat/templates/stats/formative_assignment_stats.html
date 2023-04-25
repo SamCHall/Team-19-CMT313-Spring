@@ -88,6 +88,20 @@
             <div class="card-group">
                 <div class="card stats-inner">
                     <div class="card-body">
+                        {% if question.question_type == 'question_type1' %}
+                        <p>Question: {{ question.filled_in() | safe }}</p>
+                        <p>Incorrect options: {{ question.incorrect_answers_string() }}</p>
+                        {% elif question.question_type == 'question_type2' %}
+                        <p>Question: {{ question.question_text }}</p>
+                        <ul>
+                            <li>{{ question.option1 }}</li>
+                            <li>{{ question.option2 }}</li>
+                            <li>{{ question.option3 }}</li>
+                            <li>{{ question.option4 }}</li>
+                        </ul>
+                        <p>Correct answer: {{ question.correctOption }}</p>
+                        {% endif %}
+                        <h3>Question Performance</h3>
                         <ul>
                             <li>Average Mark: {{ '%0.1f' | format(question.average_mark(submissions)) }}</li>
                             <li>Lowest Mark: {{ question.lowest_mark(submissions) }}</li>
