@@ -12,14 +12,41 @@
                         <p>Question: {{ question.filled_in() | safe }}</p>
                         <p>Incorrect options: {{ question.incorrect_answers_string() }}</p>
                         <h2>Performance</h2>
-                        {# Stats for the question as a whole #}
                         <ul>
-                            <li>Number of submissions: {{ submissions | length }}</li>
                             <li>Number of blanks: {{ question.num_of_blanks() }}</li>
-                            <li>Average Mark: {{ '%0.1f' | format(question.average_mark(submissions)) }}</li>
-                            <li>Lowest Mark: {{ question.lowest_mark(submissions) }}</li>
-                            <li>Highest Mark: {{ question.highest_mark(submissions) }}</li>
                         </ul>
+                        {# Stats for the question as a whole #}
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Chort</th>
+                                    <th>Submissions</th>
+                                    <th>Average Mark</th>
+                                    <th>Lowest Mark</th>
+                                    <th>Highest Mark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cohort in question.cohorts() %}
+                                <tr>
+                                    <td>{{ cohort }}</td>
+                                    <td>{{ question.cohort_submissions(cohort, submissions) | length }}</td>
+                                    <td>{{ '%0.1f' | format(question.average_mark(question.cohort_submissions(cohort, submissions))) }}</td>
+                                    <td>{{ question.lowest_mark(question.cohort_submissions(cohort, submissions)) }}</td>
+                                    <td>{{ question.highest_mark(question.cohort_submissions(cohort, submissions)) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>All</th>
+                                    <th>{{ submissions | length }}</th>
+                                    <th>{{ '%0.1f' | format(question.average_mark(submissions)) }}</th>
+                                    <th>{{ question.lowest_mark(submissions) }}</th>
+                                    <th>{{ question.highest_mark(submissions) }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
 

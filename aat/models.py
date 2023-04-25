@@ -301,6 +301,9 @@ class FormativeAssignment(Assignment):
 
         return out_string
 
+    def cohorts(self):
+        return set([submission.student.cohort for submission in self.submissions])
+
 
 class SummativeAssignment(Assignment):
     id = db.Column(db.Integer, db.ForeignKey("assignment.id"), primary_key=True)
@@ -538,7 +541,7 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         if not submissions:
             submissions = self.submissions
 
-        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        cohorts = self.cohorts(submissions)
         results = {}
 
         for cohort in cohorts:
@@ -558,6 +561,17 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
         if not submissions:
             submissions = self.submissions
         return max([submission.question_mark for submission in submissions])
+
+    def cohorts(self, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+        return set([submission.submission.student.cohort for submission in submissions])
+
+    def cohort_submissions(self, cohort, submissions = None):
+        if not submissions:
+            submissions = self.submissions
+
+        return [submission for submission in submissions if submission.submission.student.cohort == cohort]
 
 
 class QuestionType1(Question):
@@ -641,7 +655,7 @@ class QuestionType1(Question):
         if not submissions:
             submissions = self.submissions
 
-        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        cohorts = self.cohorts(submissions)
         results = {}
 
         for cohort in cohorts:
@@ -708,7 +722,7 @@ class QuestionType2(Question):
         if not submissions:
             submissions = self.submissions
 
-        cohorts = set([submission.submission.student.cohort for submission in submissions])
+        cohorts = self.cohorts(submissions)
         results = {}
 
         for cohort in cohorts:
