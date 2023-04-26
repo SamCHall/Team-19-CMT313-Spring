@@ -18,10 +18,7 @@ def login():
         user = User.query.filter_by(username = form.username.data).first()
         login_user(user, remember=form.remember_me.data)
         flash('Login Successful', 'info')
-        if Staff.query.get(current_user.get_id()):
-            return redirect(url_for('view_staff_assessments'))
-        else:
-            return redirect(url_for('view_assessments'))
+        return redirect('/')
 
     return render_template('auth/login.html', title='Login', form=form)
 

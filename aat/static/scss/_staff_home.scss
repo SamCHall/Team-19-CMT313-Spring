@@ -1,0 +1,19 @@
+div#card-group{
+    div.card{
+        width: 100%;
+    }
+    div#bottom-card{
+    width: calc(50% - 10px);
+    }
+    div.row{
+        margin-bottom: 20px;
+        a#top-button{
+                margin-bottom: 20px;
+            }
+    }
+}
+div#full-screen-div{
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 76px);
+}
