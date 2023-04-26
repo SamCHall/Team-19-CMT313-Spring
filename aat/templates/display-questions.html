@@ -43,7 +43,7 @@
                         <tbody>
                             {% for question in questions %}
                                 <tr>
-                                    <td>{{ question.title }}</td>
+                                    <td><a href="{{ url_for('view_question', id=question.id) }}">{{ question.title }}</a></td>
                                     <td>
                                         {% if question.question_type == 'question_type1' %}
                                             Fill in the Blank
@@ -79,7 +79,6 @@
                                         {% endif %}
                                         <a href="{{ url_for('view_question', id=question.id) }}" data-toggle="tooltip" title="View"><i class="fa-solid fa-eye fa-large fa-fw"></i></a>
                                         <a href="{{ url_for('edit_question', id=question.id) }}" data-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square fa-large fa-fw"></i></a>
-                                        <!-- <a href="{{ url_for('delete_question', id=question.id) }}" data-toggle="tooltip" title="Delete" onclick="return confirmDeleteQ(this)"><i class="fa-solid fa-trash fa-large fa-fw"></i></a> -->
                                         <a role="button" data-bs-toggle="modal" data-bs-target="#question_{{ question.id }}" data-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash fa-large fa-fw"></i></a>
                                     </td>
                                 </tr>
