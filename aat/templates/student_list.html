@@ -8,10 +8,6 @@
 
 {% block content %}
 <section class="container">
-    <a class="btn btn-primary" href="{{ url_for('staff_home') }}">Back to home</a>
-  </section>
-
-<section class="container">
     <div class="card">
         <div class="card-header">
             <h1 class="card-title">Students</h1>
@@ -34,6 +30,9 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-primary float-end" href="{{ url_for('staff_home') }}">Back to home</a>
         </div>
     </div>
 </section>
