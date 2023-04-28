@@ -323,7 +323,7 @@ class FormativeAssignment(Assignment):
             out[submission.student]["attempts"] += 1
             if submission.mark > out[submission.student]["mark"]:
                 out[submission.student]["mark"] = submission.mark
-                out[submission.student]["percentage"] = submission.mark / self.max_mark() * 100
+                out[submission.student]["percentage"] = (submission.mark / self.max_mark() * 100)
                 out[submission.student]["sub_id"] = submission.id
         return out
 
@@ -331,7 +331,7 @@ class FormativeAssignment(Assignment):
 
         out_string = "Student ID,Surname,First Name,Cohort,Number of Attempts,Best Mark,Percentage\n"
         for student, marks in self.get_student_marks().items():
-            out_string += f"{student.id},{student.surname},{student.first_name},{student.cohort},{marks['attempts']},{marks['mark']},{marks['attempts']/self.max_mark()*100}\n"
+            out_string += f"{student.id},{student.surname},{student.first_name},{student.cohort},{marks['attempts']},{marks['mark']},{marks['percentage']}\n"
 
         return out_string
 
