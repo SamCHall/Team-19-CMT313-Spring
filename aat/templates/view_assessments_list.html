@@ -56,6 +56,10 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+        </div>
+        <div class="card-footer">
+            <a style="float:right" href="{{ url_for('student_stats_page', id=current_user.id) }}" class="btn btn-primary">View previous submissions</a>
         </div>
     </div>
 </section>
