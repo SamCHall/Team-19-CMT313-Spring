@@ -16,8 +16,8 @@
                 </thead>
                 <tbody>
                     {% for module in student.modules %}
-                    <tr>
-                        <td><a href="#{{ module.code }}">{{ module.code }} - {{ module.name }}</a></td>
+                    <tr class="clickable-row" data-href="#{{ module.code }}">
+                        <td>{{ module.code }} - {{ module.name }}</td>
                         <td>{{ module.completed_assessments(student) }}</td>
                         <td>{{ module.not_completed_assessments(student) }}</td>
                         <td>
@@ -105,7 +105,8 @@
                 </thead>
                 <tbody>
                     {% for asssignment in module.assignments %}
-                    <tr>
+                    {% set sub_id = asssignment.student_highest_mark_id(student) %}
+                    <tr {% if asssignment.num_of_attempts(student) > 0 %} class="clickable-row" data-href="{{ url_for('view_submission', assessment_id=asssignment.id, submission_id=asssignment.student_highest_mark_id(student)) }}" {% endif %}>
                         <td>{{ asssignment.title }}</td>
                         <td>{{ asssignment.assignment_type | replace("_", " ") | title }}</td>
                         <td>
