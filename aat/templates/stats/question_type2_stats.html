@@ -33,8 +33,13 @@
                                 <tr>
                                     <td>{{ cohort }}</td>
                                     <td>{{ cohort_sumbmissions | length }}</td>
+                                    {% if cohort_sumbmissions | length > 0 %}
                                     <td>{{ question.correct_submissions_number(cohort_sumbmissions) }}</td>
                                     <td>{{ '%0.1f' | format(question.correct_submissions_percent(cohort_sumbmissions)) }}%</td>
+                                    {% else %}
+                                    <td>-</td>
+                                    <td>-</td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>

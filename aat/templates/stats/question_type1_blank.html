@@ -27,10 +27,16 @@
                                 {% for cohort in question.cohorts() %}
                                 {% set cohort_sumbmissions = question.cohort_submissions(cohort, submissions) %}
                                 {% set cohort_incorrect_answers = question.answer_occur_for_blank(count, cohort_sumbmissions, True) | reject('equalto', (correct_answer, question.num_correct_for_blank(count, cohort_sumbmissions, True))) | list %}
-                                <td>{{ cohort }}</td>
-                                <td>{{ question.num_correct_for_blank(count, cohort_sumbmissions, True) }}</td>
-                                <td>{{ '%0.1f' | format(question.correct_precentage_for_blank(count, cohort_sumbmissions, True)) }}%</td>
-                                <td>{% for answer in cohort_incorrect_answers %}{{ answer[0] }} ({{ answer[1] }}){% if not loop.last %}, {% endif %}{% else %}-{% endfor %}</td>
+                                <tr>
+                                    <td>{{ cohort }}</td>
+                                    <td>{{ question.num_correct_for_blank(count, cohort_sumbmissions, True) }}</td>
+                                    {% if question.num_correct_for_blank(count, cohort_sumbmissions, True) > 0 %}
+                                    <td>{{ '%0.1f' | format(question.correct_precentage_for_blank(count, cohort_sumbmissions, True)) }}%</td>
+                                    <td>{% for answer in cohort_incorrect_answers %}{{ answer[0] }} ({{ answer[1] }}){% if not loop.last %}, {% endif %}{% else %}-{% endfor %}</td>
+                                    {% else %}
+                                    <td>-</td>
+                                    <td>-</td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>

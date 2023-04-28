@@ -28,10 +28,16 @@
                                 {% set cohort_sumbmissions = question.cohort_submissions(cohort, submissions) %}
                                 <tr>
                                     <td>{{ cohort }}</td>
-                                    <td>{{ question.cohort_sumbmissions | length }}</td>
+                                    <td>{{ cohort_sumbmissions | length }}</td>
+                                    {% if cohort_sumbmissions | length > 0 %}
                                     <td>{{ '%0.1f' | format(question.average_mark(cohort_sumbmissions)) }}</td>
                                     <td>{{ question.lowest_mark(cohort_sumbmissions) }}</td>
                                     <td>{{ question.highest_mark(cohort_sumbmissions) }}</td>
+                                    {% else %}
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>
