@@ -643,9 +643,9 @@ class QuestionType1(Question):
         """ Method to count the number of blanks in the question """
         return len(self.list_correct_answers())
 
-    def num_correct_for_blank(self, blank_no, submissions = None):
+    def num_correct_for_blank(self, blank_no, submissions = None, cohort=False):
         """ Method to count the number of correct submissions for the given blank """
-        if not submissions:
+        if not (submissions or cohort):
             submissions = self.submissions
 
         correct = 0
@@ -654,13 +654,17 @@ class QuestionType1(Question):
                 correct += 1
         return correct
 
-    def correct_precentage_for_blank(self, blank_no, submissions = None):
+    def correct_precentage_for_blank(self, blank_no, submissions = None, cohort=False):
         """ Method to provide the precentage of correct answers for the given blank """
-        if not submissions:
+        if not (submissions or cohort):
             submissions = self.submissions
+
+        if len(submissions) == 0:
+            return 0
+
         return 100 * self.num_correct_for_blank(blank_no, submissions) / len(submissions)
 
-    def answer_occur_for_blank(self, blank_no, submissions = None):
+    def answer_occur_for_blank(self, blank_no, submissions = None, cohort=False):
         """
         Method to produce a list of truples which contain the following
             string: A answer a student has selected for a given blank
@@ -669,7 +673,7 @@ class QuestionType1(Question):
         The list is sorted with most common answers first
         """
 
-        if not submissions:
+        if not (submissions or cohort):
             submissions = self.submissions
 
         answers = {}

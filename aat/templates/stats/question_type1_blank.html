@@ -14,34 +14,35 @@
             <div class="card-group">
                 <div class="card stats-inner">
                     <div class="card-body">
-                        <ul>
-                            <li>Number of correct submissions: {{ question.num_correct_for_blank(count, submissions) }}</li>
-                            <li>Precentage of correct submissions: {{ '%0.1f' | format(question.correct_precentage_for_blank(count, submissions)) }}%</li>
-                            {# Display the incorrect answers if there are any #}
-                            {% if incorrect_answers | length > 0 %}
-                            <li>Incorrect answers given:
-                                {% for answer in incorrect_answers %}
-                                {{ answer[0] }} ({{ answer[1] }}){% if not loop.last %},{% endif %}
-                                {% endfor %}
-                            </li>
-                            {% endif %}
-                        </ul>
-                        {# <figure>
-                            <figcaption>Table of answers with occurrences</figcaption>
-                            <table>
+                        <table class="table table-striped table-hover">
+                            <thead>
                                 <tr>
-                                    <td>Answer</td>
-                                    <td>Occurrences</td>
+                                    <th>Cohort</th>
+                                    <th>Number Correct</th>
+                                    <th>Percentage Correct</th>
+                                    <th>Incorrect Options</th>
                                 </tr>
-                                {% for answer in answers %}
-                                <tr>
-                                    <td>{{ answer[0] }}</td>
-                                    <td>{{ answer[1] }}</td>
+                            </thead>
+                            <tbody>
+                                {% for cohort in question.cohorts() %}
+                                {% set cohort_sumbmissions = question.cohort_submissions(cohort, submissions) %}
+                                {% set cohort_incorrect_answers = question.answer_occur_for_blank(count, cohort_sumbmissions, True) | reject('equalto', (correct_answer, question.num_correct_for_blank(count, cohort_sumbmissions, True))) | list %}
+                                <td>{{ cohort }}</td>
+                                <td>{{ question.num_correct_for_blank(count, cohort_sumbmissions, True) }}</td>
+                                <td>{{ '%0.1f' | format(question.correct_precentage_for_blank(count, cohort_sumbmissions, True)) }}%</td>
+                                <td>{% for answer in cohort_incorrect_answers %}{{ answer[0] }} ({{ answer[1] }}){% if not loop.last %}, {% endif %}{% else %}-{% endfor %}</td>
                                 </tr>
                                 {% endfor %}
-                            </table>
-                        </figure> #}
-
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>All</th>
+                                    <th>{{ question.num_correct_for_blank(count, submissions) }}</th>
+                                    <th>{{ '%0.1f' | format(question.correct_precentage_for_blank(count, submissions)) }}%</th>
+                                    <th>{% for answer in incorrect_answers %}{{ answer[0] }} ({{ answer[1] }}){% if not loop.last %}, {% endif %}{% else %}-{% endfor %}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
 
