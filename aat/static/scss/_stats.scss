@@ -27,3 +27,8 @@
 tfoot.filter {
     display: table-header-group;
 }
+
+tr.clickable-row:hover > td {
+    text-decoration: underline;
+    cursor: pointer;
+}
