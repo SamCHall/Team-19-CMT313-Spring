@@ -23,3 +23,7 @@
 .header-button > a {
     height: fit-content;
 }
+
+tfoot.filter {
+    display: table-header-group;
+}

@@ -1,5 +1,17 @@
-function displayGraph(idName, title, data) {
-    let layout = {title: title};
+function displayGraph(idName, title, data, xTitle, yTitle) {
+    let layout = {
+        title: title,
+        xaxis: {
+            title: {
+                text: xTitle
+            }
+        },
+        yaxis: {
+            title: {
+                text: yTitle
+            }
+        }
+    };
     let config = {
         displayModeBar: false,
         responsive: true

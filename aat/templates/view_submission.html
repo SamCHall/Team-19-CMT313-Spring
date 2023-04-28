@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if current_user.user_type == 'student' %}
 <section class="container">
     <a class="btn btn-primary" href="{{ url_for('view_assessments') }}">Back to assessments</a>
 </section>
+{% else %}
+<section class="container">
+    <a class="btn btn-primary" href="{{ url_for('assessment_marks_list', id=assignment.id) }}">Back to student marks</a>
+</section>
+{% endif %}
 <section class="container">
     <div class="card">
         <div class="card-header">
@@ -15,7 +21,7 @@
                 <thead>
                     <tr>
                         <th>Question Number</th>
-                        <th>Your Answer</th>
+                        <th>{% if current_user.user_type == 'student' %}Your Answer{% else %}Student's answer{% endif %}</th>
                         <th>Correct Answer(s)</th>
                         <th>Score</th>
                     </tr>
@@ -40,7 +46,7 @@
                     <tr>
                         <th>Question Number</th>
                         <th>Question</th>
-                        <th>Your Answer</th>
+                        <th>{% if current_user.user_type == 'student' %}Your Answer{% else %}Student's answer{% endif %}</th>
                         <th>Correct Answer</th>
                         <th>Score</th>
                     </tr>

@@ -22,22 +22,39 @@
         <div class="card-body">
             <table id="data-student-marks" class="table table-striped table-hover">
                 <thead>
-                    <th scope="col">Student ID</th>
-                    <th scope="col">Student Name</th>
-                    <th scope="col">Cohort</th>
-                    <th scope="col">Attempts</th>
-                    <th scope="col">Best Mark</th>
-                    <th scope="col">Percentage</th>
+                    <tr>
+                        <th scope="col">Student ID</th>
+                        <th scope="col">Student Name</th>
+                        <th scope="col">Cohort</th>
+                        <th scope="col">Attempts</th>
+                        <th scope="col">Best Mark</th>
+                        <th scope="col">Percentage</th>
+                    </tr>
                 </thead>
+                <tfoot class="filter">
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Cohort</th>
+                        <th>Attempts</th>
+                        <th>Best Mark</th>
+                        <th>Percentage</th>
+                    </tr>
+                </tfoot>
                 <tbody>
                 {% for student, marks in assignment.get_student_marks().items() %}
-                    <tr>
+                    <tr {% if marks.attempts > 0 %} class="clickable-row" data-href="{{ url_for('view_submission', assessment_id=assignment.id, submission_id=marks.sub_id) }}"{% endif %}>
                         <td>{{ student.id }}</td>
                         <td>{{ student.first_name }} {{ student.surname }}</td>
                         <td>{{ student.cohort }}</td>
                         <td>{{ marks.attempts }}</td>
+                        {% if marks.attempts > 0 %}
                         <td>{{ marks.mark }}</td>
                         <td>{{ '%0.1f' | format(marks.percentage) }}%</td>
+                        {% else %}
+                        <td>No Submission</td>
+                        <td>No Submission</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

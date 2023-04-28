@@ -314,8 +314,11 @@ def view_submission(assessment_id, submission_id):
     questions_dict = AssignQuestion.get_assignment_questions(assessment_id)
 
     total_available_mark = assignment.total_available_mark()
-    if submission.student_id != current_user.id:
+    if submission.student_id != current_user.id and current_user.user_type == 'student':
         abort(403, description="You are not the owner of this submission.")
+
+    if current_user not in submission.assignment.module.get_staff() and current_user.user_type == 'staff':
+        abort(403, description="You are not a staff member on this module.")
 
     type1_count = 0
     type2_count = 0
