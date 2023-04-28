@@ -749,7 +749,8 @@ class QuestionType2(Question):
         }
 
         for submission in submissions:
-            count[submission.submission_answer] += 1
+            if submission.submission_answer != "":
+                count[submission.submission_answer] += 1
 
         return count
 
@@ -769,6 +770,7 @@ class QuestionType2(Question):
             }
 
         for submission in submissions:
-            results[submission.submission.student.cohort][submission.submission_answer] += 1
+            if submission.submission_answer != "":
+                results[submission.submission.student.cohort][submission.submission_answer] += 1
 
         return results
