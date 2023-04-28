@@ -485,7 +485,7 @@ class Question(db.Model, abc.ABC, metaclass=QuestionMeta):
 
     def __str__(self):
         if self.question_type == "question_type1":
-            question_type = "Fill in the blanks"
+            question_type = "Fill in the blank"
         elif self.question_type == "question_type2":
             question_type = "Multiple choice"
         output = self.title + " | " + question_type
