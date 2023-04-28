@@ -26,6 +26,19 @@
                 {% endif %}
 
                 <p>
+                    {{ form.question_text.label }}
+                    {{ form.question_text(size=20, class="form-control") }}
+                </p>
+
+                {% if form.question_text.errors %}
+                <ul class="errors">
+                    {% for error in form.question_text.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <p>
                     {{ form.option1.label }}
                     {{ form.option1(size=20, class="form-control") }}
                 </p>

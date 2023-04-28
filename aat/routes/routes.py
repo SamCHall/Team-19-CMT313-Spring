@@ -102,7 +102,7 @@ def create_question_type1():
         db.session.commit()
 
         flash("You've created a new Fill in the Blank question!")
-        return redirect(url_for('questions'))
+        return redirect('/')
 
     return render_template('create-question-type1.html', qt1_form=qt1_form)
 
@@ -114,7 +114,8 @@ def create_question_type1():
 def create_question_type2():
     form = QuestionType2FormCreate()
     if form.validate_on_submit():
-        question_text=form.title.data
+        title=form.title.data
+        question_text=form.question_text.data
         op1=form.option1.data
         op2=form.option2.data
         op3=form.option3.data
@@ -123,8 +124,8 @@ def create_question_type2():
         difficulty=form.difficulty.data
 
         qt2 = QuestionType2(
+            title=title,
             question_text=question_text,
-            title=question_text,
             option1=op1,
             option2=op2,
             option3=op3,
@@ -137,7 +138,7 @@ def create_question_type2():
         db.session.add(qt2)
         db.session.commit()
         flash("You've created a new Multiple Choice question!")
-        return redirect('/staff/question/create/type2')
+        return redirect('/')
 
     return render_template('create-question-type2.html', title='Create', form=form)
 
@@ -416,6 +417,7 @@ def edit_question(id):
         form = QuestionType2FormEdit()
         if form.validate_on_submit():
             question.title = form.title.data
+            question.question_text=form.question_text.data
             question.option1 = form.option1.data
             question.option2 = form.option2.data
             question.option3 = form.option3.data
@@ -429,6 +431,7 @@ def edit_question(id):
             return redirect(url_for('questions',id=question.id))
 
         form.title.data = question.title
+        form.question_text.data=question.question_text
         form.option1.data = question.option1
         form.option2.data = question.option2
         form.option3.data = question.option3
