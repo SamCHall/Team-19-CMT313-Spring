@@ -2,9 +2,6 @@
 
 {% block content %}
 <section class="container">
-    <a class="btn btn-primary" href="{{ url_for('staff_home') }}">Back to home</a>
-  </section>
-<section class="container">
     <div class="card">
         <div class="card-header">
             <h1 class="card-title">Create Formative Assessment</h1>
@@ -45,6 +42,10 @@
             </div>
             {{form.submit(class="btn btn-primary")}}
         </form>
+    </div>
+        <div class="card-footer">
+            <a class="btn btn-primary float-end" href="{{ url_for('staff_home') }}">Back to home</a>
+        </div>
     </div>
 </section>
 {% endblock content %}
