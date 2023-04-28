@@ -65,7 +65,7 @@
                                 <script type="text/javascript">
                                 {
                                     let data = barGraphData({{ dict(answers) | safe }});
-                                    displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - submissions', data);
+                                    displayGraph('blank{{ count }}Graph', 'Blank {{ count+1 }} - submissions', data, 'Option', 'Number of submissions');
                                 }
                                 </script>
                             </div>
@@ -75,7 +75,7 @@
                                 <script type="text/javascript">
                                 {
                                     let data = cohortBarGraphData({{ question.answer_occur_for_blank_cohort(count, submissions) | safe }});
-                                    displayGraph('blank{{ count }}GraphCohort', 'Blank {{ count+1 }} by cohort', data);
+                                    displayGraph('blank{{ count }}GraphCohort', 'Blank {{ count+1 }} by cohort', data, 'Option', 'Number of submissions');
                                 }
                                 </script>
 

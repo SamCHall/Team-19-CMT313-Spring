@@ -87,7 +87,7 @@
                     <script type="text/javascript">
                     {
                         let data = barGraphData({{ assignment.mark_dist() }});
-                        displayGraph('overallGraph', 'Mark distribution', data);
+                        displayGraph('overallGraph', 'Mark distribution', data, 'Mark', 'Number of submissions');
                     }
                     </script>
                 </div>
@@ -97,7 +97,7 @@
                     <script type="text/javascript">
                     {
                         let data = cohortBarGraphData({{ assignment.mark_dist_cohort() }});
-                        displayGraph('overallGraphCohort', 'Mark distribution by cohort', data);
+                        displayGraph('overallGraphCohort', 'Mark distribution by cohort', data, 'Mark', 'Number of submissions');
                     }
                     </script>
                 </div>

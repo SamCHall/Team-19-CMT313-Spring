@@ -68,7 +68,7 @@
                                 <script type="text/javascript">
                                 {
                                     let data = barGraphData({{ question.option_choice_quantity(submissions) | safe }});
-                                    displayGraph('optionsGraph', 'All Submissions', data);
+                                    displayGraph('optionsGraph', 'All Submissions', data, 'Option', 'Number of submissions');
                                 }
                                 </script>
 
@@ -80,7 +80,7 @@
                                 <script type="text/javascript">
                                 {
                                     let data = cohortBarGraphData({{ question.option_choice_quantity_cohort(submissions) | safe }});
-                                    displayGraph('optionsGraphCohort', 'Submissions by cohort', data);
+                                    displayGraph('optionsGraphCohort', 'Submissions by cohort', data, 'Option', 'Number of submissions');
                                 }
                                 </script>
                             </div>
