@@ -5,7 +5,7 @@ from ..models import Question
 
 class QuestionType2FormEdit(FlaskForm):
     title = StringField('Title', validators=[InputRequired(message='Please provide a title for this question'),Length(max=100)])
-    question_text = StringField('Ask a question:', validators=[InputRequired(message='Please provide some text for this question'),Length(max=100)])
+    question_text = StringField('Question', validators=[InputRequired(message='Please provide some text for this question'),Length(max=100)])
     option1 = StringField('Option 1',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     option2 = StringField('Option 2',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     option3 = StringField('Option 3',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
@@ -27,7 +27,7 @@ class QuestionType2FormEdit(FlaskForm):
 
 class QuestionType2FormCreate(FlaskForm):
     title = StringField('Title', validators=[InputRequired(message='Please provide a title for this question'),Length(max=100)])
-    question_text = StringField('Ask a question:', validators=[InputRequired(message='Please provide some text for this question'),Length(max=100)])
+    question_text = StringField('Question', validators=[InputRequired(message='Please provide some text for this question'),Length(max=100)])
     option1 = StringField('Option 1',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     option2 = StringField('Option 2',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
     option3 = StringField('Option 3',validators=[InputRequired(message='Please provide an option for this question'),Length(max=100)])
