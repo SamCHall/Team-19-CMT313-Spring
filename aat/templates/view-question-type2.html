@@ -33,7 +33,7 @@
             {% endif %}
 
             {% if question.option2 %}
-                {% if question.option2 == correctOption %}
+                {% if question.option2 == question.correctOption %}
                     <span class="btn btn-success">{{ question.option2 }}</span>
                 {% else %}
                     <span class="btn btn-secondary my-2">{{ question.option2 }}</span>
@@ -41,7 +41,7 @@
             {% endif %}
 
             {% if question.option3 %}
-                {% if question.option3 == correctOption %}
+                {% if question.option3 == question.correctOption %}
                     <span class="btn btn-success">{{ question.option3 }}</span>
                 {% else %}
                     <span class="btn btn-secondary my-2">{{ question.option3 }}</span>
